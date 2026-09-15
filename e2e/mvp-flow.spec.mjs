@@ -64,3 +64,15 @@ test("saved products require authentication", async ({ page }) => {
   await expect(page).toHaveURL(/\/sign-in/);
   await expect(page.getByText("Tekrar hoş geldin.", { exact: true })).toBeVisible();
 });
+
+
+test("outfit context filters products and carries try-on selection", async ({ page }) => {
+  await page.goto("/products?query=Ayakkabı&budget=1500");
+  await expect(page.getByText("Kombinindeki eksik parçaya", { exact: false })).toBeVisible();
+  await expect(page.getByText("1 ürün", { exact: false })).toBeVisible();
+  await expect(page.getByText("İnce Topuklu Ayakkabı", { exact: true })).toBeVisible();
+
+  await page.goto("/try-on?wardrobeItemId=demo-dress");
+  await expect(page.getByText("DENENECEK PARÇA", { exact: true })).toBeVisible();
+  await expect(page.getByText("Kombinden seçilen parça", { exact: true })).toBeVisible();
+});

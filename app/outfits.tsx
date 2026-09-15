@@ -13,6 +13,7 @@ type Outfit = {
   explanation: string | null;
   is_favorite: boolean;
   created_at: string;
+  outfit_items: Array<{ wardrobe_item_id: string }>;
 };
 
 export default function OutfitsScreen() {
@@ -31,7 +32,7 @@ export default function OutfitsScreen() {
     setLoading(true);
     const { data, error } = await supabase
       .from("outfits")
-      .select("id,title,occasion,explanation,is_favorite,created_at")
+      .select("id,title,occasion,explanation,is_favorite,created_at,outfit_items(wardrobe_item_id)")
       .order("created_at", { ascending: false })
       .limit(50);
     if (error) setMessage(error.message);
@@ -91,6 +92,15 @@ export default function OutfitsScreen() {
             </View>
             {!!item.explanation && <Text style={s.explanation}>{item.explanation}</Text>}
             <Text style={s.date}>{new Date(item.created_at).toLocaleDateString(locale === "tr" ? "tr-TR" : "en-US")}</Text>
+            {!!item.outfit_items[0]?.wardrobe_item_id && (
+              <Pressable
+                style={s.tryButton}
+                onPress={() => router.push({ pathname: "/try-on", params: { wardrobeItemId: item.outfit_items[0].wardrobe_item_id } })}
+                accessibilityRole="button"
+              >
+                <Text style={s.tryButtonText}>{t("virtualTryOnAction")}</Text>
+              </Pressable>
+            )}
           </View>
         ))}
       </ScrollView>

@@ -16,6 +16,26 @@ function overlap(values: string[] | null, preferences: string[]) {
   return (values ?? []).filter((value) => wanted.has(value.toLocaleLowerCase())).length;
 }
 
+function categoryGroup(category: string) {
+  if (["shirt", "tshirt", "jacket"].includes(category)) return "top";
+  if (["trousers", "skirt"].includes(category)) return "bottom";
+  if (category === "dress") return "dress";
+  if (category === "shoes") return "shoes";
+  return category;
+}
+
+function missingCategories(items: WardrobeItem[], english: boolean, budget: number) {
+  const groups = new Set(items.map((item) => categoryGroup(item.category)));
+  const needed = groups.has("dress")
+    ? ["shoes"].filter((group) => !groups.has(group))
+    : ["top", "bottom", "shoes"].filter((group) => !groups.has(group));
+  const labels: Record<string, string> = english
+    ? { top: "Shirt", bottom: "Trousers", shoes: "Shoes" }
+    : { top: "Gömlek", bottom: "Pantolon", shoes: "Ayakkabı" };
+  const maxPrice = budget && needed.length ? Math.floor(budget / needed.length) : undefined;
+  return needed.map((group) => ({ query: labels[group], maxPrice }));
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   try {
@@ -51,7 +71,16 @@ Deno.serve(async (req) => {
           overlap(item.colors, preferredColors) * 2 + overlap(item.style_tags, preferredTags) * 3;
         return score(b) - score(a);
       });
-      const selected = ranked.slice(0, 3);
+      const selected: WardrobeItem[] = [];
+      const selectedGroups = new Set<string>();
+      for (const item of ranked) {
+        const group = categoryGroup(item.category);
+        if (!selectedGroups.has(group) || selected.length < 2) {
+          selected.push(item);
+          selectedGroups.add(group);
+        }
+        if (selected.length === 3) break;
+      }
       const learnedFromFavorites = (favoriteOutfits ?? []).some((item) =>
         item.occasion?.toLocaleLowerCase() === occasion.toLocaleLowerCase()
       );
@@ -93,9 +122,7 @@ Deno.serve(async (req) => {
           title,
           explanation,
           wardrobeItemIds: selected.map((item) => item.id),
-          missingPieces: selected.length < 2
-            ? [{ query: english ? "complementary shoes" : "tamamlayıcı ayakkabı", maxPrice: budget || undefined }]
-            : [],
+          missingPieces: missingCategories(selected, english, budget),
         },
       };
       await finishUsage(admin, reservation.event_id!, startedAt, true);

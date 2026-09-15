@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
-import { useRouter } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useI18n } from "@/i18n/I18nProvider";
 import type { TranslationKey } from "@/i18n/translations";
 import { localizeProduct } from "@/catalog/localize";
 import { mockProducts } from "@/catalog/mock-products";
+import { track } from "@/analytics/track";
 
 const filters: ReadonlyArray<readonly [string, TranslationKey]> = [
   ["Tümü", "colorAll"],
@@ -15,10 +16,17 @@ const filters: ReadonlyArray<readonly [string, TranslationKey]> = [
 
 export default function ProductsScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams<{ query?: string; budget?: string }>();
   const { locale, t } = useI18n();
-  const [query, setQuery] = useState("");
+  const initialQuery = typeof params.query === "string" ? params.query : "";
+  const initialBudget = typeof params.budget === "string" ? params.budget : "";
+  const [query, setQuery] = useState(initialQuery);
   const [color, setColor] = useState("Tümü");
-  const [budget, setBudget] = useState("");
+  const [budget, setBudget] = useState(initialBudget);
+
+  useEffect(() => {
+    if (initialQuery || initialBudget) void track("outfit_product_search_opened");
+  }, [initialBudget, initialQuery]);
 
   const products = useMemo(() => {
     const max = Number(budget) || Infinity;
@@ -45,6 +53,11 @@ export default function ProductsScreen() {
         <Pressable onPress={() => router.back()} accessibilityRole="button"><Text style={s.back}>{t("back")}</Text></Pressable>
         <Text style={s.title}>{t("productSearchTitle")}</Text>
         <Text style={s.copy}>{t("productSearchCopy")}</Text>
+        {(initialQuery || initialBudget) && (
+          <View style={s.context}>
+            <Text style={s.contextText}>{t("outfitShoppingContext")}</Text>
+          </View>
+        )}
         <Pressable style={s.saved} onPress={() => router.push("/favorites")} accessibilityRole="button">
           <Text style={s.savedText}>{t("seeSaved")}</Text>
         </Pressable>

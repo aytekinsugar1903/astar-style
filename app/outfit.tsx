@@ -32,6 +32,23 @@ export default function OutfitScreen() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
 
+  function seeProducts() {
+    const missing = result?.missingPieces[0];
+    router.push({
+      pathname: "/products",
+      params: { query: missing?.query ?? "", budget: String(missing?.maxPrice ?? (Number(budget) || "")) },
+    });
+  }
+
+  function trySelectedOutfit() {
+    const wardrobeItemId = result?.wardrobeItemIds[0];
+    if (wardrobeItemId) {
+      router.push({ pathname: "/try-on", params: { wardrobeItemId } });
+      return;
+    }
+    router.push("/try-on");
+  }
+
   async function create() {
     setBusy(true);
     setSaved(false);
@@ -111,10 +128,10 @@ export default function OutfitScreen() {
             <Text style={s.resultCopy}>{result.explanation}</Text>
             <Text style={s.line}>{t("wardrobePiecesUsed", { count: result.wardrobeItemIds.length })}</Text>
             {saved && <Text style={s.saved}>{t("outfitSaved")}</Text>}
-            <Pressable style={s.secondary} onPress={() => router.push("/products")} accessibilityRole="button">
+            <Pressable style={s.secondary} onPress={seeProducts} accessibilityRole="button">
               <Text style={s.secondaryText}>{t("seeMissingPieces")}</Text>
             </Pressable>
-            <Pressable style={s.try} onPress={() => router.push("/try-on")} accessibilityRole="button">
+            <Pressable style={s.try} onPress={trySelectedOutfit} accessibilityRole="button">
               <Text style={s.tryText}>{t("virtualTryOnAction")}</Text>
             </Pressable>
           </View>
