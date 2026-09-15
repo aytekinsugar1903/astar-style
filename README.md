@@ -24,3 +24,6 @@ npm run start
 
 Detaylar: [docs/architecture.md](docs/architecture.md)
 \n\n### Kombin öğrenme döngüsü\n\nEtkinlik stilisti, stil profili ve beğenilen kombin sinyallerini kullanır. Üretilen kombinler kullanıcı hesabına kaydedilir; beğeniler sonraki sıralamayı kişiselleştirir. Mevcut sağlayıcı ücretsiz mock modundadır.\n
+### Katalog otomasyonu
+
+`catalog-sync` Edge Function yalnızca `app_metadata.role=admin` olan kullanıcılar tarafından çağrılabilir. Sağlayıcılar `CatalogProvider` arayüzü arkasındadır; varsayılan ve ücretsiz sağlayıcı `mock`tur. Gerçek affiliate API/feed anahtarları yalnızca sunucu secret alanına eklenmelidir. İzinsiz scraping yapılmaz.

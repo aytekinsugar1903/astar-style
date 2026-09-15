@@ -36,6 +36,8 @@ export default function AdminScreen() {
   const { t } = useI18n();
   const [metrics, setMetrics] = useState<Metrics>(demo);
   const [message, setMessage] = useState("");
+  const [syncBusy, setSyncBusy] = useState(false);
+  const [syncMessage, setSyncMessage] = useState("");
 
   useEffect(() => {
     if (!isSupabaseConfigured) return;
@@ -44,6 +46,18 @@ export default function AdminScreen() {
       else setMetrics({ ...demo, ...data });
     });
   }, [t]);
+
+  async function syncCatalog() {
+    setSyncBusy(true);
+    setSyncMessage("");
+    const { data, error } = await supabase.functions.invoke("catalog-sync", { body: {} });
+    if (error) setSyncMessage(t("catalogSyncFailed"));
+    else {
+      setSyncMessage(t("catalogSyncDone", { count: data.productsUpserted ?? 0 }));
+      setMetrics((value) => ({ ...value, products: data.productsUpserted ?? value.products }));
+    }
+    setSyncBusy(false);
+  }
 
   const cards = [
     [t("adminDau"), metrics.dau],
@@ -81,6 +95,14 @@ export default function AdminScreen() {
             </View>
           ))}
         </View>
+        <View style={s.sync}>
+          <Text style={s.syncTitle}>{t("catalogSyncTitle")}</Text>
+          <Text style={s.syncCopy}>{t("catalogSyncCopy")}</Text>
+          <Pressable style={[s.syncButton, syncBusy && s.disabled]} onPress={() => void syncCatalog()} disabled={syncBusy} accessibilityRole="button">
+            <Text style={s.syncButtonText}>{syncBusy ? t("catalogSyncRunning") : t("catalogSyncAction")}</Text>
+          </Pressable>
+          {!!syncMessage && <Text style={s.syncMessage} accessibilityLiveRegion="polite">{syncMessage}</Text>}
+        </View>
         <View style={s.guard}>
           <Text style={s.guardTitle}>{t("costGuardTitle")}</Text>
           <Text style={s.guardCopy}>{t("costGuardCopy")}</Text>
@@ -93,5 +115,5 @@ export default function AdminScreen() {
 const s=StyleSheet.create({
  safe:{flex:1,backgroundColor:"#171713"},page:{padding:22,paddingBottom:50,width:"100%",maxWidth:850,alignSelf:"center"},back:{color:"#DCC7CA",fontWeight:"700",marginTop:12},kicker:{fontSize:11,color:"#C99AA3",fontWeight:"800",letterSpacing:1.8,marginTop:30},title:{fontSize:40,color:"#FFF",fontWeight:"600",marginTop:12},copy:{color:"#BDB7AE",marginTop:8},message:{color:"#F3B9C4",marginTop:15},
  grid:{flexDirection:"row",flexWrap:"wrap",gap:12,marginTop:26},card:{backgroundColor:"#292925",borderRadius:20,padding:20,minHeight:130,flexGrow:1,flexBasis:145},value:{color:"#FFF",fontSize:28,fontWeight:"800"},label:{color:"#BDB7AE",marginTop:28},
- guard:{backgroundColor:"#6E2D3A",borderRadius:22,padding:22,marginTop:20},guardTitle:{color:"#FFF",fontSize:18,fontWeight:"800"},guardCopy:{color:"#F0DDE1",lineHeight:20,marginTop:8},
+ sync:{backgroundColor:"#292925",borderRadius:22,padding:22,marginTop:20,borderWidth:1,borderColor:"#45453E"},syncTitle:{color:"#FFF",fontSize:18,fontWeight:"800"},syncCopy:{color:"#BDB7AE",lineHeight:20,marginTop:8},syncButton:{backgroundColor:"#FFF",borderRadius:999,padding:14,alignItems:"center",marginTop:16},syncButtonText:{color:"#171713",fontWeight:"800"},syncMessage:{color:"#E8C7CD",fontWeight:"700",marginTop:12},disabled:{opacity:.5},guard:{backgroundColor:"#6E2D3A",borderRadius:22,padding:22,marginTop:20},guardTitle:{color:"#FFF",fontSize:18,fontWeight:"800"},guardCopy:{color:"#F0DDE1",lineHeight:20,marginTop:8},
 });
