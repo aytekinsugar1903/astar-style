@@ -2,20 +2,23 @@ import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView, ScrollView, StyleSheet, Text, Pressable, View } from "react-native";
 import { useAuth } from "@/auth/AuthProvider";
+import { useI18n } from "@/i18n/I18nProvider";
+import { TranslationKey } from "@/i18n/translations";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
-const actions = [
-  ["Gardırobum", "Kıyafetlerini düzenle", "01", "/wardrobe"],
-  ["Bana kombin yap", "AI stilistinle hazırlan", "02", "/outfit"],
-  ["Sanal dene", "Görünümünü önizle", "03", "/try-on"],
-  ["Ürün ara", "Stiline uygun parçaları bul", "04", "/products"],
-  ["Kaydettiklerim", "Beğendiğin ürünlere dön", "05", "/favorites"],
-  ["Etkinlik için kombin", "Düğün, iş, tatil ve daha fazlası", "06", "/outfit"],
-] as const;
+const actions: ReadonlyArray<readonly [TranslationKey, TranslationKey, string, "/wardrobe" | "/outfit" | "/try-on" | "/products" | "/favorites"]> = [
+  ["wardrobeTitle", "wardrobeSubtitle", "01", "/wardrobe"],
+  ["outfitTitle", "outfitSubtitle", "02", "/outfit"],
+  ["tryOnTitle", "tryOnSubtitle", "03", "/try-on"],
+  ["productsTitle", "productsSubtitle", "04", "/products"],
+  ["favoritesTitle", "favoritesSubtitle", "05", "/favorites"],
+  ["eventTitle", "eventSubtitle", "06", "/outfit"],
+];
 
 export default function HomeScreen() {
   const router = useRouter();
   const { session, loading } = useAuth();
+  const { t } = useI18n();
   const [checkingProfile, setCheckingProfile] = useState(isSupabaseConfigured);
 
   useEffect(() => {
@@ -42,7 +45,7 @@ export default function HomeScreen() {
   }, [loading, router, session]);
 
   if (loading || checkingProfile) {
-    return <SafeAreaView style={styles.safe}><Text style={styles.loading}>ASTRA STYLE</Text></SafeAreaView>;
+    return <SafeAreaView style={styles.safe}><Text style={styles.loading}>{t("loading")}</Text></SafeAreaView>;
   }
 
   return (
@@ -50,26 +53,30 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.page}>
         <View style={styles.brandRow}>
           <Text style={styles.brand}>ASTRA STYLE</Text>
-          <Pressable style={styles.avatar} onPress={() => router.push("/profile")}><Text style={styles.avatarText}>A</Text></Pressable>
-        </View>
-        {!isSupabaseConfigured && <Text style={styles.demo}>DEMO MODU · Supabase bağlandığında gerçek veriler açılır</Text>}
-        <View style={styles.hero}>
-          <Text style={styles.eyebrow}>KİŞİSEL AI STİLİSTİN</Text>
-          <Text style={styles.title}>Bugün ne{"\n"}giyeceksin?</Text>
-          <Text style={styles.subtitle}>Gardırobundan, planından ve stilinden sana özel bir görünüm hazırlayalım.</Text>
-          <Pressable style={styles.primary} onPress={() => router.push("/outfit")}>
-            <Text style={styles.primaryText}>Kombinimi hazırla</Text><Text style={styles.arrow}>→</Text>
+          <Pressable style={styles.avatar} onPress={() => router.push("/profile")} accessibilityRole="button">
+            <Text style={styles.avatarText}>A</Text>
           </Pressable>
         </View>
-        <Text style={styles.sectionTitle}>Stil alanın</Text>
+        {!isSupabaseConfigured && <Text style={styles.demo}>{t("demoMode")}</Text>}
+        <View style={styles.hero}>
+          <Text style={styles.eyebrow}>{t("homeEyebrow")}</Text>
+          <Text style={styles.title}>{t("homeTitle")}</Text>
+          <Text style={styles.subtitle}>{t("homeSubtitle")}</Text>
+          <Pressable style={styles.primary} onPress={() => router.push("/outfit")} accessibilityRole="button">
+            <Text style={styles.primaryText}>{t("homePrimary")}</Text><Text style={styles.arrow}>→</Text>
+          </Pressable>
+        </View>
+        <Text style={styles.sectionTitle}>{t("homeSection")}</Text>
         <View style={styles.grid}>
-          {actions.map(([title, subtitle, number, route]) => (
-            <Pressable key={title} style={styles.card} onPress={() => router.push(route)}>
-              <Text style={styles.number}>{number}</Text><Text style={styles.cardTitle}>{title}</Text><Text style={styles.cardSubtitle}>{subtitle}</Text>
+          {actions.map(([titleKey, subtitleKey, number, route]) => (
+            <Pressable key={titleKey} style={styles.card} onPress={() => router.push(route)} accessibilityRole="button">
+              <Text style={styles.number}>{number}</Text>
+              <Text style={styles.cardTitle}>{t(titleKey)}</Text>
+              <Text style={styles.cardSubtitle}>{t(subtitleKey)}</Text>
             </Pressable>
           ))}
         </View>
-        <Text style={styles.privacy}>Fotoğrafların sana aittir. İzinsiz paylaşılmaz.</Text>
+        <Text style={styles.privacy}>{t("homePrivacy")}</Text>
       </ScrollView>
     </SafeAreaView>
   );
