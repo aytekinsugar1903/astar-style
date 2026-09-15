@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView, ScrollView, StyleSheet, Text, Pressable, View } from "react-native";
 import { useAuth } from "@/auth/AuthProvider";
-import { isSupabaseConfigured } from "@/lib/supabase";
+import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
 const actions = [
   ["Gardırobum", "Kıyafetlerini düzenle", "01", "/wardrobe"],
@@ -16,12 +16,34 @@ const actions = [
 export default function HomeScreen() {
   const router = useRouter();
   const { session, loading } = useAuth();
+  const [checkingProfile, setCheckingProfile] = useState(isSupabaseConfigured);
 
   useEffect(() => {
-    if (!loading && isSupabaseConfigured && !session) router.replace("/sign-in");
+    if (loading || !isSupabaseConfigured) return;
+    if (!session) {
+      setCheckingProfile(false);
+      router.replace("/sign-in");
+      return;
+    }
+
+    let active = true;
+    setCheckingProfile(true);
+    void supabase.from("profiles")
+      .select("onboarding_completed")
+      .eq("id", session.user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!active) return;
+        if (!data?.onboarding_completed) router.replace("/onboarding");
+        setCheckingProfile(false);
+      });
+
+    return () => { active = false; };
   }, [loading, router, session]);
 
-  if (loading) return <SafeAreaView style={styles.safe}><Text style={styles.loading}>ASTRA STYLE</Text></SafeAreaView>;
+  if (loading || checkingProfile) {
+    return <SafeAreaView style={styles.safe}><Text style={styles.loading}>ASTRA STYLE</Text></SafeAreaView>;
+  }
 
   return (
     <SafeAreaView style={styles.safe}>
