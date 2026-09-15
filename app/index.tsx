@@ -32,8 +32,7 @@ export default function HomeScreen() {
         {!isSupabaseConfigured && <Text style={styles.demo}>DEMO MODU · Supabase bağlandığında gerçek veriler açılır</Text>}
         <View style={styles.hero}>
           <Text style={styles.eyebrow}>KİŞİSEL AI STİLİSTİN</Text>
-          <Text style={styles.title}>Bugün ne{"
-"}giyeceksin?</Text>
+          <Text style={styles.title}>Bugün ne{"\n"}giyeceksin?</Text>
           <Text style={styles.subtitle}>Gardırobundan, planından ve stilinden sana özel bir görünüm hazırlayalım.</Text>
           <Pressable style={styles.primary} onPress={() => router.push("/outfit")}>
             <Text style={styles.primaryText}>Kombinimi hazırla</Text><Text style={styles.arrow}>→</Text>
