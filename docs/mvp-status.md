@@ -12,7 +12,7 @@
 - [x] Ownership-based RLS and private storage rules
 - [x] Event and budget outfit flow with mock AI
 - [x] Product search, budget/color filters and style ranking
-- [x] Product detail and affiliate-click hook
+- [x] Product detail, server-backed favorites, saved-products screen and affiliate-click hook
 - [x] Personal full-body photo record
 - [x] Virtual try-on job queue with locked client permissions
 - [x] AI provider and try-on provider interfaces
@@ -26,6 +26,7 @@
 - [ ] Add FASHN adapter behind an explicit cost switch
 - [ ] Add official affiliate feed adapter
 - [x] Add admin dashboard
+- [x] Add zero-cost demo catalog records for end-to-end product flow
 - [ ] Complete translations and accessibility pass
 - [ ] Add automated end-to-end tests and store builds
 
