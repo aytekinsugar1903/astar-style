@@ -11,7 +11,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,5 +21,11 @@ jobs:
       - run: npm run typecheck
       - run: npm run test:i18n
       - run: npm run doctor
-      - name: Export web bundle
-        run: npx expo export --platform web
+      - name: Export web bundle in isolated demo mode
+        run: npm run build:e2e
+        env:
+          EXPO_PUBLIC_DEMO_MODE: "true"
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run mobile MVP flows
+        run: npm run test:e2e
