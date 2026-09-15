@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "@/auth/AuthProvider";
+import { useI18n } from "@/i18n/I18nProvider";
+import { localizeProduct } from "@/catalog/localize";
+import { mockProducts } from "@/catalog/mock-products";
 import { supabase } from "@/lib/supabase";
 import { track } from "@/analytics/track";
 
@@ -20,6 +23,7 @@ type SavedProduct = {
 export default function FavoritesScreen() {
   const router = useRouter();
   const { session } = useAuth();
+  const { locale, t } = useI18n();
   const [products, setProducts] = useState<SavedProduct[]>([]);
   const [message, setMessage] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -30,54 +34,28 @@ export default function FavoritesScreen() {
       return;
     }
 
-    const favorites = await supabase
-      .from("favorites")
-      .select("product_id")
-      .eq("user_id", session.user.id);
-
-    if (favorites.error) {
-      setMessage(favorites.error.message);
-      return;
-    }
+    const favorites = await supabase.from("favorites").select("product_id").eq("user_id", session.user.id);
+    if (favorites.error) { setMessage(favorites.error.message); return; }
 
     const productIds = (favorites.data ?? []).map((item) => item.product_id);
-    if (!productIds.length) {
-      setProducts([]);
-      return;
-    }
+    if (!productIds.length) { setProducts([]); return; }
 
     const [catalog, offers] = await Promise.all([
-      supabase.from("products")
-        .select("id,external_id,name,brand,category,colors")
-        .in("id", productIds)
-        .eq("active", true),
-      supabase.from("product_offers")
-        .select("product_id,price,currency,in_stock")
-        .in("product_id", productIds)
-        .order("price", { ascending: true }),
+      supabase.from("products").select("id,external_id,name,brand,category,colors").in("id", productIds).eq("active", true),
+      supabase.from("product_offers").select("product_id,price,currency,in_stock").in("product_id", productIds).order("price", { ascending: true }),
     ]);
 
     const error = catalog.error ?? offers.error;
-    if (error) {
-      setMessage(error.message);
-      return;
-    }
+    if (error) { setMessage(error.message); return; }
 
     const firstOffer = new Map<string, { price: number; currency: string; in_stock: boolean | null }>();
     for (const offer of offers.data ?? []) {
-      if (!firstOffer.has(offer.product_id)) {
-        firstOffer.set(offer.product_id, offer);
-      }
+      if (!firstOffer.has(offer.product_id)) firstOffer.set(offer.product_id, offer);
     }
 
     setProducts((catalog.data ?? []).map((product) => {
       const offer = firstOffer.get(product.id);
-      return {
-        ...product,
-        price: offer?.price,
-        currency: offer?.currency,
-        inStock: offer?.in_stock,
-      };
+      return { ...product, price: offer?.price, currency: offer?.currency, inStock: offer?.in_stock };
     }));
   }, [router, session]);
 
@@ -86,11 +64,7 @@ export default function FavoritesScreen() {
   async function remove(product: SavedProduct) {
     if (!session) return;
     setBusyId(product.id);
-    const { error } = await supabase
-      .from("favorites")
-      .delete()
-      .eq("user_id", session.user.id)
-      .eq("product_id", product.id);
+    const { error } = await supabase.from("favorites").delete().eq("user_id", session.user.id).eq("product_id", product.id);
 
     if (error) setMessage(error.message);
     else {
@@ -100,52 +74,62 @@ export default function FavoritesScreen() {
     setBusyId(null);
   }
 
+  const localeTag = locale === "tr" ? "tr-TR" : "en-US";
+
   return (
     <SafeAreaView style={s.safe}>
       <ScrollView contentContainerStyle={s.page}>
-        <Pressable onPress={() => router.back()}><Text style={s.back}>← Geri</Text></Pressable>
-        <Text style={s.title}>Kaydettiklerim</Text>
-        <Text style={s.copy}>Beğendiğin ürünleri daha sonra karşılaştırmak için burada tut.</Text>
-        {!!message && <Text style={s.message}>{message}</Text>}
+        <Pressable onPress={() => router.back()} accessibilityRole="button"><Text style={s.back}>{t("back")}</Text></Pressable>
+        <Text style={s.title}>{t("favoritesTitleScreen")}</Text>
+        <Text style={s.copy}>{t("favoritesCopy")}</Text>
+        {!!message && <Text style={s.message} accessibilityLiveRegion="polite">{message}</Text>}
 
-        {products.map((product) => (
-          <View key={product.id} style={s.card}>
-            <Pressable
-              style={s.product}
-              onPress={() => router.push({ pathname: "/product/[id]", params: { id: product.external_id } })}
-            >
-              <View style={[s.swatch, { backgroundColor: product.colors[0] === "Siyah" ? "#222" : product.colors[0] === "Bordo" ? "#6E2D3A" : "#E7DFD0" }]} />
-              <View style={s.info}>
-                <Text style={s.brand}>{product.brand ?? "ASTRA STYLE"}</Text>
-                <Text style={s.name}>{product.name}</Text>
-                <Text style={s.meta}>{product.category} · {product.colors.join(", ")}</Text>
-                <Text style={s.price}>
-                  {product.price === undefined ? "Fiyat bilgisi yok" : `${product.price.toLocaleString("tr-TR")} ${product.currency}`}
-                </Text>
-              </View>
-            </Pressable>
-            <Pressable
-              onPress={() => { void remove(product); }}
-              disabled={busyId === product.id}
-              accessibilityRole="button"
-              accessibilityLabel={`${product.name} kayıtlardan kaldır`}
-            >
-              <Text style={s.remove}>{busyId === product.id ? "Kaldırılıyor…" : "Kayıtlardan kaldır"}</Text>
-            </Pressable>
-          </View>
-        ))}
+        {products.map((product) => {
+          const demo = mockProducts.find((item) => item.id === product.external_id);
+          const localized = demo ? localizeProduct(demo, locale) : null;
+          const name = localized?.name ?? product.name;
+          const category = localized?.category ?? product.category;
+          const colors = localized ? [localized.color] : product.colors;
+          return (
+            <View key={product.id} style={s.card}>
+              <Pressable
+                style={s.product}
+                onPress={() => router.push({ pathname: "/product/[id]", params: { id: product.external_id } })}
+                accessibilityRole="button"
+              >
+                <View style={[s.swatch, { backgroundColor: product.colors[0] === "Siyah" ? "#222" : product.colors[0] === "Bordo" ? "#6E2D3A" : "#E7DFD0" }]} />
+                <View style={s.info}>
+                  <Text style={s.brand}>{product.brand ?? "ASTRA STYLE"}</Text>
+                  <Text style={s.name}>{name}</Text>
+                  <Text style={s.meta}>{category} · {colors.join(", ")}</Text>
+                  <Text style={s.price}>
+                    {product.price === undefined ? t("noPrice") : `${product.price.toLocaleString(localeTag)} ${product.currency}`}
+                  </Text>
+                </View>
+              </Pressable>
+              <Pressable
+                onPress={() => { void remove(product); }}
+                disabled={busyId === product.id}
+                accessibilityRole="button"
+                accessibilityLabel={t("removeSavedLabel", { name })}
+              >
+                <Text style={s.remove}>{busyId === product.id ? t("removing") : t("removeSaved")}</Text>
+              </Pressable>
+            </View>
+          );
+        })}
 
         {!products.length && !message && (
           <View style={s.empty}>
-            <Text style={s.emptyTitle}>Henüz ürün kaydetmedin</Text>
-            <Text style={s.emptyCopy}>Ürün detayında “Kaydet” düğmesine dokunarak listeni oluşturabilirsin.</Text>
-            <Pressable style={s.button} onPress={() => router.push("/products")}>
-              <Text style={s.buttonText}>Ürünleri keşfet →</Text>
+            <Text style={s.emptyTitle}>{t("favoritesEmptyTitle")}</Text>
+            <Text style={s.emptyCopy}>{t("favoritesEmptyCopy")}</Text>
+            <Pressable style={s.button} onPress={() => router.push("/products")} accessibilityRole="button">
+              <Text style={s.buttonText}>{t("discoverProducts")}</Text>
             </Pressable>
           </View>
         )}
 
-        <Text style={s.notice}>Şu an demo katalog kullanılıyor. Gerçek ürünler yalnızca resmî API veya affiliate feed ile eklenecek.</Text>
+        <Text style={s.notice}>{t("favoritesNotice")}</Text>
       </ScrollView>
     </SafeAreaView>
   );
