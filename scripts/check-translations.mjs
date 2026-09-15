@@ -12,9 +12,13 @@ function objectKeys(variableName) {
     if (!ts.isVariableStatement(statement)) continue;
     for (const declaration of statement.declarationList.declarations) {
       if (!ts.isIdentifier(declaration.name) || declaration.name.text !== variableName) continue;
-      const initializer = declaration.initializer && ts.isSatisfiesExpression(declaration.initializer)
-        ? declaration.initializer.expression
-        : declaration.initializer;
+      let initializer = declaration.initializer;
+      while (
+        initializer
+        && (ts.isSatisfiesExpression(initializer) || ts.isAsExpression(initializer) || ts.isParenthesizedExpression(initializer))
+      ) {
+        initializer = initializer.expression;
+      }
       if (!initializer || !ts.isObjectLiteralExpression(initializer)) throw new Error(`${variableName} is not an object literal`);
       return new Set(initializer.properties
         .filter(ts.isPropertyAssignment)
