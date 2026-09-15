@@ -21,6 +21,11 @@ export default function OutfitScreen(){
       if(error){setMessage(error.message);setBusy(false);return;}
       ids=(data??[]).map(x=>x.id);
     }
+    if(isSupabaseConfigured&&session){
+      const response=await supabase.functions.invoke("outfit",{body:{occasion,budget:Number(budget)||0}});
+      if(response.error){setMessage(response.error.message);setBusy(false);return;}
+      setResult(response.data.suggestion);setBusy(false);return;
+    }
     const suggestions=await mockAiProvider.createOutfits({locale:"tr",occasion,budget:Number(budget)||undefined,currency:"TRY",wardrobeItemIds:ids});
     setResult(suggestions[0]); setBusy(false);
   }
