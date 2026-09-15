@@ -10,8 +10,9 @@ const url =
 const publishableKey =
   process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
   "sb_publishable_9pSN28HNM__cPGgCFd5Q9g_YF2pnOw7";
+const forceDemoMode = process.env.EXPO_PUBLIC_DEMO_MODE === "true";
 
-export const isSupabaseConfigured = Boolean(url && publishableKey);
+export const isSupabaseConfigured = !forceDemoMode && Boolean(url && publishableKey);
 
 export const supabase = createClient<Database>(url, publishableKey, {
   auth: {
