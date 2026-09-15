@@ -9,12 +9,10 @@ async function removeUserFiles(
   userId: string,
 ) {
   const pageSize = 1000;
-  let offset = 0;
-
   while (true) {
     const { data, error } = await admin.storage.from(bucket).list(userId, {
       limit: pageSize,
-      offset,
+      offset: 0,
       sortBy: { column: "name", order: "asc" },
     });
     if (error) throw error;
@@ -29,7 +27,6 @@ async function removeUserFiles(
     }
 
     if ((data ?? []).length < pageSize) break;
-    offset += pageSize;
   }
 }
 
