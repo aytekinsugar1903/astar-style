@@ -11,9 +11,15 @@ type Metrics = {
   affiliateClicks: number;
   aiCostUsd: number;
   failedAiCalls: number;
+  aiCalls24h: number;
+  aiCost24hUsd: number;
+  limited24h: number;
 };
 
-const demo: Metrics = { users: 0, products: 4, tryOnCount: 0, affiliateClicks: 0, aiCostUsd: 0, failedAiCalls: 0 };
+const demo: Metrics = {
+  users: 0, products: 4, tryOnCount: 0, affiliateClicks: 0, aiCostUsd: 0,
+  failedAiCalls: 0, aiCalls24h: 0, aiCost24hUsd: 0, limited24h: 0,
+};
 
 export default function AdminScreen() {
   const router = useRouter();
@@ -25,7 +31,7 @@ export default function AdminScreen() {
     if (!isSupabaseConfigured) return;
     supabase.functions.invoke("admin-dashboard").then(({ data, error }) => {
       if (error) setMessage(t("adminOnly"));
-      else setMetrics(data);
+      else setMetrics({ ...demo, ...data });
     });
   }, [t]);
 
@@ -36,6 +42,9 @@ export default function AdminScreen() {
     [t("adminAffiliateClick"), metrics.affiliateClicks],
     [t("adminAiCost"), `$${metrics.aiCostUsd.toFixed(4)}`],
     [t("adminFailedAi"), metrics.failedAiCalls],
+    [t("adminAiCalls24h"), metrics.aiCalls24h],
+    [t("adminAiCost24h"), `$${metrics.aiCost24hUsd.toFixed(4)}`],
+    [t("adminLimited24h"), metrics.limited24h],
   ];
 
   return (
