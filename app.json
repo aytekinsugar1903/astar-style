@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "ASTRA STYLE",
+    "slug": "astra-style",
+    "scheme": "astrastyle",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "plugins": ["expo-router"],
+    "experiments": { "typedRoutes": true },
+    "ios": { "supportsTablet": true, "bundleIdentifier": "com.astrastyle.app" },
+    "android": { "package": "com.astrastyle.app" },
+    "web": { "bundler": "metro", "output": "static" }
+  }
+}
