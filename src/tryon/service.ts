@@ -10,5 +10,8 @@ export async function queueTryOn(input:{userId:string;personImagePath:string;gar
     estimated_cost_usd:0,
   }).select("id,status").single();
   if(error) throw error;
-  return data;
+
+  const processed=await supabase.functions.invoke("try-on",{body:{jobId:data.id}});
+  if(processed.error) return data;
+  return processed.data as {id:string;status:string};
 }
