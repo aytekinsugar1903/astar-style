@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Alert, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useAuth } from "@/auth/AuthProvider";
+import { useI18n } from "@/i18n/I18nProvider";
+import { isLocale, Locale } from "@/i18n/translations";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { session, signOut } = useAuth();
+  const { locale, setLocale, t } = useI18n();
   const [displayName, setDisplayName] = useState("");
   const [styleTags, setStyleTags] = useState<string[]>([]);
   const [preferredColors, setPreferredColors] = useState<string[]>([]);
@@ -14,6 +17,10 @@ export default function ProfileScreen() {
   const [busy, setBusy] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deletePhrase, setDeletePhrase] = useState("");
+
+  const requiredDeletePhrase = locale === "tr" ? "SİL" : "DELETE";
+  const localeTag = locale === "tr" ? "tr-TR" : "en-US";
+  const deletionConfirmed = deletePhrase.trim().toLocaleUpperCase(localeTag) === requiredDeletePhrase;
 
   useEffect(() => {
     if (!isSupabaseConfigured) return;
@@ -23,10 +30,11 @@ export default function ProfileScreen() {
     }
 
     void Promise.all([
-      supabase.from("profiles").select("display_name").eq("id", session.user.id).maybeSingle(),
+      supabase.from("profiles").select("display_name,locale").eq("id", session.user.id).maybeSingle(),
       supabase.from("style_profiles").select("style_tags,preferred_colors").eq("user_id", session.user.id).maybeSingle(),
     ]).then(([profile, style]) => {
       if (profile.data?.display_name) setDisplayName(profile.data.display_name);
+      if (isLocale(profile.data?.locale)) void setLocale(profile.data.locale);
       if (style.data) {
         setStyleTags(style.data.style_tags);
         setPreferredColors(style.data.preferred_colors);
@@ -34,7 +42,7 @@ export default function ProfileScreen() {
       const error = profile.error ?? style.error;
       if (error) setMessage(error.message);
     });
-  }, [router, session]);
+  }, [router, session, setLocale]);
 
   async function save() {
     if (!session) return;
@@ -44,11 +52,19 @@ export default function ProfileScreen() {
     const { error } = await supabase.from("profiles").upsert({
       id: session.user.id,
       display_name: displayName.trim() || null,
-      locale: "tr",
+      locale,
     });
 
     setBusy(false);
-    setMessage(error ? error.message : "Profilin kaydedildi.");
+    setMessage(error ? error.message : t("profileSaved"));
+  }
+
+  async function chooseLanguage(nextLocale: Locale) {
+    await setLocale(nextLocale);
+    setDeletePhrase("");
+    if (!session || !isSupabaseConfigured) return;
+    const { error } = await supabase.from("profiles").upsert({ id: session.user.id, locale: nextLocale });
+    setMessage(error ? error.message : t("languageSaved"));
   }
 
   async function leave() {
@@ -58,7 +74,7 @@ export default function ProfileScreen() {
   }
 
   async function deleteAccount() {
-    if (!session || deletePhrase.trim().toLocaleUpperCase("tr-TR") !== "SİL") return;
+    if (!session || !deletionConfirmed) return;
     setBusy(true);
     setMessage("");
 
@@ -68,7 +84,7 @@ export default function ProfileScreen() {
 
     if (error || !data?.deleted) {
       setBusy(false);
-      setMessage(error?.message ?? data?.error ?? "Hesap silinemedi.");
+      setMessage(error?.message ?? data?.error ?? t("deleteFailed"));
       return;
     }
 
@@ -77,17 +93,17 @@ export default function ProfileScreen() {
   }
 
   function confirmDelete() {
-    if (deletePhrase.trim().toLocaleUpperCase("tr-TR") !== "SİL") {
-      setMessage("Devam etmek için kutuya SİL yaz.");
+    if (!deletionConfirmed) {
+      setMessage(t("deletePhraseError", { phrase: requiredDeletePhrase }));
       return;
     }
 
     Alert.alert(
-      "Hesap kalıcı olarak silinsin mi?",
-      "Fotoğrafların, gardırobun, stil profilin ve kayıtların geri alınamayacak şekilde silinecek.",
+      t("deleteAlertTitle"),
+      t("deleteAlertCopy"),
       [
-        { text: "Vazgeç", style: "cancel" },
-        { text: "Kalıcı olarak sil", style: "destructive", onPress: () => { void deleteAccount(); } },
+        { text: t("cancel"), style: "cancel" },
+        { text: t("deleteAlertAction"), style: "destructive", onPress: () => { void deleteAccount(); } },
       ],
     );
   }
@@ -96,80 +112,99 @@ export default function ProfileScreen() {
     <SafeAreaView style={s.safe}>
       <ScrollView contentContainerStyle={s.page}>
         <Pressable onPress={() => router.back()} accessibilityRole="button">
-          <Text style={s.back}>← Ana sayfa</Text>
+          <Text style={s.back}>{t("backHome")}</Text>
         </Pressable>
 
-        <Text style={s.kicker}>HESABIM</Text>
-        <Text style={s.title}>Profilim</Text>
-        <Text style={s.copy}>Stil profilin ve özel gardırobun yalnızca hesabına bağlıdır.</Text>
+        <Text style={s.kicker}>{t("accountKicker")}</Text>
+        <Text style={s.title}>{t("profileTitle")}</Text>
+        <Text style={s.copy}>{t("profileCopy")}</Text>
 
         <View style={s.panel}>
-          <Text style={s.label}>Görünen ad</Text>
+          <Text style={s.label}>{t("displayName")}</Text>
           <TextInput
             style={s.input}
             value={displayName}
             onChangeText={setDisplayName}
-            placeholder="Adın"
+            placeholder={t("namePlaceholder")}
             autoCapitalize="words"
-            accessibilityLabel="Görünen ad"
+            accessibilityLabel={t("displayName")}
           />
-          <Text style={s.email}>{session?.user.email ?? "Demo kullanıcı"}</Text>
+          <Text style={s.email}>{session?.user.email ?? t("demoUser")}</Text>
           <Pressable style={[s.primary, busy && s.disabled]} onPress={save} disabled={busy || !session} accessibilityRole="button">
-            <Text style={s.primaryText}>{busy ? "Kaydediliyor…" : "Profili kaydet"}</Text>
+            <Text style={s.primaryText}>{busy ? t("saving") : t("saveProfile")}</Text>
           </Pressable>
         </View>
 
         <View style={s.panel}>
-          <Text style={s.sectionTitle}>Stil özeti</Text>
-          <Text style={s.summaryLabel}>Tarzlar</Text>
-          <Text style={s.summary}>{styleTags.length ? styleTags.join(" · ") : "Henüz seçilmedi"}</Text>
-          <Text style={s.summaryLabel}>Renkler</Text>
-          <Text style={s.summary}>{preferredColors.length ? preferredColors.join(" · ") : "Henüz seçilmedi"}</Text>
+          <Text style={s.sectionTitle}>{t("language")}</Text>
+          <View style={s.languageRow}>
+            {(["tr", "en"] as const).map((option) => (
+              <Pressable
+                key={option}
+                style={[s.languageButton, locale === option && s.languageButtonActive]}
+                onPress={() => { void chooseLanguage(option); }}
+                accessibilityRole="button"
+                accessibilityState={{ selected: locale === option }}
+              >
+                <Text style={[s.languageText, locale === option && s.languageTextActive]}>
+                  {option === "tr" ? t("turkish") : t("english")}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+
+        <View style={s.panel}>
+          <Text style={s.sectionTitle}>{t("styleSummary")}</Text>
+          <Text style={s.summaryLabel}>{t("styles")}</Text>
+          <Text style={s.summary}>{styleTags.length ? styleTags.join(" · ") : t("notSelected")}</Text>
+          <Text style={s.summaryLabel}>{t("colors")}</Text>
+          <Text style={s.summary}>{preferredColors.length ? preferredColors.join(" · ") : t("notSelected")}</Text>
           <Pressable style={s.secondary} onPress={() => router.push("/onboarding")} accessibilityRole="button">
-            <Text style={s.secondaryText}>Stil tercihlerimi düzenle →</Text>
+            <Text style={s.secondaryText}>{t("editStyle")}</Text>
           </Pressable>
         </View>
 
         <View style={s.privacy}>
-          <Text style={s.privacyTitle}>Gizlilik</Text>
-          <Text style={s.privacyText}>Fotoğrafların özel depolama alanında tutulur ve izinsiz paylaşılmaz. Gardıroptan sildiğin fotoğraf depolamadan da kaldırılır.</Text>
+          <Text style={s.privacyTitle}>{t("privacyTitle")}</Text>
+          <Text style={s.privacyText}>{t("privacyCopy")}</Text>
         </View>
 
         {!!message && <Text style={s.message} accessibilityLiveRegion="polite">{message}</Text>}
 
         <Pressable style={s.signOut} onPress={leave} disabled={busy} accessibilityRole="button">
-          <Text style={s.signOutText}>Çıkış yap</Text>
+          <Text style={s.signOutText}>{t("signOut")}</Text>
         </Pressable>
 
         <View style={s.danger}>
-          <Text style={s.dangerTitle}>Hesabı ve verileri sil</Text>
-          <Text style={s.dangerCopy}>Bu işlem fotoğraflarını, gardırobunu, kombinlerini ve profilini kalıcı olarak kaldırır.</Text>
+          <Text style={s.dangerTitle}>{t("deleteTitle")}</Text>
+          <Text style={s.dangerCopy}>{t("deleteCopy")}</Text>
           {!deleteOpen ? (
             <Pressable style={s.dangerOutline} onPress={() => setDeleteOpen(true)} disabled={busy} accessibilityRole="button">
-              <Text style={s.dangerOutlineText}>Hesabımı silmek istiyorum</Text>
+              <Text style={s.dangerOutlineText}>{t("deleteStart")}</Text>
             </Pressable>
           ) : (
             <View>
-              <Text style={s.deleteInstruction}>Onaylamak için aşağıya SİL yaz.</Text>
+              <Text style={s.deleteInstruction}>{t("deleteInstruction", { phrase: requiredDeletePhrase })}</Text>
               <TextInput
                 style={s.deleteInput}
                 value={deletePhrase}
                 onChangeText={setDeletePhrase}
-                placeholder="SİL"
+                placeholder={requiredDeletePhrase}
                 autoCapitalize="characters"
                 autoCorrect={false}
-                accessibilityLabel="Hesap silme doğrulaması"
+                accessibilityLabel={t("deleteAccessibility")}
               />
               <Pressable
-                style={[s.deleteButton, (busy || deletePhrase.trim().toLocaleUpperCase("tr-TR") !== "SİL") && s.disabled]}
+                style={[s.deleteButton, (busy || !deletionConfirmed) && s.disabled]}
                 onPress={confirmDelete}
-                disabled={busy || deletePhrase.trim().toLocaleUpperCase("tr-TR") !== "SİL"}
+                disabled={busy || !deletionConfirmed}
                 accessibilityRole="button"
               >
-                <Text style={s.deleteButtonText}>{busy ? "İşleniyor…" : "Hesabımı kalıcı olarak sil"}</Text>
+                <Text style={s.deleteButtonText}>{busy ? t("processing") : t("deletePermanent")}</Text>
               </Pressable>
-              <Pressable onPress={() => { setDeleteOpen(false); setDeletePhrase(""); }} disabled={busy}>
-                <Text style={s.cancelDelete}>Vazgeç</Text>
+              <Pressable onPress={() => { setDeleteOpen(false); setDeletePhrase(""); }} disabled={busy} accessibilityRole="button">
+                <Text style={s.cancelDelete}>{t("cancel")}</Text>
               </Pressable>
             </View>
           )}
@@ -194,6 +229,11 @@ const s = StyleSheet.create({
   primaryText: { color: "#FFF", fontWeight: "800" },
   disabled: { opacity: 0.45 },
   sectionTitle: { fontSize: 20, fontWeight: "700", color: "#171713", marginBottom: 14 },
+  languageRow: { flexDirection: "row", gap: 10 },
+  languageButton: { flex: 1, borderWidth: 1, borderColor: "#D8D0C3", borderRadius: 999, padding: 13, alignItems: "center" },
+  languageButtonActive: { backgroundColor: "#171713", borderColor: "#171713" },
+  languageText: { color: "#6E2D3A", fontWeight: "800" },
+  languageTextActive: { color: "#FFF" },
   summaryLabel: { color: "#817A72", fontSize: 11, fontWeight: "800", letterSpacing: 1, marginTop: 10 },
   summary: { color: "#2B2925", lineHeight: 21, marginTop: 5 },
   secondary: { borderWidth: 1, borderColor: "#D8D0C3", borderRadius: 999, padding: 14, alignItems: "center", marginTop: 20 },
