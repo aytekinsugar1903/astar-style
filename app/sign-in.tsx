@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { useI18n } from "@/i18n/I18nProvider";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
 export default function SignInScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,7 +17,7 @@ export default function SignInScreen() {
     setMessage("");
     if (!isSupabaseConfigured) { router.replace("/"); return; }
     if (!email.includes("@") || password.length < 8) {
-      setMessage("Geçerli bir e-posta ve en az 8 karakterli şifre gir.");
+      setMessage(t("authInvalid"));
       return;
     }
     setBusy(true);
@@ -25,23 +27,40 @@ export default function SignInScreen() {
     setBusy(false);
     if (result.error) { setMessage(result.error.message); return; }
     if (result.data.session) router.replace(mode === "sign-up" ? "/onboarding" : "/");
-    else setMessage("Hesabını doğrulamak için e-postandaki bağlantıya dokun.");
+    else setMessage(t("authVerify"));
   }
 
   return (
     <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <View style={styles.panel}>
         <Text style={styles.brand}>ASTRA STYLE</Text>
-        <Text style={styles.title}>{mode === "sign-in" ? "Tekrar hoş geldin." : "Stil alanını oluştur."}</Text>
-        <Text style={styles.copy}>Gardırobun, kombinlerin ve stil profilin yalnızca sana özel.</Text>
-        <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="E-posta" autoCapitalize="none" keyboardType="email-address" />
-        <TextInput style={styles.input} value={password} onChangeText={setPassword} placeholder="Şifre · en az 8 karakter" secureTextEntry />
-        {!!message && <Text style={styles.message}>{message}</Text>}
-        <Pressable style={[styles.button, busy && styles.disabled]} onPress={submit} disabled={busy}>
-          <Text style={styles.buttonText}>{busy ? "Bekle…" : mode === "sign-in" ? "Giriş yap" : "Hesap oluştur"}</Text>
+        <Text style={styles.title}>{mode === "sign-in" ? t("authWelcome") : t("authCreateTitle")}</Text>
+        <Text style={styles.copy}>{t("authCopy")}</Text>
+        <TextInput
+          style={styles.input}
+          value={email}
+          onChangeText={setEmail}
+          placeholder={t("email")}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          autoComplete="email"
+          accessibilityLabel={t("email")}
+        />
+        <TextInput
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          placeholder={t("password")}
+          secureTextEntry
+          autoComplete={mode === "sign-in" ? "current-password" : "new-password"}
+          accessibilityLabel={t("password")}
+        />
+        {!!message && <Text style={styles.message} accessibilityLiveRegion="polite">{message}</Text>}
+        <Pressable style={[styles.button, busy && styles.disabled]} onPress={submit} disabled={busy} accessibilityRole="button">
+          <Text style={styles.buttonText}>{busy ? t("wait") : mode === "sign-in" ? t("signIn") : t("createAccount")}</Text>
         </Pressable>
-        <Pressable onPress={() => setMode(mode === "sign-in" ? "sign-up" : "sign-in")}>
-          <Text style={styles.switch}>{mode === "sign-in" ? "Yeni misin? Hesap oluştur" : "Zaten hesabın var mı? Giriş yap"}</Text>
+        <Pressable onPress={() => setMode(mode === "sign-in" ? "sign-up" : "sign-in")} accessibilityRole="button">
+          <Text style={styles.switch}>{mode === "sign-in" ? t("authSwitchCreate") : t("authSwitchSignIn")}</Text>
         </Pressable>
       </View>
     </KeyboardAvoidingView>
