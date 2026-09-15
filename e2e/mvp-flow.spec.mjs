@@ -28,9 +28,15 @@ test("wardrobe and outfit demo flows work", async ({ page }) => {
   await expect(page.getByText("3 parça", { exact: true })).toBeVisible();
 
   await page.goto("/outfit");
+  await page.getByText("Parti", { exact: true }).click();
+  await expect(page.getByLabel("Etkinlik")).toHaveValue("Parti");
   await page.getByText("Kombinleri hazırla", { exact: false }).click();
   await expect(page.getByText("SANA ÖZEL ÖNERİ", { exact: true })).toBeVisible();
+  await expect(page.getByText("Parti için dengeli görünüm", { exact: true })).toBeVisible();
   await expect(page.getByText("3 gardırop parçası kullanıldı", { exact: true })).toBeVisible();
+  await page.getByText("Kombin geçmişimi gör", { exact: false }).click();
+  await expect(page).toHaveURL(/\\/outfits/);
+  await expect(page.getByText("Henüz kaydedilmiş kombinin yok.", { exact: true })).toBeVisible();
 });
 
 test("product filtering reaches product detail", async ({ page }) => {
