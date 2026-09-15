@@ -19,14 +19,24 @@
 
 ## Next
 
-- [ ] Connect a dedicated Supabase project and apply migrations
+- [x] Connect dedicated ASTRA STYLE Supabase project and apply migrations
 - [x] Add AI garment classification Edge Function (mock provider)
 - [x] Add server-only outfit generation (mock provider)
 - [ ] Add FASHN adapter behind an explicit cost switch
 - [ ] Add official affiliate feed adapter
-- [ ] Add admin dashboard
-- [ ] Add translations and accessibility pass
+- [x] Add admin dashboard
+- [ ] Complete translations and accessibility pass
 - [ ] Add automated end-to-end tests and store builds
+
+## Live backend
+
+- Supabase project: `ASTRA STYLE` (`dxnfjwtlysfbasverfiw`)
+- Region: Frankfurt / `eu-central-1`
+- Cost: Free plan, 0 USD/month at creation
+- Security: RLS enabled on all public tables; private image buckets
+- Edge Functions: classify-garment, outfit, try-on, admin-dashboard
+- AI and try-on providers: mock only, 0 USD usage
+- Validation: Supabase security advisor clean; GitHub CI passing
 
 ## External actions requiring owner approval
 
