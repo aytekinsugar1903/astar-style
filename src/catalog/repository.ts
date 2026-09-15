@@ -49,17 +49,38 @@ function score(base: number, colors: string[], tags: string[], preferences: Styl
 
 export async function loadStylePreferences(userId?: string): Promise<StylePreferences> {
   if (!userId) return emptyPreferences;
-  const { data, error } = await supabase
-    .from("style_profiles")
-    .select("preferred_colors,avoided_colors,style_tags")
-    .eq("user_id", userId)
-    .maybeSingle();
-  if (error) throw error;
-  return data ? {
-    preferredColors: data.preferred_colors,
-    avoidedColors: data.avoided_colors,
-    styleTags: data.style_tags,
-  } : emptyPreferences;
+  const [profile, favorites] = await Promise.all([
+    supabase.from("style_profiles")
+      .select("preferred_colors,avoided_colors,style_tags")
+      .eq("user_id", userId)
+      .maybeSingle(),
+    supabase.from("favorites")
+      .select("product_id")
+      .eq("user_id", userId)
+      .limit(100),
+  ]);
+  const firstError = profile.error ?? favorites.error;
+  if (firstError) throw firstError;
+
+  const productIds = (favorites.data ?? []).map((item) => item.product_id);
+  let savedColors: string[] = [];
+  let savedTags: string[] = [];
+  if (productIds.length) {
+    const savedProducts = await supabase.from("products")
+      .select("colors,metadata")
+      .in("id", productIds)
+      .eq("active", true);
+    if (savedProducts.error) throw savedProducts.error;
+    savedColors = (savedProducts.data ?? []).flatMap((product) => product.colors);
+    savedTags = (savedProducts.data ?? []).flatMap((product) => metadataTags(product.metadata));
+  }
+
+  const data = profile.data;
+  return {
+    preferredColors: [...new Set([...(data?.preferred_colors ?? []), ...savedColors])],
+    avoidedColors: data?.avoided_colors ?? [],
+    styleTags: [...new Set([...(data?.style_tags ?? []), ...savedTags])],
+  };
 }
 
 export async function loadCatalog(preferences: StylePreferences = emptyPreferences): Promise<CatalogProduct[]> {
