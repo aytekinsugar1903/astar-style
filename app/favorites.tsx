@@ -138,7 +138,7 @@ export default function FavoritesScreen() {
         {!products.length && !message && (
           <View style={s.empty}>
             <Text style={s.emptyTitle}>Henüz ürün kaydetmedin</Text>
-            <Text style={s.emptyCopy}>Ürün detayında “Kaydet” düğmesine dokunarak listenı oluşturabilirsin.</Text>
+            <Text style={s.emptyCopy}>Ürün detayında “Kaydet” düğmesine dokunarak listeni oluşturabilirsin.</Text>
             <Pressable style={s.button} onPress={() => router.push("/products")}>
               <Text style={s.buttonText}>Ürünleri keşfet →</Text>
             </Pressable>
