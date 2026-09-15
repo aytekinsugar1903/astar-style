@@ -19,6 +19,7 @@ jobs:
           node-version: 22
       - run: npm install --no-audit --no-fund
       - run: npm run typecheck
+      - run: npm run test:i18n
       - run: npm run doctor
       - name: Export web bundle
         run: npx expo export --platform web
