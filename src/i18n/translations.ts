@@ -184,6 +184,18 @@ const tr = {
   deleteGarmentAlert: "Kıyafeti sil",
   deleteGarmentAlertCopy: "Bu kıyafet ve fotoğrafı kalıcı olarak silinecek.",
   deleteAction: "Sil",
+  demoDressName: "Siyah gece elbisesi",
+  demoBlazerName: "Krem blazer",
+  categoryDress: "Elbise",
+  categoryPants: "Pantolon",
+  categorySkirt: "Etek",
+  categoryShirt: "Gömlek",
+  categoryTshirt: "Tişört",
+  categoryJacket: "Ceket",
+  categoryShoes: "Ayakkabı",
+  categoryBag: "Çanta",
+  categoryAccessory: "Aksesuar",
+  categoryOther: "Diğer",
 } as const;
 
 export type TranslationKey = keyof typeof tr;
@@ -373,6 +385,18 @@ const en = {
   deleteGarmentAlert: "Delete item",
   deleteGarmentAlertCopy: "This item and its photo will be permanently deleted.",
   deleteAction: "Delete",
+  demoDressName: "Black evening dress",
+  demoBlazerName: "Cream blazer",
+  categoryDress: "Dress",
+  categoryPants: "Pants",
+  categorySkirt: "Skirt",
+  categoryShirt: "Shirt",
+  categoryTshirt: "T-shirt",
+  categoryJacket: "Jacket",
+  categoryShoes: "Shoes",
+  categoryBag: "Bag",
+  categoryAccessory: "Accessory",
+  categoryOther: "Other",
 } satisfies Dictionary;
 
 export const translations: Record<Locale, Dictionary> = { tr, en };
