@@ -20,8 +20,8 @@
 ## Next
 
 - [ ] Connect a dedicated Supabase project and apply migrations
-- [ ] Add AI garment classification Edge Function
-- [ ] Add server-only outfit generation
+- [x] Add AI garment classification Edge Function (mock provider)
+- [x] Add server-only outfit generation (mock provider)
 - [ ] Add FASHN adapter behind an explicit cost switch
 - [ ] Add official affiliate feed adapter
 - [ ] Add admin dashboard
