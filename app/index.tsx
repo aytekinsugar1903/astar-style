@@ -27,7 +27,7 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.page}>
         <View style={styles.brandRow}>
           <Text style={styles.brand}>ASTRA STYLE</Text>
-          <Pressable style={styles.avatar} onPress={() => router.push("/onboarding")}><Text style={styles.avatarText}>A</Text></Pressable>
+          <Pressable style={styles.avatar} onPress={() => router.push("/profile")}><Text style={styles.avatarText}>A</Text></Pressable>
         </View>
         {!isSupabaseConfigured && <Text style={styles.demo}>DEMO MODU · Supabase bağlandığında gerçek veriler açılır</Text>}
         <View style={styles.hero}>
