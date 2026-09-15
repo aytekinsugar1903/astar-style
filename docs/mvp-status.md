@@ -7,7 +7,7 @@
 - [x] Supabase client and persistent auth session
 - [x] Sign up / sign in UI
 - [x] User profile, editable style summary and sign-out flow
-- [x] Persistent Turkish/English foundation with profile language preference
+- [x] Persistent Turkish/English experience across all MVP and admin screens
 - [x] Double-confirmed account deletion with private-file cleanup and session revocation
 - [x] Style profile onboarding and consent
 - [x] Wardrobe list, phone gallery upload, private image preview and permanent deletion
@@ -18,7 +18,7 @@
 - [x] Personal full-body photo record
 - [x] Virtual try-on job queue with locked client permissions
 - [x] AI provider and try-on provider interfaces
-- [x] CI with typecheck, Expo Doctor, and web export smoke test
+- [x] CI with typecheck, translation integrity, Expo Doctor, and web export smoke test
 
 ## Next
 
@@ -29,7 +29,7 @@
 - [ ] Add official affiliate feed adapter
 - [x] Add admin dashboard
 - [x] Add zero-cost demo catalog records for end-to-end product flow
-- [ ] Translate remaining feature screens and complete accessibility pass
+- [x] Translate MVP feature screens and add core accessibility roles/labels
 - [ ] Add automated end-to-end tests and store builds
 
 ## Live backend
@@ -38,7 +38,7 @@
 - Region: Frankfurt / `eu-central-1`
 - Cost: Free plan, 0 USD/month at creation
 - Security: RLS enabled on all public tables; private image buckets
-- Edge Functions: classify-garment, outfit, try-on, admin-dashboard, delete-account
+- Edge Functions: classify-garment, outfit v2 (TR/EN), try-on, admin-dashboard, delete-account
 - AI and try-on providers: mock only, 0 USD usage
 - Validation: Supabase security advisor clean; GitHub CI checks type safety, Expo health, and web export
 
