@@ -21,6 +21,7 @@
 - [x] CI with typecheck, translation integrity, Expo Doctor, web export, and six mobile browser flows
 - [x] Per-user AI quotas, daily estimated-cost guards, and localized function errors
 - [x] Privacy-minimized authenticated client error events
+- [x] DAU, MAU, 7-day return rate, session duration, screen and product engagement analytics
 - [x] EAS preview/production build profiles (credentials not connected)
 
 ## Next
@@ -42,7 +43,7 @@
 - Region: Frankfurt / `eu-central-1`
 - Cost: Free plan, 0 USD/month at creation
 - Security: RLS enabled on all public tables; private image buckets
-- Edge Functions: classify-garment v2, outfit v3 (TR/EN), try-on v2, admin-dashboard v2, delete-account v2
+- Edge Functions: classify-garment v2, outfit v3 (TR/EN), try-on v2, admin-dashboard v3, delete-account v2
 - AI and try-on providers: mock only, 0 USD usage
 - Validation: Supabase security advisor clean; GitHub CI checks type safety, translations, Expo health, web export, and mobile MVP journeys
 

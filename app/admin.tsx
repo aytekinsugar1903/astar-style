@@ -14,11 +14,21 @@ type Metrics = {
   aiCalls24h: number;
   aiCost24hUsd: number;
   limited24h: number;
+  dau: number;
+  mau: number;
+  retention7dPct: number;
+  avgSessionSeconds30d: number;
+  screenViews30d: number;
+  productClicks30d: number;
+  productSaves30d: number;
+  clientErrors24h: number;
 };
 
 const demo: Metrics = {
   users: 0, products: 4, tryOnCount: 0, affiliateClicks: 0, aiCostUsd: 0,
   failedAiCalls: 0, aiCalls24h: 0, aiCost24hUsd: 0, limited24h: 0,
+  dau: 0, mau: 0, retention7dPct: 0, avgSessionSeconds30d: 0,
+  screenViews30d: 0, productClicks30d: 0, productSaves30d: 0, clientErrors24h: 0,
 };
 
 export default function AdminScreen() {
@@ -36,6 +46,14 @@ export default function AdminScreen() {
   }, [t]);
 
   const cards = [
+    [t("adminDau"), metrics.dau],
+    [t("adminMau"), metrics.mau],
+    [t("adminRetention"), `%${metrics.retention7dPct.toFixed(1)}`],
+    [t("adminSession"), t("adminSeconds", { count: Math.round(metrics.avgSessionSeconds30d) })],
+    [t("adminScreenViews"), metrics.screenViews30d],
+    [t("adminProductClicks30d"), metrics.productClicks30d],
+    [t("adminProductSaves30d"), metrics.productSaves30d],
+    [t("adminClientErrors24h"), metrics.clientErrors24h],
     [t("adminUser"), metrics.users],
     [t("adminProduct"), metrics.products],
     [t("adminTryOn"), metrics.tryOnCount],

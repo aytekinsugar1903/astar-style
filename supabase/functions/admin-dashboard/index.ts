@@ -10,16 +10,20 @@ Deno.serve(async (req) => {
     if (auth.user.app_metadata?.role !== "admin") return json({ error: "FORBIDDEN" }, 403);
 
     const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const [profiles, products, tryOns, clicks, usage, usage24h] = await Promise.all([
+    const [profiles, products, tryOns, clicks, usage, usage24h, analytics] = await Promise.all([
       admin.from("profiles").select("*", { count: "exact", head: true }),
       admin.from("products").select("*", { count: "exact", head: true }),
       admin.from("try_on_jobs").select("*", { count: "exact", head: true }),
       admin.from("affiliate_clicks").select("*", { count: "exact", head: true }),
       admin.from("ai_usage_events").select("estimated_cost_usd,success,operation"),
       admin.from("ai_usage_events").select("estimated_cost_usd,success,operation").gte("created_at", since24h),
+      admin.rpc("admin_analytics_snapshot"),
     ]);
+    if (analytics.error) throw analytics.error;
+
     const events = usage.data ?? [];
     const recentEvents = usage24h.data ?? [];
+    const productAnalytics = analytics.data ?? {};
 
     return json({
       users: profiles.count ?? 0,
@@ -31,8 +35,10 @@ Deno.serve(async (req) => {
       aiCalls24h: recentEvents.filter((row) => row.success).length,
       aiCost24hUsd: recentEvents.reduce((total, row) => total + Number(row.estimated_cost_usd), 0),
       limited24h: recentEvents.filter((row) => row.operation.endsWith("_limited")).length,
+      ...productAnalytics,
     });
   } catch (error) {
-    return json({ error: error instanceof Error ? error.message : "UNKNOWN_ERROR" }, 400);
+    console.error("admin-dashboard", error);
+    return json({ error: "INTERNAL_ERROR" }, 500);
   }
 });
