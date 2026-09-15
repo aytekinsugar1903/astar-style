@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { isLocale, Locale, TranslationKey, translations } from "./translations";
+import { isLocale, translations } from "./translations";
+import type { Locale, TranslationKey } from "./translations";
 
 const STORAGE_KEY = "@astra-style/locale";
 
@@ -33,7 +34,7 @@ export function I18nProvider({ children }: PropsWithChildren) {
   const t = useCallback((key: TranslationKey, params?: Params) => {
     const template = translations[locale][key];
     if (!params) return template;
-    return template.replace(/{{(\\w+)}}/g, (_, name: string) => String(params[name] ?? ""));
+    return template.replace(/{{(\w+)}}/g, (_, name: string) => String(params[name] ?? ""));
   }, [locale]);
 
   const value = useMemo(() => ({ locale, setLocale, t }), [locale, setLocale, t]);
