@@ -9,7 +9,8 @@ const actions = [
   ["Bana kombin yap", "AI stilistinle hazırlan", "02", "/outfit"],
   ["Sanal dene", "Görünümünü önizle", "03", "/try-on"],
   ["Ürün ara", "Stiline uygun parçaları bul", "04", "/products"],
-  ["Etkinlik için kombin", "Düğün, iş, tatil ve daha fazlası", "05", "/outfit"],
+  ["Kaydettiklerim", "Beğendiğin ürünlere dön", "05", "/favorites"],
+  ["Etkinlik için kombin", "Düğün, iş, tatil ve daha fazlası", "06", "/outfit"],
 ] as const;
 
 export default function HomeScreen() {
