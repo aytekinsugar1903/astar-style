@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Linking, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { mockProducts } from "@/catalog/mock-products";
 import { useAuth } from "@/auth/AuthProvider";
+import { useI18n } from "@/i18n/I18nProvider";
+import { localizeProduct } from "@/catalog/localize";
+import { mockProducts } from "@/catalog/mock-products";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { track } from "@/analytics/track";
 
@@ -10,27 +12,26 @@ export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { session } = useAuth();
-  const product = mockProducts.find((item) => item.id === id);
+  const { locale, t } = useI18n();
+  const sourceProduct = mockProducts.find((item) => item.id === id);
+  const product = sourceProduct ? localizeProduct(sourceProduct, locale) : undefined;
   const [dbProductId, setDbProductId] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (!product || !isSupabaseConfigured) return;
+    if (!sourceProduct || !isSupabaseConfigured) return;
     let active = true;
 
     void supabase.from("products")
       .select("id")
-      .eq("external_id", product.id)
+      .eq("external_id", sourceProduct.id)
       .eq("source", "demo")
       .maybeSingle()
       .then(async ({ data, error }) => {
         if (!active) return;
-        if (error) {
-          setMessage(error.message);
-          return;
-        }
+        if (error) { setMessage(error.message); return; }
 
         setDbProductId(data?.id ?? null);
         if (!data || !session) return;
@@ -45,81 +46,68 @@ export default function ProductDetailScreen() {
       });
 
     return () => { active = false; };
-  }, [product, session]);
+  }, [sourceProduct, session]);
 
   async function toggleSaved() {
-    if (!session) {
-      router.push("/sign-in");
-      return;
-    }
-    if (!dbProductId) {
-      setMessage("Ürün kaydetmeye henüz hazır değil.");
-      return;
-    }
+    if (!session) { router.push("/sign-in"); return; }
+    if (!dbProductId) { setMessage(t("productNotReady")); return; }
 
     setBusy(true);
     setMessage("");
-
     const result = saved
-      ? await supabase.from("favorites").delete()
-          .eq("user_id", session.user.id)
-          .eq("product_id", dbProductId)
-      : await supabase.from("favorites").upsert({
-          user_id: session.user.id,
-          product_id: dbProductId,
-        });
+      ? await supabase.from("favorites").delete().eq("user_id", session.user.id).eq("product_id", dbProductId)
+      : await supabase.from("favorites").upsert({ user_id: session.user.id, product_id: dbProductId });
 
     if (result.error) setMessage(result.error.message);
     else {
       setSaved(!saved);
       void track(saved ? "product_unsaved" : "product_saved", { product_id: dbProductId });
-      setMessage(saved ? "Ürün kayıtlardan kaldırıldı." : "Ürün Kaydettiklerim listene eklendi.");
+      setMessage(saved ? t("productRemoved") : t("productSaved"));
     }
     setBusy(false);
   }
 
   async function openMerchant() {
-    if (!product) return;
+    if (!sourceProduct) return;
 
     if (session && dbProductId) {
-      await supabase.from("affiliate_clicks").insert({
-        user_id: session.user.id,
-        product_id: dbProductId,
-      });
+      await supabase.from("affiliate_clicks").insert({ user_id: session.user.id, product_id: dbProductId });
     }
 
-    void track("product_click", { external_id: product.id, product_id: dbProductId });
-    await Linking.openURL(product.affiliateUrl ?? product.productUrl);
+    void track("product_click", { external_id: sourceProduct.id, product_id: dbProductId });
+    await Linking.openURL(sourceProduct.affiliateUrl ?? sourceProduct.productUrl);
   }
 
-  if (!product) {
-    return <SafeAreaView style={s.safe}><Text style={s.notFound}>Ürün bulunamadı.</Text></SafeAreaView>;
+  if (!product || !sourceProduct) {
+    return <SafeAreaView style={s.safe}><Text style={s.notFound}>{t("productNotFound")}</Text></SafeAreaView>;
   }
+
+  const localeTag = locale === "tr" ? "tr-TR" : "en-US";
 
   return (
     <SafeAreaView style={s.safe}>
       <ScrollView contentContainerStyle={s.page}>
-        <Pressable onPress={() => router.back()}><Text style={s.back}>← Ürünlere dön</Text></Pressable>
-        <View style={[s.visual, { backgroundColor: product.color === "Siyah" ? "#222" : product.color === "Bordo" ? "#6E2D3A" : "#E7DFD0" }]}>
+        <Pressable onPress={() => router.back()} accessibilityRole="button"><Text style={s.back}>{t("backToProducts")}</Text></Pressable>
+        <View style={[s.visual, { backgroundColor: sourceProduct.color === "Siyah" ? "#222" : sourceProduct.color === "Bordo" ? "#6E2D3A" : "#E7DFD0" }]}>
           <Text style={s.visualText}>ASTRA STYLE</Text>
         </View>
         <Text style={s.brand}>{product.brand}</Text>
         <Text style={s.title}>{product.name}</Text>
-        <Text style={s.meta}>{product.category} · {product.color} · %{product.styleScore} stil uyumu</Text>
-        <Text style={s.price}>{product.price.toLocaleString("tr-TR")} TL</Text>
-        <Text style={s.status}>{product.inStock ? "Stokta" : "Şu anda stokta değil"} · Demo ürün</Text>
+        <Text style={s.meta}>{product.category} · {product.color} · {t("styleMatch", { score: product.styleScore })}</Text>
+        <Text style={s.price}>{product.price.toLocaleString(localeTag)} TL</Text>
+        <Text style={s.status}>{product.inStock ? t("inStock") : t("outOfStock")} · {t("demoProduct")}</Text>
 
-        <Pressable style={[s.save, busy && s.disabled]} onPress={toggleSaved} disabled={busy}>
-          <Text style={s.saveText}>{saved ? "♥ Kaydedildi" : "♡ Kaydet"}</Text>
+        <Pressable style={[s.save, busy && s.disabled]} onPress={toggleSaved} disabled={busy} accessibilityRole="button">
+          <Text style={s.saveText}>{saved ? t("saved") : t("save")}</Text>
         </Pressable>
 
-        <Pressable disabled={!product.inStock} style={[s.button, !product.inStock && s.disabled]} onPress={openMerchant}>
-          <Text style={s.buttonText}>Satın alma sayfasına git →</Text>
+        <Pressable disabled={!product.inStock} style={[s.button, !product.inStock && s.disabled]} onPress={openMerchant} accessibilityRole="link">
+          <Text style={s.buttonText}>{t("goToMerchant")}</Text>
         </Pressable>
 
-        {!!message && <Text style={s.message}>{message}</Text>}
-        <Pressable onPress={() => router.push("/favorites")}><Text style={s.savedLink}>Kaydettiklerimi gör</Text></Pressable>
-        <Text style={s.note}>Gerçek katalogda bu bağlantı resmî affiliate URL’si olacak. Satın alma mağazanın güvenli sayfasında tamamlanır.</Text>
+        {!!message && <Text style={s.message} accessibilityLiveRegion="polite">{message}</Text>}
+        <Pressable onPress={() => router.push("/favorites")} accessibilityRole="button"><Text style={s.savedLink}>{t("seeMySaved")}</Text></Pressable>
+        <Text style={s.note}>{t("merchantNotice")}</Text>
       </ScrollView>
     </SafeAreaView>
   );
