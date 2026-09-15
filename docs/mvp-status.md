@@ -6,8 +6,9 @@
 - [x] Premium mobile-first home
 - [x] Supabase client and persistent auth session
 - [x] Sign up / sign in UI
+- [x] User profile, editable style summary and sign-out flow
 - [x] Style profile onboarding and consent
-- [x] Wardrobe list and phone gallery upload
+- [x] Wardrobe list, phone gallery upload, private image preview and permanent deletion
 - [x] Ownership-based RLS and private storage rules
 - [x] Event and budget outfit flow with mock AI
 - [x] Product search, budget/color filters and style ranking
