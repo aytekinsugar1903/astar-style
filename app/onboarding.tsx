@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "@/auth/AuthProvider";
@@ -15,6 +15,21 @@ export default function OnboardingScreen() {
   const [accepted, setAccepted] = useState(false);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !session) return;
+
+    void Promise.all([
+      supabase.from("style_profiles").select("style_tags,preferred_colors").eq("user_id", session.user.id).maybeSingle(),
+      supabase.from("consents").select("granted").eq("user_id", session.user.id).eq("consent_type", "privacy_and_ai_processing").eq("granted", true).limit(1).maybeSingle(),
+    ]).then(([style, consent]) => {
+      if (style.data) {
+        setTags(style.data.style_tags);
+        setPreferredColors(style.data.preferred_colors);
+      }
+      if (consent.data?.granted) setAccepted(true);
+    });
+  }, [session]);
 
   const toggle = (value: string, values: string[], setter: (v: string[]) => void) =>
     setter(values.includes(value) ? values.filter((x) => x !== value) : [...values, value]);
