@@ -41,7 +41,7 @@ test("product filtering reaches product detail", async ({ page }) => {
   await page.getByText("Dökümlü Siyah Elbise", { exact: true }).click();
 
   await expect(page).toHaveURL(/\/product\/p2/);
-  await expect(page.getByText("1.890 TL", { exact: true })).toBeVisible();
+  await expect(page.getByText("1.890 TL", { exact: true }).last()).toBeVisible();
   await expect(page.getByText("Stokta", { exact: false })).toBeVisible();
 });
 
