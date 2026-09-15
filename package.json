@@ -10,7 +10,9 @@
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "doctor": "npx expo-doctor",
-    "test:i18n": "node scripts/check-translations.mjs"
+    "test:i18n": "node scripts/check-translations.mjs",
+    "build:e2e": "expo export --platform web",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -30,6 +32,7 @@
     "react-native-url-polyfill": "2.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@types/react": "~19.1.0",
     "typescript": "~5.9.2"
   }
