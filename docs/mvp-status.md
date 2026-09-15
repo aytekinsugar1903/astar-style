@@ -18,7 +18,7 @@
 - [x] Personal full-body photo record
 - [x] Virtual try-on job queue with locked client permissions
 - [x] AI provider and try-on provider interfaces
-- [x] CI with typecheck, translation integrity, Expo Doctor, and web export smoke test
+- [x] CI with typecheck, translation integrity, Expo Doctor, web export, and six mobile browser flows
 
 ## Next
 
@@ -30,7 +30,8 @@
 - [x] Add admin dashboard
 - [x] Add zero-cost demo catalog records for end-to-end product flow
 - [x] Translate MVP feature screens and add core accessibility roles/labels
-- [ ] Add automated end-to-end tests and store builds
+- [x] Add isolated demo-mode end-to-end tests
+- [ ] Add signed App Store and Play Store builds
 
 ## Live backend
 
@@ -40,7 +41,7 @@
 - Security: RLS enabled on all public tables; private image buckets
 - Edge Functions: classify-garment, outfit v2 (TR/EN), try-on, admin-dashboard, delete-account
 - AI and try-on providers: mock only, 0 USD usage
-- Validation: Supabase security advisor clean; GitHub CI checks type safety, Expo health, and web export
+- Validation: Supabase security advisor clean; GitHub CI checks type safety, translations, Expo health, web export, and mobile MVP journeys
 
 ## External actions requiring owner approval
 
