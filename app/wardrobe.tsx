@@ -3,6 +3,8 @@ import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { Alert, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "@/auth/AuthProvider";
+import { useI18n } from "@/i18n/I18nProvider";
+import type { TranslationKey } from "@/i18n/translations";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { uploadWardrobeImage } from "@/wardrobe/upload";
 import { track } from "@/analytics/track";
@@ -21,9 +23,24 @@ const demoItems: Item[] = [
   { id: "2", name: "Krem blazer", category: "jacket", colors: ["Krem"], image_path: "" },
 ];
 
+const categoryKeys: Record<string, TranslationKey> = {
+  dress: "categoryDress",
+  pants: "categoryPants",
+  skirt: "categorySkirt",
+  shirt: "categoryShirt",
+  tshirt: "categoryTshirt",
+  "t-shirt": "categoryTshirt",
+  jacket: "categoryJacket",
+  shoes: "categoryShoes",
+  bag: "categoryBag",
+  accessory: "categoryAccessory",
+  other: "categoryOther",
+};
+
 export default function WardrobeScreen() {
   const router = useRouter();
   const { session } = useAuth();
+  const { locale, t } = useI18n();
   const [items, setItems] = useState<Item[]>(isSupabaseConfigured ? [] : demoItems);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -37,64 +54,59 @@ export default function WardrobeScreen() {
       .select("id,name,category,colors,image_path")
       .order("created_at", { ascending: false });
 
-    if (error) {
-      setMessage(error.message);
-      return;
-    }
+    if (error) { setMessage(error.message); return; }
 
     const hydrated = await Promise.all((data ?? []).map(async (item) => {
-      const signed = await supabase.storage
-        .from("user-photos")
-        .createSignedUrl(item.image_path, 3600);
+      const signed = await supabase.storage.from("user-photos").createSignedUrl(item.image_path, 3600);
       return { ...item, imageUrl: signed.data?.signedUrl };
     }));
-
     setItems(hydrated);
   }, [session]);
 
   useEffect(() => { void load(); }, [load]);
 
+  function itemName(item: Item) {
+    if (item.id === "1") return t("demoDressName");
+    if (item.id === "2") return t("demoBlazerName");
+    if (item.name === "Yeni kıyafet") return t("newGarment");
+    if (item.name === "Yeni parça") return t("newItem");
+    return item.name ?? t("unnamedItem");
+  }
+
+  function categoryName(category: string) {
+    const key = categoryKeys[category.toLocaleLowerCase("en-US")];
+    return key ? t(key) : category;
+  }
+
+  function colorName(color: string) {
+    const keys: Record<string, TranslationKey> = {
+      Siyah: "colorBlack", Krem: "colorCream", Bordo: "colorBurgundy",
+      Lacivert: "colorNavy", Toprak: "colorEarth", Pastel: "colorPastel",
+    };
+    return keys[color] ? t(keys[color]) : color;
+  }
+
   async function addItem() {
     if (!isSupabaseConfigured) {
-      setMessage("Demo modunda örnek kıyafet eklendi.");
-      setItems((value) => [{
-        id: String(Date.now()),
-        name: "Yeni parça",
-        category: "other",
-        colors: [],
-        image_path: "",
-      }, ...value]);
+      setMessage(t("demoGarmentAdded"));
+      setItems((value) => [{ id: String(Date.now()), name: "Yeni parça", category: "other", colors: [], image_path: "" }, ...value]);
       return;
     }
-    if (!session) {
-      router.replace("/sign-in");
-      return;
-    }
+    if (!session) { router.replace("/sign-in"); return; }
 
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permission.granted) {
-      setMessage("Fotoğraf seçebilmek için galeri izni gerekiyor.");
-      return;
-    }
+    if (!permission.granted) { setMessage(t("galleryPermissionWardrobe")); return; }
 
-    const picked = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      quality: 0.82,
-      allowsEditing: true,
-    });
+    const picked = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], quality: 0.82, allowsEditing: true });
     if (picked.canceled) return;
 
     setBusy(true);
-    setMessage("Fotoğraf güvenli şekilde yükleniyor…");
+    setMessage(t("secureUploading"));
     let uploadedPath: string | null = null;
 
     try {
       const asset = picked.assets[0];
-      uploadedPath = await uploadWardrobeImage(
-        session.user.id,
-        asset.uri,
-        asset.mimeType ?? "image/jpeg",
-      );
+      uploadedPath = await uploadWardrobeImage(session.user.id, asset.uri, asset.mimeType ?? "image/jpeg");
 
       const { data: item, error } = await supabase.from("wardrobe_items").insert({
         user_id: session.user.id,
@@ -102,23 +114,18 @@ export default function WardrobeScreen() {
         category: "other",
         image_path: uploadedPath,
       }).select("id").single();
-
       if (error) throw error;
 
       const classified = await supabase.functions.invoke("classify-garment", {
-        body: { wardrobeItemId: item.id },
+        body: { wardrobeItemId: item.id, locale },
       });
 
       void track("wardrobe_item_added", { wardrobe_item_id: item.id });
-      setMessage(classified.error
-        ? "Kıyafet eklendi; AI analizi daha sonra tamamlanacak."
-        : "Kıyafet eklendi ve analiz edildi.");
+      setMessage(classified.error ? t("garmentAnalysisPending") : t("garmentAnalyzed"));
       await load();
     } catch (error) {
-      if (uploadedPath) {
-        await supabase.storage.from("user-photos").remove([uploadedPath]);
-      }
-      setMessage(error instanceof Error ? error.message : "Yükleme tamamlanamadı.");
+      if (uploadedPath) await supabase.storage.from("user-photos").remove([uploadedPath]);
+      setMessage(error instanceof Error ? error.message : t("uploadFailed"));
     } finally {
       setBusy(false);
     }
@@ -127,13 +134,10 @@ export default function WardrobeScreen() {
   async function removeItem(item: Item) {
     if (!isSupabaseConfigured) {
       setItems((value) => value.filter((entry) => entry.id !== item.id));
-      setMessage("Demo kıyafet kaldırıldı.");
+      setMessage(t("demoGarmentRemoved"));
       return;
     }
-    if (!session) {
-      router.replace("/sign-in");
-      return;
-    }
+    if (!session) { router.replace("/sign-in"); return; }
 
     setDeletingId(item.id);
     setMessage("");
@@ -142,18 +146,14 @@ export default function WardrobeScreen() {
       const removed = await supabase.storage.from("user-photos").remove([item.image_path]);
       if (removed.error) throw removed.error;
 
-      const deleted = await supabase
-        .from("wardrobe_items")
-        .delete()
-        .eq("id", item.id)
-        .eq("user_id", session.user.id);
+      const deleted = await supabase.from("wardrobe_items").delete().eq("id", item.id).eq("user_id", session.user.id);
       if (deleted.error) throw deleted.error;
 
       setItems((value) => value.filter((entry) => entry.id !== item.id));
       void track("wardrobe_item_deleted", { wardrobe_item_id: item.id });
-      setMessage("Kıyafet ve fotoğrafı kalıcı olarak silindi.");
+      setMessage(t("garmentDeleted"));
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Kıyafet silinemedi.");
+      setMessage(error instanceof Error ? error.message : t("garmentDeleteFailed"));
       await load();
     } finally {
       setDeletingId(null);
@@ -162,11 +162,11 @@ export default function WardrobeScreen() {
 
   function confirmRemove(item: Item) {
     Alert.alert(
-      "Kıyafeti sil",
-      "Bu kıyafet ve fotoğrafı kalıcı olarak silinecek.",
+      t("deleteGarmentAlert"),
+      t("deleteGarmentAlertCopy"),
       [
-        { text: "Vazgeç", style: "cancel" },
-        { text: "Sil", style: "destructive", onPress: () => { void removeItem(item); } },
+        { text: t("cancel"), style: "cancel" },
+        { text: t("deleteAction"), style: "destructive", onPress: () => { void removeItem(item); } },
       ],
     );
   }
@@ -175,44 +175,45 @@ export default function WardrobeScreen() {
     <SafeAreaView style={s.safe}>
       <ScrollView contentContainerStyle={s.page}>
         <View style={s.top}>
-          <Pressable onPress={() => router.back()}><Text style={s.back}>← Ana sayfa</Text></Pressable>
-          <Text style={s.count}>{items.length} parça</Text>
+          <Pressable onPress={() => router.back()} accessibilityRole="button"><Text style={s.back}>{t("backHome")}</Text></Pressable>
+          <Text style={s.count}>{t("wardrobeCount", { count: items.length })}</Text>
         </View>
-        <Text style={s.title}>Gardırobum</Text>
-        <Text style={s.copy}>Kendi parçalarınla daha akıllı kombinler oluştur.</Text>
-        <Pressable style={[s.add, busy && s.disabled]} onPress={addItem} disabled={busy || !!deletingId}>
-          <Text style={s.addText}>{busy ? "Yükleniyor…" : "+ Kıyafet ekle"}</Text>
+        <Text style={s.title}>{t("wardrobeScreenTitle")}</Text>
+        <Text style={s.copy}>{t("wardrobeCopy")}</Text>
+        <Pressable style={[s.add, busy && s.disabled]} onPress={addItem} disabled={busy || !!deletingId} accessibilityRole="button">
+          <Text style={s.addText}>{busy ? t("uploading") : t("addGarment")}</Text>
         </Pressable>
-        {!!message && <Text style={s.message}>{message}</Text>}
+        {!!message && <Text style={s.message} accessibilityLiveRegion="polite">{message}</Text>}
         <View style={s.grid}>
-          {items.map((item) => (
-            <View key={item.id} style={s.card}>
-              <View style={s.image}>
-                {item.imageUrl
-                  ? <Image source={{ uri: item.imageUrl }} style={s.photo} resizeMode="cover" />
-                  : <Text style={s.imageText}>ASTRA</Text>}
-              </View>
-              <Text style={s.item}>{item.name ?? "İsimsiz parça"}</Text>
-              <Text style={s.meta}>
-                {item.category} · {item.colors.join(", ") || "Renk analiz edilecek"}
-              </Text>
-              <Pressable
-                onPress={() => confirmRemove(item)}
-                disabled={deletingId === item.id}
-                accessibilityRole="button"
-                accessibilityLabel={`${item.name ?? "Kıyafet"} sil`}
-              >
-                <Text style={s.deleteText}>
-                  {deletingId === item.id ? "Siliniyor…" : "Kıyafeti sil"}
+          {items.map((item) => {
+            const name = itemName(item);
+            return (
+              <View key={item.id} style={s.card}>
+                <View style={s.image}>
+                  {item.imageUrl
+                    ? <Image source={{ uri: item.imageUrl }} style={s.photo} resizeMode="cover" accessibilityLabel={name} />
+                    : <Text style={s.imageText}>ASTRA</Text>}
+                </View>
+                <Text style={s.item}>{name}</Text>
+                <Text style={s.meta}>
+                  {categoryName(item.category)} · {item.colors.length ? item.colors.map(colorName).join(", ") : t("colorPending")}
                 </Text>
-              </Pressable>
-            </View>
-          ))}
+                <Pressable
+                  onPress={() => confirmRemove(item)}
+                  disabled={deletingId === item.id}
+                  accessibilityRole="button"
+                  accessibilityLabel={t("garmentDeleteLabel", { name })}
+                >
+                  <Text style={s.deleteText}>{deletingId === item.id ? t("deleting") : t("deleteGarment")}</Text>
+                </Pressable>
+              </View>
+            );
+          })}
         </View>
         {items.length === 0 && (
           <View style={s.empty}>
-            <Text style={s.emptyTitle}>İlk parçanı ekle</Text>
-            <Text style={s.emptyCopy}>Düz bir zeminde, iyi ışıkta çekilmiş fotoğraf en iyi sonucu verir.</Text>
+            <Text style={s.emptyTitle}>{t("wardrobeEmptyTitle")}</Text>
+            <Text style={s.emptyCopy}>{t("wardrobeEmptyCopy")}</Text>
           </View>
         )}
       </ScrollView>
