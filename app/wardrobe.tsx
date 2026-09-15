@@ -37,11 +37,12 @@ export default function WardrobeScreen() {
     setBusy(true); setMessage("Fotoğraf güvenli şekilde yükleniyor…");
     try {
       const imagePath = await uploadWardrobeImage(session.user.id, picked.assets[0].uri);
-      const { error } = await supabase.from("wardrobe_items").insert({
+      const { data: item, error } = await supabase.from("wardrobe_items").insert({
         user_id: session.user.id, name: "Yeni kıyafet", category: "other", image_path: imagePath,
-      });
+      }).select("id").single();
       if (error) throw error;
-      setMessage("Kıyafet eklendi. AI kategorizasyonu sıraya alındı.");
+      const classified = await supabase.functions.invoke("classify-garment", { body: { wardrobeItemId: item.id } });
+      setMessage(classified.error ? "Kıyafet eklendi; AI analizi daha sonra tamamlanacak." : "Kıyafet eklendi ve analiz edildi.");
       await load();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Yükleme tamamlanamadı.");
