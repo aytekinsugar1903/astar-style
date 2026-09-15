@@ -7,9 +7,10 @@ export type StylePreferences = {
   preferredColors: string[];
   avoidedColors: string[];
   styleTags: string[];
+  audience: "women" | "men" | "unisex";
 };
 
-const emptyPreferences: StylePreferences = { preferredColors: [], avoidedColors: [], styleTags: [] };
+const emptyPreferences: StylePreferences = { preferredColors: [], avoidedColors: [], styleTags: [], audience: "unisex" };
 
 function canonical(value: string) {
   const normalized = value.trim().toLocaleLowerCase("tr-TR");
@@ -51,7 +52,7 @@ export async function loadStylePreferences(userId?: string): Promise<StylePrefer
   if (!userId) return emptyPreferences;
   const [profile, favorites] = await Promise.all([
     supabase.from("style_profiles")
-      .select("preferred_colors,avoided_colors,style_tags")
+      .select("preferred_colors,avoided_colors,style_tags,body_preferences")
       .eq("user_id", userId)
       .maybeSingle(),
     supabase.from("favorites")
@@ -80,6 +81,7 @@ export async function loadStylePreferences(userId?: string): Promise<StylePrefer
     preferredColors: [...new Set([...(data?.preferred_colors ?? []), ...savedColors])],
     avoidedColors: data?.avoided_colors ?? [],
     styleTags: [...new Set([...(data?.style_tags ?? []), ...savedTags])],
+    audience: data?.body_preferences && typeof data.body_preferences === "object" && !Array.isArray(data.body_preferences) && (data.body_preferences.audience === "women" || data.body_preferences.audience === "men") ? data.body_preferences.audience : "unisex",
   };
 }
 
@@ -109,6 +111,7 @@ export async function loadCatalog(preferences: StylePreferences = emptyPreferenc
       id: product.external_id,
       dbId: product.id,
       source: product.source,
+      audience: product.metadata && typeof product.metadata === "object" && !Array.isArray(product.metadata) && (product.metadata.audience === "women" || product.metadata.audience === "men") ? product.metadata.audience : "unisex",
       imageUrl: product.image_url ?? undefined,
       merchant: offer.merchant,
       name: product.name,

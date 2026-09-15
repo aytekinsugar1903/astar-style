@@ -1,5 +1,6 @@
 export type CatalogFeedItem = {
   externalId: string;
+  audience: "women" | "men" | "unisex";
   name: string;
   brand?: string;
   category: string;

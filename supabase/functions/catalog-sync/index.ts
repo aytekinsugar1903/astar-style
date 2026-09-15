@@ -19,6 +19,7 @@ function safeUrl(value: string | undefined) {
 function validate(item: CatalogFeedItem): CatalogFeedItem {
   const currency = item.currency.trim().toUpperCase();
   if (!item.externalId.trim() || !item.name.trim() || !item.category.trim() || !item.merchant.trim()) throw new Error("INVALID_CATALOG_ITEM");
+  if (!["women", "men", "unisex"].includes(item.audience)) throw new Error("INVALID_AUDIENCE");
   if (!Number.isFinite(item.price) || item.price < 0) throw new Error("INVALID_PRICE");
   if (!/^[A-Z]{3}$/.test(currency)) throw new Error("INVALID_CURRENCY");
   const commissionRate = item.commissionRate;
@@ -46,7 +47,7 @@ Deno.serve(async (req) => {
       const { data: product, error: productError } = await admin.from("products").upsert({
         source: source.name, external_id: item.externalId, name: item.name, brand: item.brand ?? null,
         category: item.category, colors: item.colors, image_url: item.imageUrl ?? null, product_url: item.productUrl,
-        metadata: { style_tags: item.styleTags, synced_at: now }, active: true, updated_at: now,
+        metadata: { style_tags: item.styleTags, audience: item.audience, synced_at: now }, active: true, updated_at: now,
       }, { onConflict: "source,external_id" }).select("id").single();
       if (productError) throw productError;
       productsUpserted += 1;

@@ -2,6 +2,7 @@ export type CatalogProduct = {
   id: string;
   dbId?: string;
   source?: string;
+  audience?: "women" | "men" | "unisex";
   imageUrl?: string;
   merchant?: string;
   name: string;

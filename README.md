@@ -23,7 +23,12 @@ npm run start
 ```
 
 Detaylar: [docs/architecture.md](docs/architecture.md)
-\n\n### Kombin öğrenme döngüsü\n\nEtkinlik stilisti, stil profili ve beğenilen kombin sinyallerini kullanır. Üretilen kombinler kullanıcı hesabına kaydedilir; beğeniler sonraki sıralamayı kişiselleştirir. Mevcut sağlayıcı ücretsiz mock modundadır.\n
-### Katalog otomasyonu
 
-`catalog-sync` Edge Function yalnızca `app_metadata.role=admin` olan kullanıcılar tarafından çağrılabilir. Sağlayıcılar `CatalogProvider` arayüzü arkasındadır; varsayılan ve ücretsiz sağlayıcı `mock`tur. Gerçek affiliate API/feed anahtarları yalnızca sunucu secret alanına eklenmelidir. İzinsiz scraping yapılmaz.
+
+### Kombin öğrenme döngüsü
+
+Etkinlik stilisti, stil profili ve beğenilen kombin sinyallerini kullanır. Üretilen kombinler kullanıcı hesabına kaydedilir; beğeniler sonraki sıralamayı kişiselleştirir. Mevcut sağlayıcı ücretsiz mock modundadır.
+
+### Geniş ücretsiz demo kapsamı
+
+Ücretsiz katalog 80 sentetik üründen oluşur ve kadın, erkek ve unisex koleksiyonları kapsar. Ürün araması kategori, renk, stil, stok ve bütçe filtrelerini birlikte uygular. Kombin motoru 3 koleksiyon × 8 etkinlik × 4 mevsim × 8 stil üzerinden 768 temel şablon üretir ve her istekte en uygun 6 farklı seçeneği döndürür.

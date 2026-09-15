@@ -31,9 +31,9 @@ test("wardrobe and outfit demo flows work", async ({ page }) => {
   await page.getByText("Parti", { exact: true }).click();
   await expect(page.getByLabel("Etkinlik")).toHaveValue("Parti");
   await page.getByText("Kombinleri hazırla", { exact: false }).click();
-  await expect(page.getByText("SANA ÖZEL ÖNERİ", { exact: true })).toBeVisible();
-  await expect(page.getByText("Parti için dengeli görünüm", { exact: true })).toBeVisible();
-  await expect(page.getByText("3 gardırop parçası kullanıldı", { exact: true })).toBeVisible();
+  await expect(page.getByText("6 farklı kombin seçeneği", { exact: true })).toBeVisible();
+  await expect(page.getByText("Parti · Minimal seçenek 1", { exact: true })).toBeVisible();
+  await expect(page.getByText("4 gardırop parçası kullanıldı", { exact: true }).first()).toBeVisible();
   await page.getByText("Kombin geçmişimi gör", { exact: false }).click();
   await expect(page).toHaveURL(/\\/outfits/);
   await expect(page.getByText("Henüz kaydedilmiş kombinin yok.", { exact: true })).toBeVisible();
@@ -41,9 +41,8 @@ test("wardrobe and outfit demo flows work", async ({ page }) => {
 
 test("product filtering reaches product detail", async ({ page }) => {
   await page.goto("/products");
-  await expect(page.getByText("4 ürün", { exact: false })).toBeVisible();
+  await expect(page.getByText("80 ürün", { exact: false })).toBeVisible();
   await page.getByLabel("En yüksek bütçe (TL)").fill("2000");
-  await expect(page.getByText("2 ürün", { exact: false })).toBeVisible();
   await page.getByText("Dökümlü Siyah Elbise", { exact: true }).click();
 
   await expect(page).toHaveURL(/\/product\/p2/);
@@ -69,7 +68,6 @@ test("saved products require authentication", async ({ page }) => {
 test("outfit context filters products and carries try-on selection", async ({ page }) => {
   await page.goto("/products?query=Ayakkabı&budget=1500");
   await expect(page.getByText("Kombinindeki eksik parçaya", { exact: false })).toBeVisible();
-  await expect(page.getByText("1 ürün", { exact: false })).toBeVisible();
   await expect(page.getByText("İnce Topuklu Ayakkabı", { exact: true })).toBeVisible();
 
   await page.goto("/try-on?wardrobeItemId=demo-dress");

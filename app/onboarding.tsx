@@ -33,6 +33,7 @@ export default function OnboardingScreen() {
   const { session } = useAuth();
   const { locale, t } = useI18n();
   const [tags, setTags] = useState<string[]>([]);
+  const [audience, setAudience] = useState<"women" | "men" | "unisex">("unisex");
   const [preferredColors, setPreferredColors] = useState<string[]>([]);
   const [accepted, setAccepted] = useState(false);
   const [message, setMessage] = useState("");
@@ -42,12 +43,14 @@ export default function OnboardingScreen() {
     if (!isSupabaseConfigured || !session) return;
 
     void Promise.all([
-      supabase.from("style_profiles").select("style_tags,preferred_colors").eq("user_id", session.user.id).maybeSingle(),
+      supabase.from("style_profiles").select("style_tags,preferred_colors,body_preferences").eq("user_id", session.user.id).maybeSingle(),
       supabase.from("consents").select("granted").eq("user_id", session.user.id).eq("consent_type", "privacy_and_ai_processing").eq("granted", true).limit(1).maybeSingle(),
     ]).then(([style, consent]) => {
       if (style.data) {
         setTags(style.data.style_tags);
         setPreferredColors(style.data.preferred_colors);
+        const preferences = style.data.body_preferences;
+        if (preferences && typeof preferences === "object" && !Array.isArray(preferences) && (preferences.audience === "women" || preferences.audience === "men" || preferences.audience === "unisex")) setAudience(preferences.audience);
       }
       if (consent.data?.granted) setAccepted(true);
     });
@@ -65,7 +68,7 @@ export default function OnboardingScreen() {
     setBusy(true);
     const [profile, style, consent] = await Promise.all([
       supabase.from("profiles").upsert({ id: session.user.id, locale, onboarding_completed: true }),
-      supabase.from("style_profiles").upsert({ user_id: session.user.id, style_tags: tags, preferred_colors: preferredColors }),
+      supabase.from("style_profiles").upsert({ user_id: session.user.id, style_tags: tags, preferred_colors: preferredColors, body_preferences: { audience } }),
       supabase.from("consents").insert({ user_id: session.user.id, consent_type: "privacy_and_ai_processing", policy_version: "2026-09-15", granted: true }),
     ]);
     setBusy(false);
@@ -98,6 +101,14 @@ export default function OnboardingScreen() {
         <Text style={s.step}>{t("onboardingStep")}</Text>
         <Text style={s.title}>{t("onboardingTitle")}</Text>
         <Text style={s.copy}>{t("onboardingCopy")}</Text>
+        <Text style={s.label}>{t("audienceQuestion")}</Text>
+        <View style={s.chips}>
+          {([["women","audienceWomen"],["men","audienceMen"],["unisex","audienceUnisex"]] as const).map(([value,key]) => (
+            <Pressable key={value} onPress={() => setAudience(value)} style={[s.chip,audience===value&&s.active]} accessibilityRole="radio" accessibilityState={{checked:audience===value}}>
+              <Text style={[s.chipText,audience===value&&s.activeText]}>{t(key)}</Text>
+            </Pressable>
+          ))}
+        </View>
         <Text style={s.label}>{t("onboardingStyleQuestion")}</Text>
         <View style={s.chips}>{renderOptions(styleOptions, tags, setTags)}</View>
         <Text style={s.label}>{t("onboardingColorQuestion")}</Text>
