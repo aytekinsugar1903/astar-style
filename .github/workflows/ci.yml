@@ -25,7 +25,20 @@ jobs:
         run: npm run build:e2e
         env:
           EXPO_PUBLIC_DEMO_MODE: "true"
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package.json') }}
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Run mobile MVP flows
         run: npm run test:e2e
+      - name: Upload browser diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-diagnostics
+          path: test-results
+          retention-days: 5
+          if-no-files-found: ignore
