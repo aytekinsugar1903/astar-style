@@ -7,6 +7,7 @@
 - [x] Supabase client and persistent auth session
 - [x] Sign up / sign in UI
 - [x] User profile, editable style summary and sign-out flow
+- [x] Persistent Turkish/English foundation with profile language preference
 - [x] Double-confirmed account deletion with private-file cleanup and session revocation
 - [x] Style profile onboarding and consent
 - [x] Wardrobe list, phone gallery upload, private image preview and permanent deletion
@@ -17,7 +18,7 @@
 - [x] Personal full-body photo record
 - [x] Virtual try-on job queue with locked client permissions
 - [x] AI provider and try-on provider interfaces
-- [x] CI configuration
+- [x] CI with typecheck, Expo Doctor, and web export smoke test
 
 ## Next
 
@@ -28,7 +29,7 @@
 - [ ] Add official affiliate feed adapter
 - [x] Add admin dashboard
 - [x] Add zero-cost demo catalog records for end-to-end product flow
-- [ ] Complete translations and accessibility pass
+- [ ] Translate remaining feature screens and complete accessibility pass
 - [ ] Add automated end-to-end tests and store builds
 
 ## Live backend
@@ -39,11 +40,10 @@
 - Security: RLS enabled on all public tables; private image buckets
 - Edge Functions: classify-garment, outfit, try-on, admin-dashboard, delete-account
 - AI and try-on providers: mock only, 0 USD usage
-- Validation: Supabase security advisor clean; GitHub CI passing
+- Validation: Supabase security advisor clean; GitHub CI checks type safety, Expo health, and web export
 
 ## External actions requiring owner approval
 
-- Creating or selecting the production Supabase project
 - Purchasing virtual try-on credits
 - Affiliate network applications
 - Apple Developer and Google Play accounts
