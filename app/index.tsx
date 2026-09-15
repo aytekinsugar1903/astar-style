@@ -6,10 +6,10 @@ import { isSupabaseConfigured } from "@/lib/supabase";
 
 const actions = [
   ["Gardırobum", "Kıyafetlerini düzenle", "01", "/wardrobe"],
-  ["Bana kombin yap", "AI stilistinle hazırlan", "02", "/onboarding"],
-  ["Sanal dene", "Görünümünü önizle", "03", "/wardrobe"],
-  ["Ürün ara", "Stiline uygun parçaları bul", "04", "/wardrobe"],
-  ["Etkinlik için kombin", "Düğün, iş, tatil ve daha fazlası", "05", "/onboarding"],
+  ["Bana kombin yap", "AI stilistinle hazırlan", "02", "/outfit"],
+  ["Sanal dene", "Görünümünü önizle", "03", "/try-on"],
+  ["Ürün ara", "Stiline uygun parçaları bul", "04", "/products"],
+  ["Etkinlik için kombin", "Düğün, iş, tatil ve daha fazlası", "05", "/outfit"],
 ] as const;
 
 export default function HomeScreen() {
@@ -35,7 +35,7 @@ export default function HomeScreen() {
           <Text style={styles.title}>Bugün ne{"
 "}giyeceksin?</Text>
           <Text style={styles.subtitle}>Gardırobundan, planından ve stilinden sana özel bir görünüm hazırlayalım.</Text>
-          <Pressable style={styles.primary} onPress={() => router.push("/onboarding")}>
+          <Pressable style={styles.primary} onPress={() => router.push("/outfit")}>
             <Text style={styles.primaryText}>Kombinimi hazırla</Text><Text style={styles.arrow}>→</Text>
           </Pressable>
         </View>
