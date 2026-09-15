@@ -23,3 +23,4 @@ npm run start
 ```
 
 Detaylar: [docs/architecture.md](docs/architecture.md)
+\n\n### Kombin öğrenme döngüsü\n\nEtkinlik stilisti, stil profili ve beğenilen kombin sinyallerini kullanır. Üretilen kombinler kullanıcı hesabına kaydedilir; beğeniler sonraki sıralamayı kişiselleştirir. Mevcut sağlayıcı ücretsiz mock modundadır.\n
