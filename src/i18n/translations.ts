@@ -196,6 +196,17 @@ const tr = {
   categoryBag: "Çanta",
   categoryAccessory: "Aksesuar",
   categoryOther: "Diğer",
+  adminOnly: "Bu alan yalnızca admin hesabına açıktır.",
+  adminUser: "Kullanıcı",
+  adminProduct: "Ürün",
+  adminTryOn: "Sanal deneme",
+  adminAffiliateClick: "Affiliate tıklama",
+  adminAiCost: "AI maliyeti",
+  adminFailedAi: "Başarısız AI",
+  adminKicker: "OPERASYON",
+  adminCopy: "Maliyet, kullanım ve dönüşüm sinyallerinin tek görünümü.",
+  costGuardTitle: "Maliyet koruması aktif",
+  costGuardCopy: "Ücretli sağlayıcılar kapalı. Tüm mevcut AI ve sanal deneme işlemleri $0 mock sağlayıcı kullanıyor.",
 } as const;
 
 export type TranslationKey = keyof typeof tr;
@@ -397,6 +408,17 @@ const en = {
   categoryBag: "Bag",
   categoryAccessory: "Accessory",
   categoryOther: "Other",
+  adminOnly: "This area is available only to an admin account.",
+  adminUser: "Users",
+  adminProduct: "Products",
+  adminTryOn: "Virtual try-ons",
+  adminAffiliateClick: "Affiliate clicks",
+  adminAiCost: "AI cost",
+  adminFailedAi: "Failed AI calls",
+  adminKicker: "OPERATIONS",
+  adminCopy: "A single view of cost, usage, and conversion signals.",
+  costGuardTitle: "Cost protection is active",
+  costGuardCopy: "Paid providers are disabled. All current AI and virtual try-on operations use $0 mock providers.",
 } satisfies Dictionary;
 
 export const translations: Record<Locale, Dictionary> = { tr, en };
