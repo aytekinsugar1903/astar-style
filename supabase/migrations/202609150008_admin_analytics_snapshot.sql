@@ -1,6 +1,3 @@
-create index if not exists analytics_events_name_created_idx
-on public.analytics_events (event_name, created_at desc);
-
 create or replace function public.admin_analytics_snapshot()
 returns jsonb
 language sql
