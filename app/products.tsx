@@ -2,9 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useI18n } from "@/i18n/I18nProvider";
+import { useAuth } from "@/auth/AuthProvider";
 import type { TranslationKey } from "@/i18n/translations";
 import { localizeProduct } from "@/catalog/localize";
 import { mockProducts } from "@/catalog/mock-products";
+import { loadCatalog, loadStylePreferences } from "@/catalog/repository";
+import type { CatalogProduct } from "@/catalog/types";
+import { isSupabaseConfigured } from "@/lib/supabase";
 import { track } from "@/analytics/track";
 
 const filters: ReadonlyArray<readonly [string, TranslationKey]> = [
@@ -17,23 +21,36 @@ const filters: ReadonlyArray<readonly [string, TranslationKey]> = [
 export default function ProductsScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ query?: string; budget?: string }>();
+  const { session } = useAuth();
   const { locale, t } = useI18n();
   const initialQuery = typeof params.query === "string" ? params.query : "";
   const initialBudget = typeof params.budget === "string" ? params.budget : "";
   const [query, setQuery] = useState(initialQuery);
   const [color, setColor] = useState("Tümü");
   const [budget, setBudget] = useState(initialBudget);
+  const [catalog, setCatalog] = useState<CatalogProduct[]>(mockProducts);
+  const [catalogMessage, setCatalogMessage] = useState("");
 
   useEffect(() => {
     if (initialQuery || initialBudget) void track("outfit_product_search_opened");
   }, [initialBudget, initialQuery]);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    let active = true;
+    void loadStylePreferences(session?.user.id)
+      .then(loadCatalog)
+      .then((items) => { if (active && items.length) setCatalog(items); })
+      .catch(() => { if (active) setCatalogMessage(t("catalogFallback")); });
+    return () => { active = false; };
+  }, [session?.user.id, t]);
 
   const products = useMemo(() => {
     const max = Number(budget) || Infinity;
     const localeTag = locale === "tr" ? "tr-TR" : "en-US";
     const normalizedQuery = query.toLocaleLowerCase(localeTag);
 
-    return mockProducts.filter((product) => {
+    return catalog.filter((product) => {
       const localized = localizeProduct(product, locale);
       const searchable = [
         product.name, product.brand, product.category,
@@ -43,7 +60,7 @@ export default function ProductsScreen() {
         && (color === "Tümü" || product.color === color)
         && searchable.includes(normalizedQuery);
     }).sort((a, b) => b.styleScore - a.styleScore);
-  }, [budget, color, locale, query]);
+  }, [budget, catalog, color, locale, query]);
 
   const localeTag = locale === "tr" ? "tr-TR" : "en-US";
 
@@ -89,6 +106,7 @@ export default function ProductsScreen() {
             </Pressable>
           ))}
         </View>
+        {!!catalogMessage && <Text style={s.catalogMessage} accessibilityLiveRegion="polite">{catalogMessage}</Text>}
         <Text style={s.count}>{t("productCount", { count: products.length })}</Text>
         {products.map((product) => {
           const localized = localizeProduct(product, locale);
@@ -114,7 +132,7 @@ export default function ProductsScreen() {
           );
         })}
         {products.length === 0 && <Text style={s.empty}>{t("noProducts")}</Text>}
-        <Text style={s.notice}>{t("demoCatalogNotice")}</Text>
+        <Text style={s.notice}>{t(catalog.every((product) => product.source === "demo" || !product.source) ? "demoCatalogNotice" : "officialCatalogNotice")}</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -124,5 +142,5 @@ const s=StyleSheet.create({
  safe:{flex:1,backgroundColor:"#F5F1E8"},page:{padding:22,paddingBottom:50,width:"100%",maxWidth:760,alignSelf:"center"},back:{color:"#6E2D3A",fontWeight:"700",marginTop:12},
  title:{fontSize:40,fontWeight:"600",marginTop:26,color:"#171713"},copy:{color:"#6B665F",marginTop:8,marginBottom:12},saved:{alignSelf:"flex-start",paddingVertical:8,marginBottom:10},savedText:{color:"#6E2D3A",fontWeight:"800"},context:{backgroundColor:"#E9DDD0",borderRadius:14,padding:12,marginTop:14,marginBottom:4},contextText:{color:"#6E2D3A",fontWeight:"700",fontSize:13},input:{backgroundColor:"#FFF",borderWidth:1,borderColor:"#DED6C9",borderRadius:14,padding:14,fontSize:15,marginBottom:10},
  filters:{flexDirection:"row",flexWrap:"wrap",gap:8,marginVertical:8},filter:{backgroundColor:"#FFF",borderWidth:1,borderColor:"#D1C8BA",borderRadius:999,paddingVertical:9,paddingHorizontal:13},filterOn:{backgroundColor:"#171713"},filterText:{fontWeight:"600"},filterTextOn:{color:"#FFF"},
- count:{fontSize:12,color:"#777168",marginVertical:14},card:{backgroundColor:"#FFF",borderRadius:20,padding:12,marginBottom:11,flexDirection:"row",alignItems:"center",gap:13},swatch:{width:72,height:92,borderRadius:14},info:{flex:1},brand:{fontSize:11,color:"#7B746B",textTransform:"uppercase",letterSpacing:1},name:{fontSize:17,fontWeight:"700",marginTop:5,color:"#171713"},meta:{fontSize:12,color:"#716B63",marginTop:4},price:{fontSize:15,fontWeight:"800",marginTop:9},score:{alignItems:"center"},scoreNumber:{color:"#6E2D3A",fontWeight:"900"},scoreLabel:{fontSize:10,color:"#817A72"},empty:{padding:30,textAlign:"center"},notice:{fontSize:11,lineHeight:17,color:"#777168",textAlign:"center",marginTop:20},
+ catalogMessage:{color:"#6E2D3A",fontSize:12,marginTop:8},count:{fontSize:12,color:"#777168",marginVertical:14},card:{backgroundColor:"#FFF",borderRadius:20,padding:12,marginBottom:11,flexDirection:"row",alignItems:"center",gap:13},swatch:{width:72,height:92,borderRadius:14},info:{flex:1},brand:{fontSize:11,color:"#7B746B",textTransform:"uppercase",letterSpacing:1},name:{fontSize:17,fontWeight:"700",marginTop:5,color:"#171713"},meta:{fontSize:12,color:"#716B63",marginTop:4},price:{fontSize:15,fontWeight:"800",marginTop:9},score:{alignItems:"center"},scoreNumber:{color:"#6E2D3A",fontWeight:"900"},scoreLabel:{fontSize:10,color:"#817A72"},empty:{padding:30,textAlign:"center"},notice:{fontSize:11,lineHeight:17,color:"#777168",textAlign:"center",marginTop:20},
 });
