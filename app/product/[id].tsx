@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useAuth } from "@/auth/AuthProvider";
 import { useI18n } from "@/i18n/I18nProvider";
 import { localizeProduct } from "@/catalog/localize";
+import { productColor } from "@/catalog/color";
 import { mockProducts } from "@/catalog/mock-products";
 import { loadCatalog } from "@/catalog/repository";
 import type { CatalogProduct } from "@/catalog/types";
@@ -82,7 +83,7 @@ export default function ProductDetailScreen() {
     <SafeAreaView style={s.safe}>
       <ScrollView contentContainerStyle={s.page}>
         <Pressable onPress={() => router.back()} accessibilityRole="button"><Text style={s.back}>{t("backToProducts")}</Text></Pressable>
-        <View style={[s.visual, { backgroundColor: sourceProduct.color === "Siyah" ? "#222" : sourceProduct.color === "Bordo" ? "#6E2D3A" : "#E7DFD0" }]}>
+        <View style={[s.visual, { backgroundColor: productColor(sourceProduct.color) }]}>
           <Text style={s.visualText}>ASTRA STYLE</Text>
         </View>
         <Text style={s.brand}>{product.brand}</Text>

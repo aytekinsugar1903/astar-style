@@ -4,6 +4,7 @@ import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "rea
 import { useAuth } from "@/auth/AuthProvider";
 import { useI18n } from "@/i18n/I18nProvider";
 import { localizeProduct } from "@/catalog/localize";
+import { productColor } from "@/catalog/color";
 import { mockProducts } from "@/catalog/mock-products";
 import { supabase } from "@/lib/supabase";
 import { track } from "@/analytics/track";
@@ -97,7 +98,7 @@ export default function FavoritesScreen() {
                 onPress={() => router.push({ pathname: "/product/[id]", params: { id: product.external_id } })}
                 accessibilityRole="button"
               >
-                <View style={[s.swatch, { backgroundColor: product.colors[0] === "Siyah" ? "#222" : product.colors[0] === "Bordo" ? "#6E2D3A" : "#E7DFD0" }]} />
+                <View style={[s.swatch, { backgroundColor: productColor(product.colors[0] ?? "") }]} />
                 <View style={s.info}>
                   <Text style={s.brand}>{product.brand ?? "ASTRA STYLE"}</Text>
                   <Text style={s.name}>{name}</Text>
