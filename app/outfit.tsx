@@ -6,6 +6,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { mockAiProvider } from "@/ai/mock-provider";
 import type { OutfitSuggestion } from "@/ai/types";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { functionErrorKey } from "@/lib/function-error";
 
 export default function OutfitScreen() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function OutfitScreen() {
       const response = await supabase.functions.invoke("outfit", {
         body: { occasion, budget: Number(budget) || 0, locale },
       });
-      if (response.error) { setMessage(response.error.message); setBusy(false); return; }
+      if (response.error) { setMessage(t(await functionErrorKey(response.error, "outfit"))); setBusy(false); return; }
       setResult(response.data.suggestion);
       setBusy(false);
       return;

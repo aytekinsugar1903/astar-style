@@ -12,6 +12,6 @@ export async function queueTryOn(input:{userId:string;personImagePath:string;gar
   if(error) throw error;
 
   const processed=await supabase.functions.invoke("try-on",{body:{jobId:data.id}});
-  if(processed.error) return data;
+  if(processed.error) throw processed.error;
   return processed.data as {id:string;status:string};
 }

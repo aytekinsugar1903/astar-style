@@ -3,14 +3,31 @@
     "name": "ASTRA STYLE",
     "slug": "astra-style",
     "scheme": "astrastyle",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "ASTRA STYLE accesses only the photos you choose for your wardrobe and virtual try-on.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
+    ],
     "experiments": { "typedRoutes": true },
-    "ios": { "supportsTablet": true, "bundleIdentifier": "com.astrastyle.app" },
-    "android": { "package": "com.astrastyle.app" },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.astrastyle.app",
+      "buildNumber": "1"
+    },
+    "android": {
+      "package": "com.astrastyle.app",
+      "versionCode": 1
+    },
     "web": { "bundler": "metro", "output": "static" }
   }
 }

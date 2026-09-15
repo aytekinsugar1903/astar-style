@@ -5,6 +5,7 @@ import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "@/auth/AuthProvider";
 import { useI18n } from "@/i18n/I18nProvider";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { functionErrorKey } from "@/lib/function-error";
 import { uploadWardrobeImage } from "@/wardrobe/upload";
 import { queueTryOn } from "@/tryon/service";
 
@@ -73,7 +74,7 @@ export default function TryOnScreen() {
       });
       setMessage(t("tryOnQueued", { status: job.status }));
     } catch (startError) {
-      setMessage(startError instanceof Error ? startError.message : t("processStartFailed"));
+      setMessage(t(await functionErrorKey(startError, "virtual_try_on")));
     } finally {
       setBusy(false);
     }

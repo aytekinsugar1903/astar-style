@@ -6,6 +6,7 @@ import { useAuth } from "@/auth/AuthProvider";
 import { useI18n } from "@/i18n/I18nProvider";
 import type { TranslationKey } from "@/i18n/translations";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { functionErrorKey } from "@/lib/function-error";
 import { uploadWardrobeImage } from "@/wardrobe/upload";
 import { track } from "@/analytics/track";
 
@@ -121,7 +122,12 @@ export default function WardrobeScreen() {
       });
 
       void track("wardrobe_item_added", { wardrobe_item_id: item.id });
-      setMessage(classified.error ? t("garmentAnalysisPending") : t("garmentAnalyzed"));
+      if (classified.error) {
+        const errorMessage = t(await functionErrorKey(classified.error, "garment_classification"));
+        setMessage(`${t("garmentAnalysisPending")} ${errorMessage}`);
+      } else {
+        setMessage(t("garmentAnalyzed"));
+      }
       await load();
     } catch (error) {
       if (uploadedPath) await supabase.storage.from("user-photos").remove([uploadedPath]);
