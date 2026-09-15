@@ -75,11 +75,15 @@ Deno.serve(async (req) => {
       const selectedGroups = new Set<string>();
       for (const item of ranked) {
         const group = categoryGroup(item.category);
-        if (!selectedGroups.has(group) || selected.length < 2) {
+        if (!selectedGroups.has(group)) {
           selected.push(item);
           selectedGroups.add(group);
         }
         if (selected.length === 3) break;
+      }
+      for (const item of ranked) {
+        if (selected.length === 3) break;
+        if (!selected.some((chosen) => chosen.id === item.id)) selected.push(item);
       }
       const learnedFromFavorites = (favoriteOutfits ?? []).some((item) =>
         item.occasion?.toLocaleLowerCase() === occasion.toLocaleLowerCase()
