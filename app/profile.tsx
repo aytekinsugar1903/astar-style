@@ -165,6 +165,13 @@ export default function ProfileScreen() {
           </Pressable>
         </View>
 
+        {session?.user.app_metadata?.role === "admin" && (
+          <Pressable style={s.adminAccess} onPress={() => router.push("/admin")} accessibilityRole="button">
+            <Text style={s.adminAccessTitle}>{t("openAdminPanel")}</Text>
+            <Text style={s.adminAccessCopy}>{t("openAdminPanelCopy")}</Text>
+          </Pressable>
+        )}
+
         <View style={s.privacy}>
           <Text style={s.privacyTitle}>{t("privacyTitle")}</Text>
           <Text style={s.privacyText}>{t("privacyCopy")}</Text>
@@ -238,6 +245,9 @@ const s = StyleSheet.create({
   summary: { color: "#2B2925", lineHeight: 21, marginTop: 5 },
   secondary: { borderWidth: 1, borderColor: "#D8D0C3", borderRadius: 999, padding: 14, alignItems: "center", marginTop: 20 },
   secondaryText: { color: "#6E2D3A", fontWeight: "800" },
+  adminAccess: { backgroundColor: "#171713", borderRadius: 20, padding: 18, marginBottom: 13 },
+  adminAccessTitle: { color: "#FFF", fontSize: 17, fontWeight: "800" },
+  adminAccessCopy: { color: "#C9C4BC", fontSize: 13, marginTop: 6 },
   privacy: { borderWidth: 1, borderColor: "#CFC6B8", borderRadius: 20, padding: 18, marginTop: 2 },
   privacyTitle: { color: "#171713", fontWeight: "800" },
   privacyText: { color: "#6B665F", fontSize: 13, lineHeight: 19, marginTop: 7 },
