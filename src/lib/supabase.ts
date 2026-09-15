@@ -2,25 +2,22 @@ import "react-native-url-polyfill/auto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 import { createClient } from "@supabase/supabase-js";
+import type { Database } from "../types/database";
 
-const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
-const publishableKey = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+const url =
+  process.env.EXPO_PUBLIC_SUPABASE_URL ??
+  "https://dxnfjwtlysfbasverfiw.supabase.co";
+const publishableKey =
+  process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+  "sb_publishable_9pSN28HNM__cPGgCFd5Q9g_YF2pnOw7";
 
 export const isSupabaseConfigured = Boolean(url && publishableKey);
 
-if (!isSupabaseConfigured) {
-  console.warn("Supabase variables are missing; ASTRA STYLE is running in demo mode.");
-}
-
-export const supabase = createClient(
-  url ?? "https://example.supabase.co",
-  publishableKey ?? "demo-key",
-  {
-    auth: {
-      ...(Platform.OS === "web" ? {} : { storage: AsyncStorage }),
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: Platform.OS === "web",
-    },
+export const supabase = createClient<Database>(url, publishableKey, {
+  auth: {
+    ...(Platform.OS === "web" ? {} : { storage: AsyncStorage }),
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: Platform.OS === "web",
   },
-);
+});
