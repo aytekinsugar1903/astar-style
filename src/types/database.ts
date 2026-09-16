@@ -173,6 +173,24 @@ export type Database = {
         }
         Relationships: []
       }
+      dressing_sessions: {
+        Row: {
+          canvas_state: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          canvas_state?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          canvas_state?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           created_at: string
@@ -231,6 +249,7 @@ export type Database = {
       }
       outfits: {
         Row: {
+          context: Json
           created_at: string
           explanation: string | null
           id: string
@@ -240,6 +259,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          context?: Json
           created_at?: string
           explanation?: string | null
           id?: string
@@ -249,6 +269,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          context?: Json
           created_at?: string
           explanation?: string | null
           id?: string
@@ -378,6 +399,7 @@ export type Database = {
       style_profiles: {
         Row: {
           ai_summary: string | null
+          avatar_config: Json
           avoided_colors: string[]
           body_preferences: Json
           preferred_colors: string[]
@@ -388,6 +410,7 @@ export type Database = {
         }
         Insert: {
           ai_summary?: string | null
+          avatar_config?: Json
           avoided_colors?: string[]
           body_preferences?: Json
           preferred_colors?: string[]
@@ -398,6 +421,7 @@ export type Database = {
         }
         Update: {
           ai_summary?: string | null
+          avatar_config?: Json
           avoided_colors?: string[]
           body_preferences?: Json
           preferred_colors?: string[]
@@ -516,41 +540,142 @@ export type Database = {
       wardrobe_items: {
         Row: {
           ai_confidence: number | null
+          brand: string | null
+          capture_quality: Json
           category: Database["public"]["Enums"]["wardrobe_category"]
           colors: string[]
           created_at: string
+          cutout_image_path: string | null
+          fabric: string | null
           id: string
           image_path: string
+          last_worn_at: string | null
+          matched_metadata: Json
+          metadata_confirmed: boolean
           name: string | null
+          processing_status: string
+          purchase_currency: string
+          purchase_price: number | null
+          raw_image_path: string
           seasons: string[]
           style_tags: string[]
           user_id: string
+          wear_count: number
         }
         Insert: {
           ai_confidence?: number | null
+          brand?: string | null
+          capture_quality?: Json
           category?: Database["public"]["Enums"]["wardrobe_category"]
           colors?: string[]
           created_at?: string
+          cutout_image_path?: string | null
+          fabric?: string | null
           id?: string
           image_path: string
+          last_worn_at?: string | null
+          matched_metadata?: Json
+          metadata_confirmed?: boolean
           name?: string | null
+          processing_status?: string
+          purchase_currency?: string
+          purchase_price?: number | null
+          raw_image_path: string
           seasons?: string[]
           style_tags?: string[]
           user_id: string
+          wear_count?: number
         }
         Update: {
           ai_confidence?: number | null
+          brand?: string | null
+          capture_quality?: Json
           category?: Database["public"]["Enums"]["wardrobe_category"]
           colors?: string[]
           created_at?: string
+          cutout_image_path?: string | null
+          fabric?: string | null
           id?: string
           image_path?: string
+          last_worn_at?: string | null
+          matched_metadata?: Json
+          metadata_confirmed?: boolean
           name?: string | null
+          processing_status?: string
+          purchase_currency?: string
+          purchase_price?: number | null
+          raw_image_path?: string
           seasons?: string[]
           style_tags?: string[]
           user_id?: string
+          wear_count?: number
         }
         Relationships: []
+      }
+      wear_event_items: {
+        Row: {
+          wardrobe_item_id: string
+          wear_event_id: string
+        }
+        Insert: {
+          wardrobe_item_id: string
+          wear_event_id: string
+        }
+        Update: {
+          wardrobe_item_id?: string
+          wear_event_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wear_event_items_wardrobe_item_id_fkey"
+            columns: ["wardrobe_item_id"]
+            isOneToOne: false
+            referencedRelation: "wardrobe_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wear_event_items_wear_event_id_fkey"
+            columns: ["wear_event_id"]
+            isOneToOne: false
+            referencedRelation: "wear_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wear_events: {
+        Row: {
+          created_at: string
+          event_name: string | null
+          id: string
+          outfit_id: string
+          user_id: string
+          worn_on: string
+        }
+        Insert: {
+          created_at?: string
+          event_name?: string | null
+          id?: string
+          outfit_id: string
+          user_id: string
+          worn_on?: string
+        }
+        Update: {
+          created_at?: string
+          event_name?: string | null
+          id?: string
+          outfit_id?: string
+          user_id?: string
+          worn_on?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wear_events_outfit_id_fkey"
+            columns: ["outfit_id"]
+            isOneToOne: false
+            referencedRelation: "outfits"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -558,6 +683,10 @@ export type Database = {
     }
     Functions: {
       admin_analytics_snapshot: { Args: never; Returns: Json }
+      mark_outfit_worn: {
+        Args: { p_event_name?: string; p_outfit_id: string }
+        Returns: string
+      }
       reserve_ai_usage: {
         Args: {
           p_daily_cost_limit_usd?: number
@@ -728,3 +857,4 @@ export const Constants = {
     },
   },
 } as const
+

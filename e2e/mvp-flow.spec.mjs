@@ -36,7 +36,7 @@ test("wardrobe and outfit demo flows work", async ({ page }) => {
   await expect(page.getByText("Parti · Minimal seçenek 1", { exact: true })).toBeVisible();
   await expect(page.getByText("4 gardırop parçası kullanıldı", { exact: true }).first()).toBeVisible();
   await page.getByText("Kombin geçmişimi gör", { exact: false }).click();
-  await expect(page).toHaveURL(/\\/outfits/);
+  await expect(page).toHaveURL(/\/outfits/);
   await expect(page.getByText("Henüz kaydedilmiş kombinin yok.", { exact: true })).toBeVisible();
 });
 

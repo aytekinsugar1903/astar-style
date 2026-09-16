@@ -2,6 +2,7 @@ import { corsHeaders, json } from "../_shared/http.ts";
 import { clients } from "../_shared/clients.ts";
 import { finishUsage, limitPayload, reserveUsage, usageLimits } from "../_shared/usage.ts";
 import { TEMPLATE_COUNT, audienceLabel, currentSeason, orderedStyles, seasonLabel, styleLabel, type Audience } from "./templates.ts";
+import { filterEligible, type Context } from "./rules.ts";
 
 type WardrobeItem={id:string;name:string|null;category:string;colors:string[]|null;style_tags:string[]|null;seasons:string[]|null};
 const group=(category:string)=>({shirt:"top",tshirt:"top",jacket:"outer",trousers:"bottom",skirt:"bottom",dress:"dress",shoes:"shoes",bag:"bag",accessory:"accessory"}[category]??"other");
@@ -35,6 +36,13 @@ Deno.serve(async(req)=>{
     const body=await req.json();const english=body.locale==="en";const fallback=english?"Everyday":"Günlük";
     const occasion=String(body.occasion??fallback).trim().slice(0,80)||fallback;
     const budget=Math.max(0,Math.min(1_000_000,Number(body.budget??0)));
+    const temperature=Number(body.temperatureC);
+    const context:Context={
+      occasion,
+      temperatureC:Number.isFinite(temperature)?Math.max(-30,Math.min(55,temperature)):undefined,
+      surface:["indoor","grass","cobblestone","sand"].includes(body.surface)?body.surface:"indoor",
+      timeOfDay:body.timeOfDay==="day"?"day":"evening",
+    };
     const seed=Math.abs(Math.trunc(Number(body.variationSeed??0)));
     const [{data:wardrobe,error:wardrobeError},{data:profile,error:profileError},{data:favorites,error:favoritesError}]=await Promise.all([
       user.from("wardrobe_items").select("id,name,category,colors,style_tags,seasons").limit(80),
@@ -49,7 +57,8 @@ Deno.serve(async(req)=>{
       const preferences=profile?.body_preferences;
       const audience:Audience=preferences&&typeof preferences==="object"&&!Array.isArray(preferences)&&(preferences.audience==="women"||preferences.audience==="men")?preferences.audience:"unisex";
       const preferredColors=profile?.preferred_colors??[];const preferredTags=profile?.style_tags??[];
-      const baseRanked=([...(wardrobe??[])] as WardrobeItem[]).sort((a,b)=>(overlap(b.colors,preferredColors)*3+overlap(b.style_tags,preferredTags)*5)-(overlap(a.colors,preferredColors)*3+overlap(a.style_tags,preferredTags)*5));
+      const filtered=filterEligible([...(wardrobe??[])] as WardrobeItem[],context);
+      const baseRanked=filtered.eligible.sort((a,b)=>(overlap(b.colors,preferredColors)*3+overlap(b.style_tags,preferredTags)*5)-(overlap(a.colors,preferredColors)*3+overlap(a.style_tags,preferredTags)*5));
       const season=currentSeason();const styles=orderedStyles(preferredTags,seed);
       const learned=(favorites??[]).some(item=>item.occasion?.toLocaleLowerCase()===occasion.toLocaleLowerCase());
       const suggestions=[];
@@ -59,13 +68,13 @@ Deno.serve(async(req)=>{
         const explanation=english
           ?`${audienceLabel(audience,true)} collection · ${seasonLabel(season,true)}-ready ${styleLabel(style,true).toLocaleLowerCase()} styling, balanced with your colors and wardrobe.${learned?" Your liked outfits also influenced this option.":""}`
           :`${audienceLabel(audience,false)} koleksiyonu · ${seasonLabel(season,false)} için ${styleLabel(style,false).toLocaleLowerCase()} çizgide; renklerin ve gardırobun dengelenerek hazırlandı.${learned?" Beğendiğin kombinler de bu seçeneği etkiledi.":""}`;
-        const {data:saved,error}=await user.from("outfits").insert({user_id:auth.user.id,title,occasion,explanation}).select("id").single();
+        const {data:saved,error}=await user.from("outfits").insert({user_id:auth.user.id,title,occasion,explanation,context}).select("id").single();
         if(error)throw error;created.push(saved.id);
         if(selected.length){const {error:itemError}=await user.from("outfit_items").insert(selected.map(item=>({outfit_id:saved.id,wardrobe_item_id:item.id})));if(itemError)throw itemError;}
         suggestions.push({outfitId:saved.id,templateId:`${audience}:${season}:${style}:${index}`,title,explanation,wardrobeItemIds:selected.map(item=>item.id),missingPieces:missing(selected,audience,style,english,budget)});
       }
       await finishUsage(admin,reservation.event_id!,startedAt,true);
-      return json({provider:"mock",estimatedCostUsd:0,templateCount:TEMPLATE_COUNT,suggestions,suggestion:suggestions[0]});
+      return json({provider:"mock",estimatedCostUsd:0,templateCount:TEMPLATE_COUNT,eligibleCount:baseRanked.length,excluded:filtered.excluded,suggestions,suggestion:suggestions[0]});
     }catch(error){for(const id of created)await user.from("outfits").delete().eq("id",id);if(reservation.event_id)await finishUsage(admin,reservation.event_id,startedAt,false);throw error;}
   }catch(error){console.error("outfit_failed",error);return json({error:"INTERNAL_ERROR"},500);}
 });

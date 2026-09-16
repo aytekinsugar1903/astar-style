@@ -5,11 +5,16 @@
 - [x] Expo mobile/web foundation with Turkish and English support
 - [x] Supabase authentication, persistent sessions, profile and double-confirmed account deletion
 - [x] Consent-based style onboarding with women, men, and combined collection preferences
+- [x] Height, weight, body-shape and skin-tone avatar setup with generated 2D anchor points
+- [x] Camera/gallery garment capture, minimum-resolution check and one-tap wardrobe confirmation card
 - [x] Private full-body and wardrobe photo storage, preview and permanent deletion
 - [x] Automatic garment classification through a replaceable provider interface (free mock provider active)
 - [x] Digital wardrobe with ownership-based RLS and private storage policies
+- [x] 2D dressing room with category-based z-index layering and persisted canvas state
 - [x] 768-template outfit engine: 3 audiences × 8 occasions × 4 seasons × 8 styles
 - [x] Six distinct outfit suggestions per request, saved outfit history and missing-piece routing
+- [x] Event, temperature, time and surface rules; wedding-white and terrain/heel exclusions
+- [x] “Wore today” calendar log, wear count and cost-per-wear tracking
 - [x] Women, men, and unisex outfit structures; men’s combinations do not depend on dress categories
 - [x] 80-item synthetic demo catalog: 34 women, 24 men, 22 unisex; 11 categories
 - [x] Product search with collection, category, color, style, stock and budget filters
@@ -26,12 +31,12 @@
 
 ## Live backend
 
-- Supabase project: `ASTRA STYLE` (`dxnfjwtlysfbasverfiw`)
+- Supabase project: `ASTRA STYLE` / WEYRA app (`dxnfjwtlysfbasverfiw`); dashboard display-name rename is optional
 - Region: Frankfurt / `eu-central-1`
 - Current plan and added usage cost: Free / 0 USD
 - Active catalog: 80 synthetic products; no scraping and no copied third-party imagery
 - Outfit engine: 768 base templates; six variants returned per request
-- Edge Functions: classify-garment v3, outfit v7, try-on v3, admin-dashboard v3, delete-account v2, catalog-sync v3, operations-runner v1
+- Edge Functions: classify-garment v3, outfit v8, background-remove v1, enrich-garment v1, try-on v3, admin-dashboard v3, delete-account v2, catalog-sync v3, operations-runner v1
 - Providers: free mock providers active; FASHN, OpenAI vision and official JSON feed adapters installed but disabled
 - Security: JWT-protected functions, RLS on public data and private photo buckets
 
@@ -43,6 +48,8 @@ These are intentionally not activated because they require an external account, 
 - [x] OpenAI image-analysis adapter with strict normalization (activation and credentials pending)
 - [x] HTTPS official JSON affiliate-feed adapter (network credentials and commercial links pending)
 - [x] Provider-neutral premium entitlement foundation (payment merchant account and webhook activation pending)
+- [x] BiRefNet-compatible background-removal endpoint boundary (real endpoint/token pending; safe passthrough active)
+- [x] Licensed internal catalog matcher for garment metadata (public-web reverse image provider intentionally not activated)
 - [ ] Apple Developer / Google Play accounts and signed store builds
 - [ ] Production domain and hosting decision
 

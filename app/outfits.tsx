@@ -23,6 +23,7 @@ export default function OutfitsScreen() {
   const [items, setItems] = useState<Outfit[]>([]);
   const [loading, setLoading] = useState(isSupabaseConfigured);
   const [message, setMessage] = useState("");
+  const [wearingId, setWearingId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     if (!isSupabaseConfigured || !session) {
@@ -59,6 +60,17 @@ export default function OutfitsScreen() {
     void track(next ? "outfit_favorited" : "outfit_unfavorited");
   }
 
+  async function markWorn(item: Outfit) {
+    if (!isSupabaseConfigured || !session) return;
+    setWearingId(item.id);
+    setMessage("");
+    const { error } = await supabase.rpc("mark_outfit_worn", { p_outfit_id: item.id, p_event_name: item.occasion ?? undefined });
+    setWearingId(null);
+    if (error) { setMessage(error.message); return; }
+    void track("outfit_worn", { outfit_id: item.id, piece_count: item.outfit_items.length });
+    setMessage(t("outfitMarkedWorn"));
+  }
+
   return (
     <SafeAreaView style={s.safe}>
       <ScrollView contentContainerStyle={s.page}>
@@ -92,6 +104,9 @@ export default function OutfitsScreen() {
             </View>
             {!!item.explanation && <Text style={s.explanation}>{item.explanation}</Text>}
             <Text style={s.date}>{new Date(item.created_at).toLocaleDateString(locale === "tr" ? "tr-TR" : "en-US")}</Text>
+            <Pressable style={[s.wornButton,wearingId===item.id&&s.disabled]} onPress={()=>void markWorn(item)} disabled={wearingId===item.id} accessibilityRole="button">
+              <Text style={s.wornButtonText}>{wearingId===item.id?t("saving"):t("woreToday")}</Text>
+            </Pressable>
             {!!item.outfit_items[0]?.wardrobe_item_id && (
               <Pressable
                 style={s.tryButton}
@@ -114,4 +129,6 @@ const s=StyleSheet.create({
  card:{backgroundColor:"#FFF",borderWidth:1,borderColor:"#E3DACE",borderRadius:22,padding:20,marginBottom:13},row:{flexDirection:"row",alignItems:"flex-start",gap:12},cardText:{flex:1},occasion:{fontSize:10,fontWeight:"800",letterSpacing:1.4,color:"#6E2D3A"},cardTitle:{fontSize:21,fontWeight:"700",color:"#171713",marginTop:7},explanation:{color:"#615D56",lineHeight:20,marginTop:12},date:{color:"#918B82",fontSize:11,marginTop:15},
  favorite:{width:42,height:42,borderRadius:21,borderWidth:1,borderColor:"#CBBFB0",alignItems:"center",justifyContent:"center"},favoriteActive:{backgroundColor:"#6E2D3A",borderColor:"#6E2D3A"},favoriteText:{fontSize:21,color:"#6E2D3A"},favoriteTextActive:{color:"#FFF"},
  empty:{color:"#777168",marginTop:22},emptyCard:{backgroundColor:"#FFF",borderRadius:22,padding:22},emptyTitle:{fontSize:18,fontWeight:"700",color:"#171713"},primary:{backgroundColor:"#171713",borderRadius:999,padding:15,alignItems:"center",marginTop:18},primaryText:{color:"#FFF",fontWeight:"800"},
+ wornButton:{backgroundColor:"#171713",borderRadius:999,padding:13,alignItems:"center",marginTop:15},wornButtonText:{color:"#FFF",fontWeight:"800"},disabled:{opacity:.5},
+ tryButton:{borderWidth:1,borderColor:"#6E2D3A",borderRadius:999,padding:13,alignItems:"center",marginTop:10},tryButtonText:{color:"#6E2D3A",fontWeight:"800"},
 });

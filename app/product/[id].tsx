@@ -84,7 +84,7 @@ export default function ProductDetailScreen() {
       <ScrollView contentContainerStyle={s.page}>
         <Pressable onPress={() => router.back()} accessibilityRole="button"><Text style={s.back}>{t("backToProducts")}</Text></Pressable>
         <View style={[s.visual, { backgroundColor: productColor(sourceProduct.color) }]}>
-          <Text style={s.visualText}>ASTRA STYLE</Text>
+          <Text style={s.visualText}>WEYRA</Text>
         </View>
         <Text style={s.brand}>{product.brand}</Text>
         <Text style={s.title}>{product.name}</Text>
@@ -115,3 +115,4 @@ const s = StyleSheet.create({
   message: { color: "#6E2D3A", textAlign: "center", fontWeight: "700", marginTop: 14 }, savedLink: { color: "#6E2D3A", textAlign: "center", fontWeight: "800", marginTop: 18 },
   note: { fontSize: 11, lineHeight: 17, color: "#777168", textAlign: "center", marginTop: 16 }, notFound: { margin: "auto" },
 });
+

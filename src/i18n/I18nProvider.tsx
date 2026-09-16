@@ -3,7 +3,7 @@ import { createContext, PropsWithChildren, useCallback, useContext, useEffect, u
 import { isLocale, translations } from "./translations";
 import type { Locale, TranslationKey } from "./translations";
 
-const STORAGE_KEY = "@astra-style/locale";
+const STORAGE_KEY = "@weyra/locale";
 
 type Params = Record<string, string | number>;
 
@@ -47,3 +47,4 @@ export function useI18n() {
   if (!value) throw new Error("useI18n must be used inside I18nProvider");
   return value;
 }
+

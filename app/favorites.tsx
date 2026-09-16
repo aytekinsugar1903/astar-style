@@ -100,7 +100,7 @@ export default function FavoritesScreen() {
               >
                 <View style={[s.swatch, { backgroundColor: productColor(product.colors[0] ?? "") }]} />
                 <View style={s.info}>
-                  <Text style={s.brand}>{product.brand ?? "ASTRA STYLE"}</Text>
+                  <Text style={s.brand}>{product.brand ?? "WEYRA"}</Text>
                   <Text style={s.name}>{name}</Text>
                   <Text style={s.meta}>{category} · {colors.join(", ")}</Text>
                   <Text style={s.price}>
@@ -159,3 +159,4 @@ const s = StyleSheet.create({
   buttonText: { color: "#FFF", fontWeight: "800" },
   notice: { fontSize: 11, lineHeight: 17, color: "#777168", textAlign: "center", marginTop: 20 },
 });
+

@@ -84,7 +84,7 @@ export default function AdminScreen() {
       <ScrollView contentContainerStyle={s.page}>
         <Pressable onPress={() => router.back()} accessibilityRole="button"><Text style={s.back}>{t("back")}</Text></Pressable>
         <Text style={s.kicker}>{t("adminKicker")}</Text>
-        <Text style={s.title}>ASTRA Control</Text>
+        <Text style={s.title}>WEYRA Control</Text>
         <Text style={s.copy}>{t("adminCopy")}</Text>
         {!!message && <Text style={s.message} accessibilityLiveRegion="polite">{message}</Text>}
         <View style={s.grid}>
@@ -117,3 +117,4 @@ const s=StyleSheet.create({
  grid:{flexDirection:"row",flexWrap:"wrap",gap:12,marginTop:26},card:{backgroundColor:"#292925",borderRadius:20,padding:20,minHeight:130,flexGrow:1,flexBasis:145},value:{color:"#FFF",fontSize:28,fontWeight:"800"},label:{color:"#BDB7AE",marginTop:28},
  sync:{backgroundColor:"#292925",borderRadius:22,padding:22,marginTop:20,borderWidth:1,borderColor:"#45453E"},syncTitle:{color:"#FFF",fontSize:18,fontWeight:"800"},syncCopy:{color:"#BDB7AE",lineHeight:20,marginTop:8},syncButton:{backgroundColor:"#FFF",borderRadius:999,padding:14,alignItems:"center",marginTop:16},syncButtonText:{color:"#171713",fontWeight:"800"},syncMessage:{color:"#E8C7CD",fontWeight:"700",marginTop:12},disabled:{opacity:.5},guard:{backgroundColor:"#6E2D3A",borderRadius:22,padding:22,marginTop:20},guardTitle:{color:"#FFF",fontSize:18,fontWeight:"800"},guardCopy:{color:"#F0DDE1",lineHeight:20,marginTop:8},
 });
+

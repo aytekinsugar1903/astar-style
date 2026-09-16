@@ -50,5 +50,6 @@ const server = createServer((request, response) => {
 });
 
 server.listen(port, host, () => {
-  console.log(`ASTRA STYLE test server: http://${host}:${port}`);
+  console.log(`WEYRA test server: http://${host}:${port}`);
 });
+

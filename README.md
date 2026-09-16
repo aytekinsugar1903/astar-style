@@ -1,4 +1,4 @@
-# ASTRA STYLE
+# WEYRA
 
 AI destekli kişisel stil, dijital gardırop, kombin, sanal deneme ve alışveriş platformu.
 
@@ -32,3 +32,4 @@ Etkinlik stilisti, stil profili ve beğenilen kombin sinyallerini kullanır. Ür
 ### Geniş ücretsiz demo kapsamı
 
 Ücretsiz katalog 80 sentetik üründen oluşur ve kadın, erkek ve unisex koleksiyonları kapsar. Ürün araması kategori, renk, stil, stok ve bütçe filtrelerini birlikte uygular. Kombin motoru 3 koleksiyon × 8 etkinlik × 4 mevsim × 8 stil üzerinden 768 temel şablon üretir ve her istekte en uygun 6 farklı seçeneği döndürür.
+

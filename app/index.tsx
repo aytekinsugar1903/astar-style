@@ -6,7 +6,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { TranslationKey } from "@/i18n/translations";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
-const actions: ReadonlyArray<readonly [TranslationKey, TranslationKey, string, "/wardrobe" | "/outfit" | "/outfits" | "/try-on" | "/products" | "/favorites"]> = [
+const actions: ReadonlyArray<readonly [TranslationKey, TranslationKey, string, "/wardrobe" | "/dressing-room" | "/outfit" | "/outfits" | "/try-on" | "/products" | "/favorites"]> = [
   ["wardrobeTitle", "wardrobeSubtitle", "01", "/wardrobe"],
   ["outfitTitle", "outfitSubtitle", "02", "/outfit"],
   ["tryOnTitle", "tryOnSubtitle", "03", "/try-on"],
@@ -14,6 +14,7 @@ const actions: ReadonlyArray<readonly [TranslationKey, TranslationKey, string, "
   ["favoritesTitle", "favoritesSubtitle", "05", "/favorites"],
   ["eventTitle", "eventSubtitle", "06", "/outfit"],
   ["outfitHistoryTitle", "outfitHistorySubtitle", "07", "/outfits"],
+  ["dressingRoomTitle", "dressingRoomSubtitle", "08", "/dressing-room"],
 ];
 
 export default function HomeScreen() {
@@ -53,7 +54,7 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.page}>
         <View style={styles.brandRow}>
-          <Text style={styles.brand}>ASTRA STYLE</Text>
+          <Text style={styles.brand}>WEYRA</Text>
           <Pressable style={styles.avatar} onPress={() => router.push("/profile")} accessibilityRole="button">
             <Text style={styles.avatarText}>A</Text>
           </Pressable>

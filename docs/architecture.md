@@ -1,4 +1,4 @@
-# ASTRA STYLE — MVP Architecture
+# WEYRA — MVP Architecture
 
 ## Product flow
 
@@ -31,3 +31,4 @@ Explicit consent is versioned. Original and derived images can be deleted togeth
 - Usage ledger by provider/model/user
 - Mock providers in development
 - Kill switch per provider
+

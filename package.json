@@ -1,5 +1,5 @@
 {
-  "name": "astra-style",
+  "name": "weyra",
   "version": "0.2.0",
   "private": true,
   "main": "expo-router/entry",
@@ -38,3 +38,4 @@
     "typescript": "~5.9.2"
   }
 }
+

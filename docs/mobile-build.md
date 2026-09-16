@@ -1,6 +1,6 @@
 # Mobile build readiness
 
-ASTRA STYLE is configured for Expo Application Services without embedding private keys.
+WEYRA is configured for Expo Application Services without embedding private keys.
 
 ## Prepared
 
@@ -21,3 +21,4 @@ ASTRA STYLE is configured for Expo Application Services without embedding privat
 5. For Google Play submission, connect a Play Console account and service credential.
 
 Do not commit Expo access tokens, Apple credentials, Google service-account JSON, or provider secrets. No build or store submission should be started without the owner's approval because account verification or billing may apply.
+

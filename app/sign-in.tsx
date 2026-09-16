@@ -33,7 +33,7 @@ export default function SignInScreen() {
   return (
     <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <View style={styles.panel}>
-        <Text style={styles.brand}>ASTRA STYLE</Text>
+        <Text style={styles.brand}>WEYRA</Text>
         <Text style={styles.title}>{mode === "sign-in" ? t("authWelcome") : t("authCreateTitle")}</Text>
         <Text style={styles.copy}>{t("authCopy")}</Text>
         <TextInput
@@ -78,3 +78,4 @@ const styles = StyleSheet.create({
   disabled: { opacity: 0.55 }, buttonText: { color: "#FFFFFF", fontWeight: "800" },
   switch: { color: "#6E2D3A", textAlign: "center", marginTop: 20, fontWeight: "700" },
 });
+
