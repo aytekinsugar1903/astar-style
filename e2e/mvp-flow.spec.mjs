@@ -28,6 +28,7 @@ test("wardrobe and outfit demo flows work", async ({ page }) => {
   await expect(page.getByText("3 parça", { exact: true })).toBeVisible();
 
   await page.goto("/outfit");
+  await expect(page.getByText("768 farklı kadın, erkek ve unisex kombin şablonu hazır.", { exact: true })).toBeVisible();
   await page.getByText("Parti", { exact: true }).click();
   await expect(page.getByLabel("Etkinlik")).toHaveValue("Parti");
   await page.getByText("Kombinleri hazırla", { exact: false }).click();
@@ -37,6 +38,15 @@ test("wardrobe and outfit demo flows work", async ({ page }) => {
   await page.getByText("Kombin geçmişimi gör", { exact: false }).click();
   await expect(page).toHaveURL(/\\/outfits/);
   await expect(page.getByText("Henüz kaydedilmiş kombinin yok.", { exact: true })).toBeVisible();
+});
+
+
+test("men collection exposes a broad catalog", async ({ page }) => {
+  await page.goto("/products");
+  await page.getByText("Erkek", { exact: true }).click();
+  await expect(page.getByText("46 ürün", { exact: false })).toBeVisible();
+  await expect(page.getByText("Lacivert Yapılı Blazer", { exact: true })).toBeVisible();
+  await expect(page.getByText("Lacivert İki Parça Takım", { exact: true })).toBeVisible();
 });
 
 test("product filtering reaches product detail", async ({ page }) => {
