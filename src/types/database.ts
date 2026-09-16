@@ -116,6 +116,36 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_runs: {
+        Row: {
+          completed_at: string | null
+          error_code: string | null
+          id: string
+          job_name: string
+          metrics: Json
+          started_at: string
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          error_code?: string | null
+          id?: string
+          job_name: string
+          metrics?: Json
+          started_at?: string
+          status: string
+        }
+        Update: {
+          completed_at?: string | null
+          error_code?: string | null
+          id?: string
+          job_name?: string
+          metrics?: Json
+          started_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
       consents: {
         Row: {
           consent_type: string
@@ -378,6 +408,42 @@ export type Database = {
         }
         Relationships: []
       }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          current_period_end: string | null
+          plan: string
+          provider: string
+          provider_customer_id: string | null
+          provider_subscription_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          current_period_end?: string | null
+          plan?: string
+          provider?: string
+          provider_customer_id?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          current_period_end?: string | null
+          plan?: string
+          provider?: string
+          provider_customer_id?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       try_on_jobs: {
         Row: {
           completed_at: string | null
@@ -491,7 +557,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_analytics_snapshot: { Args: never; Returns: Json }
+      reserve_ai_usage: {
+        Args: {
+          p_daily_cost_limit_usd?: number
+          p_estimated_cost_usd?: number
+          p_max_requests?: number
+          p_model?: string
+          p_operation: string
+          p_provider: string
+          p_user_id: string
+          p_window_seconds?: number
+        }
+        Returns: Json
+      }
     }
     Enums: {
       job_status: "queued" | "processing" | "succeeded" | "failed" | "cancelled"

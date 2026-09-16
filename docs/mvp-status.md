@@ -19,6 +19,8 @@
 - [x] Per-user AI quotas, daily estimated-cost guards and localized function errors
 - [x] Privacy-minimized analytics for DAU, MAU, retention, sessions, try-on and product engagement
 - [x] Admin dashboard for users, products, AI usage/cost, conversions and errors
+- [x] Premium subscription/entitlement schema with owner-read-only RLS
+- [x] Admin-only daily and weekly operations runner with persistent run history
 - [x] EAS preview/production build profiles; signing credentials intentionally not connected
 - [x] CI checks for type safety, translations, Expo health, web export and mobile browser journeys
 
@@ -29,7 +31,7 @@
 - Current plan and added usage cost: Free / 0 USD
 - Active catalog: 80 synthetic products; no scraping and no copied third-party imagery
 - Outfit engine: 768 base templates; six variants returned per request
-- Edge Functions: classify-garment v3, outfit v7, try-on v3, admin-dashboard v3, delete-account v2, catalog-sync v3
+- Edge Functions: classify-garment v3, outfit v7, try-on v3, admin-dashboard v3, delete-account v2, catalog-sync v3, operations-runner v1
 - Providers: free mock providers active; FASHN, OpenAI vision and official JSON feed adapters installed but disabled
 - Security: JWT-protected functions, RLS on public data and private photo buckets
 
@@ -40,7 +42,7 @@ These are intentionally not activated because they require an external account, 
 - [x] FASHN try-on adapter with explicit paid-provider switch (activation and credits pending)
 - [x] OpenAI image-analysis adapter with strict normalization (activation and credentials pending)
 - [x] HTTPS official JSON affiliate-feed adapter (network credentials and commercial links pending)
-- [ ] Payment provider merchant account
+- [x] Provider-neutral premium entitlement foundation (payment merchant account and webhook activation pending)
 - [ ] Apple Developer / Google Play accounts and signed store builds
 - [ ] Production domain and hosting decision
 
