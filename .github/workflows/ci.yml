@@ -20,6 +20,7 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npm run typecheck
       - run: npm run test:i18n
+      - run: npm run test:providers
       - run: npm run doctor
       - name: Export web bundle in isolated demo mode
         run: npm run build:e2e

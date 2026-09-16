@@ -1,11 +1,18 @@
 import { corsHeaders, json } from "../_shared/http.ts";
 import { clients } from "../_shared/clients.ts";
 import { mockCatalogProvider } from "./providers/mock.ts";
+import { createOfficialJsonProvider } from "./providers/official-json.ts";
 import type { CatalogFeedItem, CatalogProvider } from "./providers/types.ts";
 
 function provider(): CatalogProvider {
   const name = Deno.env.get("CATALOG_PROVIDER") ?? "mock";
   if (name === "mock") return mockCatalogProvider;
+  if (name === "official-json") {
+    if (Deno.env.get("OFFICIAL_CATALOG_ENABLED") !== "true") throw new Error("OFFICIAL_CATALOG_DISABLED");
+    const url = Deno.env.get("CATALOG_FEED_URL");
+    if (!url) throw new Error("CATALOG_PROVIDER_NOT_CONFIGURED");
+    return createOfficialJsonProvider({ url, token: Deno.env.get("CATALOG_FEED_TOKEN"), sourceName: Deno.env.get("CATALOG_SOURCE_NAME") ?? "official-feed" });
+  }
   throw new Error("CATALOG_PROVIDER_NOT_CONFIGURED");
 }
 
@@ -67,6 +74,6 @@ Deno.serve(async (req) => {
     return json({ provider: source.name, productsUpserted, offersUpserted, estimatedCostUsd: 0 });
   } catch (error) {
     console.error("catalog_sync_failed", error);
-    return json({ error: error instanceof Error && error.message === "CATALOG_PROVIDER_NOT_CONFIGURED" ? error.message : "INTERNAL_ERROR" }, 500);
+    return json({ error: error instanceof Error && ["CATALOG_PROVIDER_NOT_CONFIGURED","OFFICIAL_CATALOG_DISABLED"].includes(error.message) ? error.message : "INTERNAL_ERROR" }, 500);
   }
 });

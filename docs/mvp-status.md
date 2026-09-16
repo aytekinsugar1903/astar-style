@@ -29,17 +29,17 @@
 - Current plan and added usage cost: Free / 0 USD
 - Active catalog: 80 synthetic products; no scraping and no copied third-party imagery
 - Outfit engine: 768 base templates; six variants returned per request
-- Edge Functions: classify-garment v2, outfit v7, try-on v2, admin-dashboard v3, delete-account v2, catalog-sync v2
-- Providers: free mock classification, outfit, catalog and try-on providers
+- Edge Functions: classify-garment v3, outfit v7, try-on v3, admin-dashboard v3, delete-account v2, catalog-sync v3
+- Providers: free mock providers active; FASHN, OpenAI vision and official JSON feed adapters installed but disabled
 - Security: JWT-protected functions, RLS on public data and private photo buckets
 
 ## Provider-dependent production work
 
 These are intentionally not activated because they require an external account, commercial terms, payment, or store-owner approval:
 
-- [ ] Real visual try-on provider adapter and paid credits
-- [ ] Real image-analysis model credentials
-- [ ] Official marketplace or affiliate feed credentials and commercial product links
+- [x] FASHN try-on adapter with explicit paid-provider switch (activation and credits pending)
+- [x] OpenAI image-analysis adapter with strict normalization (activation and credentials pending)
+- [x] HTTPS official JSON affiliate-feed adapter (network credentials and commercial links pending)
 - [ ] Payment provider merchant account
 - [ ] Apple Developer / Google Play accounts and signed store builds
 - [ ] Production domain and hosting decision
