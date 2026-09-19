@@ -13,8 +13,9 @@ Deno.serve(async(req)=>{
   ]);if(itemError||!item)return json({error:"NOT_FOUND"},404);if(productsError)throw productsError;
   const words=[item.name,item.category,...(item.colors??[])].filter(Boolean).map(value=>normalize(String(value)));
   const ranked=(products??[]).map(product=>{const haystack=normalize([product.name,product.brand,product.category,...(product.colors??[])].filter(Boolean).join(" "));return{product,score:words.filter(word=>haystack.includes(word)).length};}).sort((a,b)=>b.score-a.score);
-  const best=ranked[0];const offer=best?.product.product_offers?.[0];const metadata=best&&best.score>0?{source:"official_or_demo_catalog",confidence:Math.min(.95,.35+best.score*.15),product_id:best.product.id,brand:best.product.brand,product_name:best.product.name,category:best.product.category,colors:best.product.colors,fabric:best.product.metadata?.fabric??null,price:offer?.price??null,currency:offer?.currency??null}:{source:"no_match",confidence:0};
-  const{error:updateError}=await admin.from("wardrobe_items").update({matched_metadata:metadata,brand:metadata.brand??null,fabric:metadata.fabric??null,processing_status:best&&best.score>0?"ready":"needs_review"}).eq("id",id).eq("user_id",auth.user.id);if(updateError)throw updateError;
-  return json({provider:"catalog_match",estimatedCostUsd:0,matched_metadata:metadata});
+  // Text-only catalog overlap cannot establish a garment's manufacturer, fabric, or purchase price.
+  const metadata={source:"text_catalog_suggestions",verified:false,requires_user_review:true,candidates:ranked.filter(entry=>entry.score>0).slice(0,3).map(entry=>({product_id:entry.product.id,product_name:entry.product.name,score:entry.score}))};
+  const{error:updateError}=await admin.from("wardrobe_items").update({matched_metadata:metadata,processing_status:"needs_review"}).eq("id",id).eq("user_id",auth.user.id);if(updateError)throw updateError;
+  return json({provider:"text_catalog_suggestions",estimatedCostUsd:0,matched_metadata:metadata});
  }catch(error){console.error("enrich_garment_failed",error);return json({error:"OPERATION_FAILED"},400);}
 });

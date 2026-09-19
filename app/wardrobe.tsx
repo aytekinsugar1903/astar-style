@@ -131,6 +131,7 @@ export default function WardrobeScreen() {
     setBusy(true);
     setMessage(t("secureUploading"));
     let uploadedPath: string | null = null;
+    let saved = false;
 
     try {
       uploadedPath = await uploadWardrobeImage(session.user.id, pending.uri, pending.mimeType ?? "image/jpeg");
@@ -143,11 +144,12 @@ export default function WardrobeScreen() {
         image_path: uploadedPath,
         raw_image_path: uploadedPath,
         capture_quality: { width: pending.width, height: pending.height, passed: true },
-        purchase_price: Number.isFinite(price) && price >= 0 ? price : null,
+        purchase_price: pendingPrice.trim() && Number.isFinite(price) && price >= 0 ? price : null,
         purchase_currency: "TRY",
         processing_status: "enriching",
       }).select("id").single();
       if (error) throw error;
+      saved = true;
 
       const classified = await supabase.functions.invoke("classify-garment", {
         body: { wardrobeItemId: item.id, locale },
@@ -167,7 +169,7 @@ export default function WardrobeScreen() {
       setPending(null); setPendingName(""); setPendingPrice("");
       await load();
     } catch (error) {
-      if (uploadedPath) await supabase.storage.from("user-photos").remove([uploadedPath]);
+      if (uploadedPath && !saved) await supabase.storage.from("user-photos").remove([uploadedPath]);
       setMessage(error instanceof Error ? error.message : t("uploadFailed"));
     } finally {
       setBusy(false);
@@ -187,15 +189,13 @@ export default function WardrobeScreen() {
 
     try {
       const paths = [...new Set([item.image_path, item.raw_image_path, item.cutout_image_path].filter((path): path is string => Boolean(path)))];
-      const removed = await supabase.storage.from("user-photos").remove(paths);
-      if (removed.error) throw removed.error;
-
       const deleted = await supabase.from("wardrobe_items").delete().eq("id", item.id).eq("user_id", session.user.id);
       if (deleted.error) throw deleted.error;
 
       setItems((value) => value.filter((entry) => entry.id !== item.id));
       void track("wardrobe_item_deleted", { wardrobe_item_id: item.id });
-      setMessage(t("garmentDeleted"));
+      const removed = await supabase.storage.from("user-photos").remove(paths);
+      setMessage(removed.error ? t("garmentDeleteFailed") : t("garmentDeleted"));
     } catch (error) {
       setMessage(error instanceof Error ? error.message : t("garmentDeleteFailed"));
       await load();

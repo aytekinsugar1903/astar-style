@@ -13,7 +13,8 @@
     "test:i18n": "node scripts/check-translations.mjs",
     "build:e2e": "expo export --platform web",
     "test:e2e": "playwright test",
-    "test:providers": "node scripts/check-provider-guards.mjs"
+    "test:providers": "node scripts/check-provider-guards.mjs",
+    "test:outfits": "node --experimental-strip-types scripts/test-outfit-logic.mjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -38,4 +39,3 @@
     "typescript": "~5.9.2"
   }
 }
-

@@ -3,21 +3,9 @@ import { clients } from "../_shared/clients.ts";
 import { finishUsage, limitPayload, reserveUsage, usageLimits } from "../_shared/usage.ts";
 import { TEMPLATE_COUNT, audienceLabel, currentSeason, orderedStyles, seasonLabel, styleLabel, type Audience } from "./templates.ts";
 import { filterEligible, type Context } from "./rules.ts";
+import { choose, group, type WardrobeItem } from "./selection.ts";
 
-type WardrobeItem={id:string;name:string|null;category:string;colors:string[]|null;style_tags:string[]|null;seasons:string[]|null};
-const group=(category:string)=>({shirt:"top",tshirt:"top",jacket:"outer",trousers:"bottom",skirt:"bottom",dress:"dress",shoes:"shoes",bag:"bag",accessory:"accessory"}[category]??"other");
 const overlap=(values:string[]|null,preferences:string[])=>{const wanted=new Set(preferences.map(v=>v.toLocaleLowerCase("tr-TR")));return (values??[]).filter(v=>wanted.has(v.toLocaleLowerCase("tr-TR"))).length;};
-function choose(items:WardrobeItem[],style:string,offset:number){
-  const ranked=[...items].sort((a,b)=>{
-    const score=(item:WardrobeItem)=>overlap(item.style_tags,[style])*8+overlap(item.colors,[])*2;
-    return score(b)-score(a);
-  });
-  const rotated=[...ranked.slice(offset%Math.max(1,ranked.length)),...ranked.slice(0,offset%Math.max(1,ranked.length))];
-  const picked:WardrobeItem[]=[];const groups=new Set<string>();
-  for(const item of rotated){const key=group(item.category);if(!groups.has(key)){picked.push(item);groups.add(key);}if(picked.length===4)break;}
-  for(const item of rotated){if(picked.length===4)break;if(!picked.some(x=>x.id===item.id))picked.push(item);}
-  return picked;
-}
 function missing(items:WardrobeItem[],audience:Audience,style:string,english:boolean,budget:number){
   const groups=new Set(items.map(item=>group(item.category)));
   const base=groups.has("dress")&&audience!=="men"?["shoes"]:["top","bottom","shoes"];
@@ -63,7 +51,7 @@ Deno.serve(async(req)=>{
       const learned=(favorites??[]).some(item=>item.occasion?.toLocaleLowerCase()===occasion.toLocaleLowerCase());
       const suggestions=[];
       for(let index=0;index<styles.length;index++){
-        const style=styles[index];const selected=choose(baseRanked,style,seed+index*3);
+        const style=styles[index];const selected=choose(baseRanked,style,seed+index*3,audience);
         const title=english?`${occasion} · ${styleLabel(style,true)} option ${index+1}`:`${occasion} · ${styleLabel(style,false)} seçenek ${index+1}`;
         const explanation=english
           ?`${audienceLabel(audience,true)} collection · ${seasonLabel(season,true)}-ready ${styleLabel(style,true).toLocaleLowerCase()} styling, balanced with your colors and wardrobe.${learned?" Your liked outfits also influenced this option.":""}`
