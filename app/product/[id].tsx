@@ -89,7 +89,7 @@ export default function ProductDetailScreen() {
         <Text style={s.brand}>{product.brand}</Text>
         <Text style={s.title}>{product.name}</Text>
         <Text style={s.meta}>{product.category} · {product.color} · {t("styleMatch", { score: product.styleScore })}</Text>
-        <Text style={s.price}>{product.price.toLocaleString(localeTag)} {product.currency}</Text>
+        <Text style={s.price}>{product.price.toLocaleString(localeTag)} {locale === "tr" && product.currency === "TRY" ? "TL" : product.currency}</Text>
         <Text style={s.status}>{product.inStock ? t("inStock") : t("outOfStock")} · {t(sourceProduct.source === "demo" || !sourceProduct.source ? "demoProduct" : "officialCatalogProduct")}</Text>
         <Pressable style={[s.save, busy && s.disabled]} onPress={toggleSaved} disabled={busy} accessibilityRole="button">
           <Text style={s.saveText}>{saved ? t("saved") : t("save")}</Text>
@@ -115,4 +115,3 @@ const s = StyleSheet.create({
   message: { color: "#6E2D3A", textAlign: "center", fontWeight: "700", marginTop: 14 }, savedLink: { color: "#6E2D3A", textAlign: "center", fontWeight: "800", marginTop: 18 },
   note: { fontSize: 11, lineHeight: 17, color: "#777168", textAlign: "center", marginTop: 16 }, notFound: { margin: "auto" },
 });
-
