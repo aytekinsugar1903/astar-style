@@ -74,6 +74,22 @@ test("saved products require authentication", async ({ page }) => {
   await expect(page.getByText("Tekrar hoş geldin.", { exact: true })).toBeVisible();
 });
 
+test("stylist answers in conversation and exposes human request boundary", async ({ page }) => {
+  await page.goto("/stylist");
+  await page.getByLabel("Örn. Düğüne gidiyorum, 3.000 TL bütçem var").fill("Düğüne gidiyorum, 3.000 TL bütçem var");
+  await page.getByText("Sor", { exact: true }).click();
+  await expect(page.getByText("3.000", { exact: false }).first()).toBeVisible();
+  await expect(page.getByText("İnsan stiliste gönder", { exact: true })).toBeVisible();
+});
+
+test("outfit board places and moves a piece", async ({ page }) => {
+  await page.goto("/board");
+  await page.getByText("Blazer", { exact: true }).click();
+  await expect(page.getByText("Blazer", { exact: true })).toHaveCount(2);
+  await page.getByText("Kombini kaydet", { exact: true }).click();
+  await expect(page.getByText("Kombin kaydedildi", { exact: false })).toBeVisible();
+});
+
 
 test("outfit context filters products and carries try-on selection", async ({ page }) => {
   await page.goto("/products?query=Ayakkabı&budget=1500");

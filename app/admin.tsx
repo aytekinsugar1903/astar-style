@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useI18n } from "@/i18n/I18nProvider";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
@@ -22,6 +22,7 @@ type Metrics = {
   productClicks30d: number;
   productSaves30d: number;
   clientErrors24h: number;
+  stylistRequests?: Array<{ id: string; request_text: string; created_at: string }>;
 };
 
 const demo: Metrics = {
@@ -38,6 +39,7 @@ export default function AdminScreen() {
   const [message, setMessage] = useState("");
   const [syncBusy, setSyncBusy] = useState(false);
   const [syncMessage, setSyncMessage] = useState("");
+  const [replies, setReplies] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (!isSupabaseConfigured) return;
@@ -57,6 +59,13 @@ export default function AdminScreen() {
       setMetrics((value) => ({ ...value, products: data.productsUpserted ?? value.products }));
     }
     setSyncBusy(false);
+  }
+  async function sendReply(id: string) {
+    const reply = replies[id]?.trim();
+    if (!reply) return;
+    const result = await supabase.functions.invoke("stylist-reply", { body: { requestId: id, reply } });
+    if (result.error) { setMessage(t("adminReplyFailed")); return; }
+    setMetrics(current => ({ ...current, stylistRequests: current.stylistRequests?.filter(request => request.id !== id) }));
   }
 
   const cards = [
@@ -95,6 +104,12 @@ export default function AdminScreen() {
             </View>
           ))}
         </View>
+        <Text style={s.syncTitle}>{t("adminHumanQueue")}</Text>
+        {(metrics.stylistRequests ?? []).map(request => <View key={request.id} style={s.sync}>
+          <Text style={s.syncCopy}>{request.request_text}</Text>
+          <TextInput style={s.replyInput} multiline value={replies[request.id] ?? ""} maxLength={2000} onChangeText={value => setReplies(current => ({ ...current, [request.id]: value }))} placeholder={t("adminReplyPlaceholder")} accessibilityLabel={t("adminReplyPlaceholder")} />
+          <Pressable style={s.syncButton} onPress={() => void sendReply(request.id)} accessibilityRole="button"><Text style={s.syncButtonText}>{t("adminReplySend")}</Text></Pressable>
+        </View>)}
         <View style={s.sync}>
           <Text style={s.syncTitle}>{t("catalogSyncTitle")}</Text>
           <Text style={s.syncCopy}>{t("catalogSyncCopy")}</Text>
@@ -113,8 +128,8 @@ export default function AdminScreen() {
 }
 
 const s=StyleSheet.create({
+ replyInput:{backgroundColor:"#FFF",color:"#171713",minHeight:88,borderRadius:12,padding:12,marginTop:12},
  safe:{flex:1,backgroundColor:"#171713"},page:{padding:22,paddingBottom:50,width:"100%",maxWidth:850,alignSelf:"center"},back:{color:"#DCC7CA",fontWeight:"700",marginTop:12},kicker:{fontSize:11,color:"#C99AA3",fontWeight:"800",letterSpacing:1.8,marginTop:30},title:{fontSize:40,color:"#FFF",fontWeight:"600",marginTop:12},copy:{color:"#BDB7AE",marginTop:8},message:{color:"#F3B9C4",marginTop:15},
  grid:{flexDirection:"row",flexWrap:"wrap",gap:12,marginTop:26},card:{backgroundColor:"#292925",borderRadius:20,padding:20,minHeight:130,flexGrow:1,flexBasis:145},value:{color:"#FFF",fontSize:28,fontWeight:"800"},label:{color:"#BDB7AE",marginTop:28},
  sync:{backgroundColor:"#292925",borderRadius:22,padding:22,marginTop:20,borderWidth:1,borderColor:"#45453E"},syncTitle:{color:"#FFF",fontSize:18,fontWeight:"800"},syncCopy:{color:"#BDB7AE",lineHeight:20,marginTop:8},syncButton:{backgroundColor:"#FFF",borderRadius:999,padding:14,alignItems:"center",marginTop:16},syncButtonText:{color:"#171713",fontWeight:"800"},syncMessage:{color:"#E8C7CD",fontWeight:"700",marginTop:12},disabled:{opacity:.5},guard:{backgroundColor:"#6E2D3A",borderRadius:22,padding:22,marginTop:20},guardTitle:{color:"#FFF",fontSize:18,fontWeight:"800"},guardCopy:{color:"#F0DDE1",lineHeight:20,marginTop:8},
 });
-

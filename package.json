@@ -14,7 +14,8 @@
     "build:e2e": "expo export --platform web",
     "test:e2e": "playwright test",
     "test:providers": "node scripts/check-provider-guards.mjs",
-    "test:outfits": "node --experimental-strip-types scripts/test-outfit-logic.mjs"
+    "test:outfits": "node --experimental-strip-types scripts/test-outfit-logic.mjs",
+    "test:stylist": "node --experimental-strip-types scripts/test-stylist.mjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",

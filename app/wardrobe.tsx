@@ -22,6 +22,7 @@ type Item = {
   purchase_price?: number | null;
   purchase_currency?: string;
   processing_status?: string;
+  matched_metadata?: unknown;
   imageUrl?: string;
 };
 
@@ -33,6 +34,7 @@ const demoItems: Item[] = [
 const categoryKeys: Record<string, TranslationKey> = {
   dress: "categoryDress",
   pants: "categoryPants",
+  trousers: "categoryPants",
   skirt: "categorySkirt",
   shirt: "categoryShirt",
   tshirt: "categoryTshirt",
@@ -43,6 +45,9 @@ const categoryKeys: Record<string, TranslationKey> = {
   accessory: "categoryAccessory",
   other: "categoryOther",
 };
+const editableCategories = ["dress", "trousers", "skirt", "shirt", "tshirt", "jacket", "shoes", "bag", "accessory", "other"] as const;
+type EditableCategory = typeof editableCategories[number];
+const similarCount = (value: unknown) => value && typeof value === "object" && !Array.isArray(value) && "similar_to" in value && Array.isArray(value.similar_to) ? value.similar_to.length : 0;
 
 export default function WardrobeScreen() {
   const router = useRouter();
@@ -52,16 +57,23 @@ export default function WardrobeScreen() {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [pending, setPending] = useState<ImagePicker.ImagePickerAsset | null>(null);
+  const [pendingBatch, setPendingBatch] = useState<ImagePicker.ImagePickerAsset[]>([]);
+  const pending = pendingBatch[0] ?? null;
   const [pendingName, setPendingName] = useState("");
   const [pendingPrice, setPendingPrice] = useState("");
+  const [pendingCategory, setPendingCategory] = useState<EditableCategory>("other");
+  const [pendingColor, setPendingColor] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editColor, setEditColor] = useState("");
+  const [editCategory, setEditCategory] = useState<EditableCategory>("other");
 
   const load = useCallback(async () => {
     if (!isSupabaseConfigured || !session) return;
 
     const { data, error } = await supabase
       .from("wardrobe_items")
-      .select("id,name,category,colors,image_path,raw_image_path,cutout_image_path,wear_count,purchase_price,purchase_currency,processing_status")
+      .select("id,name,category,colors,image_path,raw_image_path,cutout_image_path,wear_count,purchase_price,purchase_currency,processing_status,matched_metadata")
       .order("created_at", { ascending: false });
 
     if (error) { setMessage(error.message); return; }
@@ -108,12 +120,18 @@ export default function WardrobeScreen() {
       ? await ImagePicker.requestCameraPermissionsAsync()
       : await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) { setMessage(t(source === "camera" ? "cameraPermissionWardrobe" : "galleryPermissionWardrobe")); return; }
-    const options: ImagePicker.ImagePickerOptions = { mediaTypes: ["images"], quality: .9, allowsEditing: true };
+    const options: ImagePicker.ImagePickerOptions = source === "library"
+      ? { mediaTypes: ["images"], quality: .9, allowsMultipleSelection: true, selectionLimit: 30 }
+      : { mediaTypes: ["images"], quality: .9, allowsEditing: true };
     const picked = source === "camera" ? await ImagePicker.launchCameraAsync(options) : await ImagePicker.launchImageLibraryAsync(options);
     if (picked.canceled) return;
-    const asset = picked.assets[0];
-    if ((asset.width ?? 0) < 720 || (asset.height ?? 0) < 720) { setMessage(t("captureTooSmall")); return; }
-    setPending(asset); setPendingName(""); setPendingPrice(""); setMessage(t("captureReady"));
+    const valid = picked.assets.filter(asset => (asset.width ?? 0) >= 720 && (asset.height ?? 0) >= 720);
+    if (!valid.length) { setMessage(t("captureTooSmall")); return; }
+    setPendingBatch(current => {
+      const seen = new Set(current.map(asset => asset.assetId ?? asset.uri));
+      return [...current, ...valid.filter(asset => !seen.has(asset.assetId ?? asset.uri))].slice(0, 30);
+    });
+    setPendingName(""); setPendingPrice(""); setMessage(t("batchQueued", { count: valid.length }));
   }
 
   function addItem() {
@@ -140,7 +158,9 @@ export default function WardrobeScreen() {
       const { data: item, error } = await supabase.from("wardrobe_items").insert({
         user_id: session.user.id,
         name: pendingName.trim() || "Yeni kıyafet",
-        category: "other",
+        category: pendingCategory,
+        colors: pendingColor.trim() ? [pendingColor.trim().slice(0, 32)] : [],
+        metadata_confirmed: pendingCategory !== "other" || Boolean(pendingColor.trim()),
         image_path: uploadedPath,
         raw_image_path: uploadedPath,
         capture_quality: { width: pending.width, height: pending.height, passed: true },
@@ -151,9 +171,9 @@ export default function WardrobeScreen() {
       if (error) throw error;
       saved = true;
 
-      const classified = await supabase.functions.invoke("classify-garment", {
-        body: { wardrobeItemId: item.id, locale },
-      });
+      const classified = pendingCategory === "other" && !pendingColor.trim()
+        ? await supabase.functions.invoke("classify-garment", { body: { wardrobeItemId: item.id, locale } })
+        : { error: null };
       const segmented = await supabase.functions.invoke("background-remove", { body: { wardrobeItemId: item.id } });
       const enriched = await supabase.functions.invoke("enrich-garment", { body: { wardrobeItemId: item.id, locale } });
 
@@ -166,7 +186,7 @@ export default function WardrobeScreen() {
       } else {
         setMessage(t("garmentNeedsCutout"));
       }
-      setPending(null); setPendingName(""); setPendingPrice("");
+      setPendingBatch(current => current.slice(1)); setPendingName(""); setPendingPrice(""); setPendingColor(""); setPendingCategory("other");
       await load();
     } catch (error) {
       if (uploadedPath && !saved) await supabase.storage.from("user-photos").remove([uploadedPath]);
@@ -174,6 +194,25 @@ export default function WardrobeScreen() {
     } finally {
       setBusy(false);
     }
+  }
+
+  async function splitPending() {
+    if (!pending || !session) return;
+    setBusy(true);
+    let temporaryPath: string | null = null;
+    try {
+      temporaryPath = await uploadWardrobeImage(session.user.id, pending.uri, pending.mimeType ?? "image/jpeg", "incoming");
+      const result = await supabase.functions.invoke("split-garments", { body: { imagePath: temporaryPath } });
+      if (result.error) throw result.error;
+      setPendingBatch(current => current.slice(1));
+      const added = result.data?.added ?? [];
+      const duplicates = added.filter((entry: { similarTo: string[] }) => entry.similarTo.length).length;
+      setMessage(t("batchSplitDone", { count: added.length, duplicates }));
+      await load();
+    } catch (error) {
+      if (temporaryPath) await supabase.storage.from("user-photos").remove([temporaryPath]);
+      setMessage(t("batchSplitUnavailable"));
+    } finally { setBusy(false); }
   }
 
   async function removeItem(item: Item) {
@@ -215,6 +254,22 @@ export default function WardrobeScreen() {
     );
   }
 
+  async function saveItemEdit() {
+    if (!editingId || !session) return;
+    setBusy(true);
+    const { error } = await supabase.from("wardrobe_items").update({
+      name: editName.trim().slice(0, 100) || null,
+      category: editCategory,
+      colors: editColor.trim() ? [editColor.trim().slice(0, 32)] : [],
+      metadata_confirmed: true,
+      processing_status: "ready",
+    }).eq("id", editingId).eq("user_id", session.user.id);
+    setBusy(false);
+    if (error) { setMessage(error.message); return; }
+    setEditingId(null);
+    await load();
+  }
+
   return (
     <SafeAreaView style={s.safe}>
       <ScrollView contentContainerStyle={s.page}>
@@ -230,12 +285,17 @@ export default function WardrobeScreen() {
         {!!message && <Text style={s.message} accessibilityLiveRegion="polite">{message}</Text>}
         {pending && <View style={s.pendingCard}>
           <Image source={{ uri: pending.uri }} style={s.pendingImage} resizeMode="contain" />
-          <Text style={s.pendingTitle}>{t("confirmWardrobeCard")}</Text>
+          <Text style={s.pendingTitle}>{t("confirmWardrobeCard")} · {t("batchRemaining", { count: pendingBatch.length })}</Text>
           <Text style={s.pendingCopy}>{t("capturePassed", { width: pending.width ?? 0, height: pending.height ?? 0 })}</Text>
           <TextInput style={s.input} value={pendingName} onChangeText={setPendingName} placeholder={t("garmentNameOptional")} accessibilityLabel={t("garmentNameOptional")} />
+          <Text style={s.pendingCopy}>{t("batchCategory")}</Text>
+          <View style={s.categories}>{editableCategories.map(key => <Pressable key={key} style={[s.categoryChip, pendingCategory === key && s.categorySelected]} onPress={() => setPendingCategory(key)} accessibilityRole="button"><Text style={s.categoryText}>{categoryName(key)}</Text></Pressable>)}</View>
+          <TextInput style={s.input} value={pendingColor} onChangeText={setPendingColor} placeholder={t("batchColor")} accessibilityLabel={t("batchColor")} />
           <TextInput style={s.input} value={pendingPrice} onChangeText={setPendingPrice} placeholder={t("purchasePriceOptional")} keyboardType="numeric" accessibilityLabel={t("purchasePriceOptional")} />
           <Pressable style={[s.confirm, busy && s.disabled]} onPress={() => void confirmPending()} disabled={busy}><Text style={s.confirmText}>{t("addToWardrobe")}</Text></Pressable>
-          <Pressable onPress={() => setPending(null)} disabled={busy}><Text style={s.cancelPending}>{t("retake")}</Text></Pressable>
+          <Pressable style={[s.room, busy && s.disabled]} onPress={() => void splitPending()} disabled={busy} accessibilityRole="button"><Text style={s.roomText}>{t("batchSplit")}</Text></Pressable>
+          <Pressable onPress={() => setPendingBatch(current => current.slice(1))} disabled={busy}><Text style={s.cancelPending}>{t("batchSkip")}</Text></Pressable>
+          <Pressable onPress={() => void pickImage("library")} disabled={busy}><Text style={s.cancelPending}>{t("batchAddMore")}</Text></Pressable>
         </View>}
         <View style={s.grid}>
           {items.map((item) => {
@@ -251,10 +311,18 @@ export default function WardrobeScreen() {
                 <Text style={s.meta}>
                   {categoryName(item.category)} · {item.colors.length ? item.colors.map(colorName).join(", ") : t("colorPending")}
                 </Text>
+                {similarCount(item.matched_metadata) > 0 && <Text style={s.wear}>{t("batchSimilar", { count: similarCount(item.matched_metadata) })}</Text>}
                 <Text style={s.wear}>
                   {t("wearCount", { count: item.wear_count ?? 0 })}
-                  {item.purchase_price != null ? " · " + t("costPerWear", { amount: (Number(item.purchase_price) / Math.max(1, item.wear_count ?? 0)).toFixed(0), currency: item.purchase_currency ?? "TRY" }) : ""}
+                  {item.purchase_price != null && (item.wear_count ?? 0) > 0 ? " · " + t("costPerWear", { amount: (Number(item.purchase_price) / (item.wear_count ?? 1)).toFixed(0), currency: item.purchase_currency ?? "TRY" }) : ""}
                 </Text>
+                {isSupabaseConfigured && <Pressable onPress={() => { setEditingId(item.id); setEditName(item.name ?? ""); setEditColor(item.colors[0] ?? ""); setEditCategory(editableCategories.includes(item.category as EditableCategory) ? item.category as EditableCategory : "other"); }} accessibilityRole="button"><Text style={s.deleteText}>{t("batchEdit")}</Text></Pressable>}
+                {editingId === item.id && <View>
+                  <TextInput style={s.input} value={editName} onChangeText={setEditName} placeholder={t("garmentNameOptional")} />
+                  <View style={s.categories}>{editableCategories.map(key => <Pressable key={key} style={[s.categoryChip, editCategory === key && s.categorySelected]} onPress={() => setEditCategory(key)}><Text style={s.categoryText}>{categoryName(key)}</Text></Pressable>)}</View>
+                  <TextInput style={s.input} value={editColor} onChangeText={setEditColor} placeholder={t("batchColor")} />
+                  <Pressable onPress={() => void saveItemEdit()} disabled={busy} style={s.confirm}><Text style={s.confirmText}>{t("batchSave")}</Text></Pressable>
+                </View>}
                 <Pressable
                   onPress={() => confirmRemove(item)}
                   disabled={deletingId === item.id}
@@ -274,6 +342,7 @@ export default function WardrobeScreen() {
           </View>
         )}
         <Pressable style={s.room} onPress={() => router.push("/dressing-room")} accessibilityRole="button"><Text style={s.roomText}>{t("openDressingRoom")}</Text></Pressable>
+        <Pressable style={s.room} onPress={() => router.push("/board")} accessibilityRole="button"><Text style={s.roomText}>{t("boardTitle")}</Text></Pressable>
       </ScrollView>
     </SafeAreaView>
   );
@@ -295,6 +364,10 @@ const s = StyleSheet.create({
   pendingImage: { height: 220, width: "100%", backgroundColor: "#EEE8DE", borderRadius: 16 },
   pendingTitle: { fontSize: 20, fontWeight: "800", marginTop: 14, color: "#171713" },
   pendingCopy: { color: "#6B665F", marginTop: 6 },
+  categories: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 8 },
+  categoryChip: { borderWidth: 1, borderColor: "#C9BFB0", padding: 8, borderRadius: 999 },
+  categorySelected: { borderColor: "#6E2D3A", backgroundColor: "#F3E9EA" },
+  categoryText: { fontSize: 12, color: "#29231E" },
   input: { backgroundColor: "#FAF8F4", borderWidth: 1, borderColor: "#DCD3C5", borderRadius: 13, padding: 13, marginTop: 10 },
   confirm: { backgroundColor: "#171713", borderRadius: 999, padding: 15, alignItems: "center", marginTop: 12 },
   confirmText: { color: "#FFF", fontWeight: "800" }, cancelPending: { color: "#6E2D3A", fontWeight: "700", textAlign: "center", padding: 12 },

@@ -28,6 +28,10 @@
 - [x] Admin-only daily and weekly operations runner with persistent run history
 - [x] EAS preview/production build profiles; signing credentials intentionally not connected
 - [x] CI checks for type safety, translations, Expo health, web export and mobile browser journeys
+- [x] Multi-photo intake queue, manual metadata correction, isolated-foreground splitter and similar-garment review hints; service deployment is pending a host
+- [x] Self-hostable rembg cutout service and private JWT Edge boundaries for single and grouped garment photos
+- [x] Draggable collage board with saved outfit positions
+- [x] Grounded Turkish/English stylist chat, owner-only human stylist requests and admin-only response flow
 
 ## Live backend
 
@@ -36,7 +40,7 @@
 - Current plan and added usage cost: Free / 0 USD
 - Active catalog: 80 synthetic products; no scraping and no copied third-party imagery
 - Outfit engine: 768 base templates; six variants returned per request
-- Edge Functions: classify-garment v3, outfit v10, background-remove v2, enrich-garment v2, try-on v3, admin-dashboard v3, delete-account v3, catalog-sync v3, operations-runner v1
+- Edge Functions: classify-garment v3, outfit v10, background-remove v3, enrich-garment v3, split-garments v1, stylist-reply v1, try-on v3, admin-dashboard v4, delete-account v3, catalog-sync v3, operations-runner v1
 - Providers: free mock providers active; FASHN, OpenAI vision and official JSON feed adapters installed but disabled
 - Security: JWT-protected functions, RLS on public data and private photo buckets
 
@@ -48,7 +52,7 @@ These are intentionally not activated because they require an external account, 
 - [x] OpenAI image-analysis adapter with strict normalization (activation and credentials pending)
 - [x] HTTPS official JSON affiliate-feed adapter (network credentials and commercial links pending)
 - [x] Provider-neutral premium entitlement foundation (payment merchant account and webhook activation pending)
-- [x] BiRefNet-compatible background-removal endpoint boundary (real endpoint/token pending; mock leaves cutout empty)
+- [x] Self-hosted rembg image processing code and connected Edge interface (actual host, credentials and production throughput testing pending; mock leaves cutout empty)
 - [x] Internal text-only catalog suggestions require user verification; reverse visual search is not active
 - [ ] Apple Developer / Google Play accounts and signed store builds
 - [ ] Production domain and hosting decision
@@ -58,6 +62,7 @@ These are intentionally not activated because they require an external account, 
 - TypeScript, translation parity, provider guards, deterministic outfit cases and static web export pass locally.
 - Playwright browser journeys are configured, but the local Chromium download timed out; these journeys have not passed locally.
 - Real registration, camera use, signed mobile builds, third-party try-on, cutout, real marketplace checkout and purchase attribution still need on-device/provider tests.
+- Human stylist replies need a real assigned stylist; the queue and admin response interface alone do not supply a human service. The conversational free stylist is a rules-based assistant, not a connected generative model.
 
 ## Cost and compliance guardrails
 

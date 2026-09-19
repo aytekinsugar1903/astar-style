@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
     if (auth.user.app_metadata?.role !== "admin") return json({ error: "FORBIDDEN" }, 403);
 
     const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const [profiles, products, tryOns, clicks, usage, usage24h, analytics] = await Promise.all([
+    const [profiles, products, tryOns, clicks, usage, usage24h, analytics, stylistRequests] = await Promise.all([
       admin.from("profiles").select("*", { count: "exact", head: true }),
       admin.from("products").select("*", { count: "exact", head: true }),
       admin.from("try_on_jobs").select("*", { count: "exact", head: true }),
@@ -18,8 +18,9 @@ Deno.serve(async (req) => {
       admin.from("ai_usage_events").select("estimated_cost_usd,success,operation"),
       admin.from("ai_usage_events").select("estimated_cost_usd,success,operation").gte("created_at", since24h),
       admin.rpc("admin_analytics_snapshot"),
+      admin.from("stylist_requests").select("id,request_text,created_at").eq("status", "pending").order("created_at", { ascending: true }).limit(20),
     ]);
-    if (analytics.error) throw analytics.error;
+    if (analytics.error || stylistRequests.error) throw analytics.error ?? stylistRequests.error;
 
     const events = usage.data ?? [];
     const recentEvents = usage24h.data ?? [];
@@ -35,6 +36,7 @@ Deno.serve(async (req) => {
       aiCalls24h: recentEvents.filter((row) => row.success).length,
       aiCost24hUsd: recentEvents.reduce((total, row) => total + Number(row.estimated_cost_usd), 0),
       limited24h: recentEvents.filter((row) => row.operation.endsWith("_limited")).length,
+      stylistRequests: stylistRequests.data ?? [],
       ...productAnalytics,
     });
   } catch (error) {

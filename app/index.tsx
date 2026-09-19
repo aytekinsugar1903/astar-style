@@ -6,7 +6,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { TranslationKey } from "@/i18n/translations";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
-const actions: ReadonlyArray<readonly [TranslationKey, TranslationKey, string, "/wardrobe" | "/dressing-room" | "/outfit" | "/outfits" | "/try-on" | "/products" | "/favorites"]> = [
+const actions: ReadonlyArray<readonly [TranslationKey, TranslationKey, string, "/wardrobe" | "/dressing-room" | "/outfit" | "/outfits" | "/try-on" | "/products" | "/favorites" | "/stylist" | "/board"]> = [
   ["wardrobeTitle", "wardrobeSubtitle", "01", "/wardrobe"],
   ["outfitTitle", "outfitSubtitle", "02", "/outfit"],
   ["tryOnTitle", "tryOnSubtitle", "03", "/try-on"],
@@ -15,6 +15,8 @@ const actions: ReadonlyArray<readonly [TranslationKey, TranslationKey, string, "
   ["eventTitle", "eventSubtitle", "06", "/outfit"],
   ["outfitHistoryTitle", "outfitHistorySubtitle", "07", "/outfits"],
   ["dressingRoomTitle", "dressingRoomSubtitle", "08", "/dressing-room"],
+  ["stylistTitle", "stylistSubtitle", "09", "/stylist"],
+  ["boardTitle", "boardSubtitle", "10", "/board"],
 ];
 
 export default function HomeScreen() {

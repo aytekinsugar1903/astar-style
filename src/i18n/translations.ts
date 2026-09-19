@@ -294,6 +294,12 @@ const tr = {
   dressingRoomKicker: "DİJİTAL KABİN", dressingRoomTitle: "Kabin", dressingRoomSubtitle: "Parçaları avatarında katmanla",
   dressingRoomCopy: "Dolap çekmecesinden parçaya dokun; sistem içten dışa doğru doğru katmana yerleştirir.",
   dressingRoomEmpty: "Giydirmek için aşağıdan bir parça seç.", wardrobeDrawer: "Gardırop çekmecesi",
+  batchQueued: "{{count}} fotoğraf sıraya eklendi.", batchRemaining: "Sırada {{count}} fotoğraf", batchSkip: "Bu fotoğrafı atla", batchAddMore: "Daha fazla fotoğraf seç", batchCategory: "Kategori", batchColor: "Renk (isteğe bağlı)", batchEdit: "Bilgileri düzelt", batchSave: "Düzeltmeyi kaydet",
+  boardTitle: "Kombin panosu", boardCopy: "Kıyafete dokunup panoya ekle; panodaki parçayı parmağınla taşı. Görünümü kaydet.", boardSave: "Kombini kaydet", boardSavedTitle: "Kendi kombinim", boardSaved: "Kombin kaydedildi.",
+  batchSplit: "Bu fotoğraftaki parçaları ayır", batchSplitDone: "{{count}} parça eklendi; {{duplicates}} benzer parça işaretlendi. Kartları kontrol et.", batchSplitUnavailable: "Görüntü işleme sunucusu henüz bağlı değil. Fotoğrafı tek parça olarak ekleyebilir veya sırada tutabilirsin.",
+  batchSimilar: "{{count}} benzer parça olabilir · silmeden önce kontrol et",
+  stylistTitle: "Stilistinle konuş", stylistSubtitle: "Önce kendi dolabından yanıt al", stylistCopy: "Etkinliğini, renk tercihini ve bütçeni yaz. Ücretsiz yanıtlar dolabındaki gerçek kayıtlara dayalıdır; gelişmiş dil modeli henüz bağlı değil.", stylistPlaceholder: "Örn. Düğüne gidiyorum, 3.000 TL bütçem var", stylistSend: "Sor", stylistFromCloset: "Dolabından {{count}} parça seçildi", stylistSearchMissing: "Eksik parçayı ürünlerde ara", stylistHumanRequest: "İnsan stiliste gönder", stylistHumanNotice: "Mesajın insan incelemesine iletilir. Stilist görevlendirilip yanıtlayana kadar beklemede kalır; otomatik yanıt insan yanıtı değildir.", stylistAskFirst: "Önce bir soru yaz.", stylistHumanQueued: "Talebin beklemeye alındı.", stylistHumanPending: "İnsan stilist yanıtı bekleniyor", stylistHumanAnswered: "Stilist yanıtı", boardSubtitle: "Parçaları sürükle ve kaydet",
+  adminHumanQueue: "İnsan stilist talepleri", adminReplyPlaceholder: "İncelenmiş yanıtı yaz", adminReplySend: "Yanıtı gönder", adminReplyFailed: "Yanıt gönderilemedi.",
 } as const;
 
 export type TranslationKey = keyof typeof tr;
@@ -593,6 +599,12 @@ const en = {
   dressingRoomKicker: "DIGITAL DRESSING ROOM", dressingRoomTitle: "Dressing room", dressingRoomSubtitle: "Layer pieces on your avatar",
   dressingRoomCopy: "Tap an item in the wardrobe drawer; the system places it in the correct inside-to-outside layer.",
   dressingRoomEmpty: "Select an item below to dress the avatar.", wardrobeDrawer: "Wardrobe drawer",
+  batchQueued: "{{count}} photos added to the queue.", batchRemaining: "{{count}} photos remaining", batchSkip: "Skip this photo", batchAddMore: "Choose more photos", batchCategory: "Category", batchColor: "Color (optional)", batchEdit: "Correct details", batchSave: "Save corrections",
+  boardTitle: "Outfit board", boardCopy: "Tap an item to add it, drag pieces around the board, then save your look.", boardSave: "Save outfit", boardSavedTitle: "My outfit", boardSaved: "Outfit saved.",
+  batchSplit: "Separate items in this photo", batchSplitDone: "{{count}} items added; {{duplicates}} similar items flagged. Review the cards.", batchSplitUnavailable: "The image processor is not connected yet. Add as one item or keep this photo queued.",
+  batchSimilar: "{{count}} potentially similar items · review before deleting",
+  stylistTitle: "Chat with your stylist", stylistSubtitle: "Answers grounded in your own closet", stylistCopy: "Describe your occasion, colors and budget. Free replies use your saved items; a generative model is not connected yet.", stylistPlaceholder: "e.g. Wedding, budget 3,000 TRY", stylistSend: "Ask", stylistFromCloset: "{{count}} pieces from your closet", stylistSearchMissing: "Search for missing piece", stylistHumanRequest: "Ask a human stylist", stylistHumanNotice: "Your message enters a human review queue. It stays pending until a stylist is assigned and replies; an automated reply is never presented as human.", stylistAskFirst: "Ask a question first.", stylistHumanQueued: "Your request is in the queue.", stylistHumanPending: "Awaiting human stylist", stylistHumanAnswered: "Stylist reply", boardSubtitle: "Drag pieces and save looks",
+  adminHumanQueue: "Human stylist requests", adminReplyPlaceholder: "Write the reviewed response", adminReplySend: "Send response", adminReplyFailed: "Could not send response.",
 } satisfies Dictionary;
 
 export const translations: Record<Locale, Dictionary> = { tr, en };

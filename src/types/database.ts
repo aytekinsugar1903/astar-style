@@ -396,6 +396,12 @@ export type Database = {
         }
         Relationships: []
       }
+      stylist_requests: {
+        Row: { id: string; user_id: string; request_text: string; outfit_item_ids: string[]; status: string; stylist_reply: string | null; created_at: string; replied_at: string | null }
+        Insert: { id?: string; user_id: string; request_text: string; outfit_item_ids?: string[]; status?: string; stylist_reply?: string | null; created_at?: string; replied_at?: string | null }
+        Update: { id?: string; user_id?: string; request_text?: string; outfit_item_ids?: string[]; status?: string; stylist_reply?: string | null; created_at?: string; replied_at?: string | null }
+        Relationships: []
+      }
       style_profiles: {
         Row: {
           ai_summary: string | null
@@ -857,4 +863,3 @@ export const Constants = {
     },
   },
 } as const
-
