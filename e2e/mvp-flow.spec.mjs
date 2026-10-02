@@ -6,8 +6,9 @@ test("language preference persists across navigation", async ({ page }) => {
   await expect(page.getByText("My profile", { exact: true })).toBeVisible();
 
   await page.goto("/");
-  await expect(page.getByText("What will you", { exact: false })).toBeVisible();
-  await expect(page.getByText("Your style space", { exact: true })).toBeVisible();
+  await expect(page.getByText("Dolabın burada.", { exact: true })).toBeVisible();
+  await expect(page.getByText("Askılığımı aç", { exact: true })).toBeVisible();
+  await expect(page.getByText("My profile", { exact: true })).not.toBeVisible();
 });
 
 test("onboarding completes in demo mode", async ({ page }) => {
@@ -99,4 +100,21 @@ test("outfit context filters products and carries try-on selection", async ({ pa
   await page.goto("/try-on?wardrobeItemId=demo-dress");
   await expect(page.getByText("DENENECEK PARÇA", { exact: true })).toBeVisible();
   await expect(page.getByText("Kombinden seçilen parça", { exact: true })).toBeVisible();
+});
+
+
+test("home rack opens showcase and returns to outfit flow", async ({ page }) => {
+  await page.goto("/");
+  await page.getByText("Askılığımı aç", { exact: true }).click();
+  await expect(page).toHaveURL(/\/showcase/);
+  await expect(page.getByText("Dolabını askıda gez.", { exact: true })).toBeVisible();
+  await page.getByText("Bu parçayla kombin yap", { exact: true }).first().click();
+  await expect(page).toHaveURL(/\/outfit/);
+});
+
+test("wardrobe can switch from grid to rack", async ({ page }) => {
+  await page.goto("/wardrobe");
+  await page.getByText("Vitrin / Askılık", { exact: true }).click();
+  await expect(page).toHaveURL(/\/showcase/);
+  await expect(page.getByText("DİJİTAL VİTRİN", { exact: true })).toBeVisible();
 });
