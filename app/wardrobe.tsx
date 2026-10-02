@@ -277,7 +277,7 @@ export default function WardrobeScreen() {
           <Pressable onPress={() => router.back()} accessibilityRole="button"><Text style={s.back}>{t("backHome")}</Text></Pressable>
           <Text style={s.count}>{t("wardrobeCount", { count: items.length })}</Text>
         </View>
-        <Text style={s.title}>{t("wardrobeScreenTitle")}</Text>
+        <Text style={s.title}>{t("wardrobeScreenTitle")}</Text>\n        <View style={s.viewSwitch}><Pressable style={s.switchOn}><Text style={s.switchOnText}>Izgara</Text></Pressable><Pressable style={s.switchOff} onPress={() => router.push("/showcase")}><Text style={s.switchOffText}>Vitrin / Askılık</Text></Pressable></View>
         <Text style={s.copy}>{t("wardrobeCopy")}</Text>
         <Pressable style={[s.add, busy && s.disabled]} onPress={addItem} disabled={busy || !!deletingId} accessibilityRole="button">
           <Text style={s.addText}>{busy ? t("uploading") : t("addGarment")}</Text>
@@ -349,7 +349,7 @@ export default function WardrobeScreen() {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#F5F1E8" },
+  safe: { flex: 1, backgroundColor: "#F5F1E8" },\n  viewSwitch:{flexDirection:"row",gap:8,marginTop:16},switchOn:{backgroundColor:"#171713",borderRadius:999,paddingHorizontal:15,paddingVertical:9},switchOnText:{color:"#FFF",fontWeight:"800",fontSize:12},switchOff:{borderWidth:1,borderColor:"#171713",borderRadius:999,paddingHorizontal:15,paddingVertical:9},switchOffText:{color:"#171713",fontWeight:"800",fontSize:12},
   page: { padding: 22, paddingBottom: 50, width: "100%", maxWidth: 760, alignSelf: "center" },
   top: { flexDirection: "row", justifyContent: "space-between", marginTop: 12 },
   back: { color: "#6E2D3A", fontWeight: "700" },
