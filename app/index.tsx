@@ -3,20 +3,15 @@ import { useRouter } from "expo-router";
 import { SafeAreaView, ScrollView, StyleSheet, Text, Pressable, View } from "react-native";
 import { useAuth } from "@/auth/AuthProvider";
 import { useI18n } from "@/i18n/I18nProvider";
-import { TranslationKey } from "@/i18n/translations";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
-const actions: ReadonlyArray<readonly [TranslationKey, TranslationKey, string, "/wardrobe" | "/dressing-room" | "/outfit" | "/outfits" | "/try-on" | "/products" | "/favorites" | "/stylist" | "/board"]> = [
-  ["wardrobeTitle", "wardrobeSubtitle", "01", "/wardrobe"],
-  ["outfitTitle", "outfitSubtitle", "02", "/outfit"],
-  ["tryOnTitle", "tryOnSubtitle", "03", "/try-on"],
-  ["productsTitle", "productsSubtitle", "04", "/products"],
-  ["favoritesTitle", "favoritesSubtitle", "05", "/favorites"],
-  ["eventTitle", "eventSubtitle", "06", "/outfit"],
-  ["outfitHistoryTitle", "outfitHistorySubtitle", "07", "/outfits"],
-  ["dressingRoomTitle", "dressingRoomSubtitle", "08", "/dressing-room"],
-  ["stylistTitle", "stylistSubtitle", "09", "/stylist"],
-  ["boardTitle", "boardSubtitle", "10", "/board"],
+const actions: ReadonlyArray<readonly [string, string, string, "/wardrobe" | "/outfit" | "/try-on" | "/products" | "/stylist" | "/board"]> = [
+  ["Dolabım", "Kıyafetlerini tara, ayır ve düzenle.", "01", "/wardrobe"],
+  ["Kombin Yap", "Kendi dolabından sana özel kombinler.", "02", "/outfit"],
+  ["Ürün Kontrol Et", "Almadan önce dolabınla uyumunu kontrol et.", "03", "/products"],
+  ["Üzerimde Gör", "Seçtiğin kombini sanal olarak dene.", "04", "/try-on"],
+  ["WEYRA AI", "Gardırobunu bilen kişisel stilistin.", "05", "/stylist"],
+  ["Kombin Panosu", "Parçaları sürükle, kendi görünümünü oluştur.", "06", "/board"],
 ];
 
 export default function HomeScreen() {
@@ -63,20 +58,20 @@ export default function HomeScreen() {
         </View>
         {!isSupabaseConfigured && <Text style={styles.demo}>{t("demoMode")}</Text>}
         <View style={styles.hero}>
-          <Text style={styles.eyebrow}>{t("homeEyebrow")}</Text>
-          <Text style={styles.title}>{t("homeTitle")}</Text>
-          <Text style={styles.subtitle}>{t("homeSubtitle")}</Text>
+          <Text style={styles.eyebrow}>WEYRA CLOSET INTELLIGENCE</Text>
+          <Text style={styles.title}>Bugün ne giyeyim?</Text>
+          <Text style={styles.subtitle}>Dolabını bilen WEYRA; sana kombin önerir, eksik parçayı bulur ve bir ürünü almadan önce gerçekten işine yarayıp yaramadığını gösterir.</Text>
           <Pressable style={styles.primary} onPress={() => router.push("/outfit")} accessibilityRole="button">
-            <Text style={styles.primaryText}>{t("homePrimary")}</Text><Text style={styles.arrow}>→</Text>
+            <Text style={styles.primaryText}>Kombinimi hazırla</Text><Text style={styles.arrow}>→</Text>
           </Pressable>
         </View>
-        <Text style={styles.sectionTitle}>{t("homeSection")}</Text>
+        <Text style={styles.sectionTitle}>Gardırobun. Kararın. Stilin.</Text>
         <View style={styles.grid}>
-          {actions.map(([titleKey, subtitleKey, number, route]) => (
-            <Pressable key={titleKey} style={styles.card} onPress={() => router.push(route)} accessibilityRole="button">
+          {actions.map(([title, subtitle, number, route]) => (
+            <Pressable key={title} style={styles.card} onPress={() => router.push(route)} accessibilityRole="button">
               <Text style={styles.number}>{number}</Text>
-              <Text style={styles.cardTitle}>{t(titleKey)}</Text>
-              <Text style={styles.cardSubtitle}>{t(subtitleKey)}</Text>
+              <Text style={styles.cardTitle}>{title}</Text>
+              <Text style={styles.cardSubtitle}>{subtitle}</Text>
             </Pressable>
           ))}
         </View>
