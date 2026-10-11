@@ -88,3 +88,4 @@ export const demoProductDefinitions: DemoProductDefinition[] = [
   { id:"p80", trName:"Toprak Minimal Saat Kayışı", enName:"Earth-Tone Minimal Watch Strap", brand:"Core Men", trCategory:"Aksesuar", enCategory:"Accessory", trColor:"Toprak", enColor:"Earth tones", trTags:["Minimal","Rahat"], enTags:["Minimal","Casual"], price:599, inStock:true, styleScore:84, audience:"unisex" },
 ];
 
+

@@ -20,6 +20,7 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npm run typecheck
       - run: npm run test:i18n
+      - run: npm run test:catalog
       - run: npm run test:providers
       - run: npm run test:outfits
       - run: npm run test:stylist
@@ -45,3 +46,4 @@ jobs:
           path: test-results
           retention-days: 5
           if-no-files-found: ignore
+

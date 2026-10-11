@@ -4,8 +4,8 @@ WEYRA is configured for Expo Application Services without embedding private keys
 
 ## Prepared
 
-- iOS bundle identifier: `com.astrastyle.app`
-- Android package: `com.astrastyle.app`
+- iOS bundle identifier: `com.weyra.app`
+- Android package: `com.weyra.app`
 - Preview profile: internal distribution; Android APK
 - Production profile: store-ready Android AAB and iOS archive
 - Remote app version management and automatic production build increments
@@ -21,4 +21,5 @@ WEYRA is configured for Expo Application Services without embedding private keys
 5. For Google Play submission, connect a Play Console account and service credential.
 
 Do not commit Expo access tokens, Apple credentials, Google service-account JSON, or provider secrets. No build or store submission should be started without the owner's approval because account verification or billing may apply.
+
 

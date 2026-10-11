@@ -3,3 +3,4 @@ create index if not exists wear_event_items_wardrobe_idx
 
 create index if not exists wear_events_outfit_idx
   on public.wear_events(outfit_id);
+

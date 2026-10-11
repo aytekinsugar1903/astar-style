@@ -86,3 +86,4 @@ grant execute on function public.admin_analytics_snapshot() to service_role;
 
 comment on function public.admin_analytics_snapshot()
 is 'Aggregates privacy-minimized product analytics for the service-role admin dashboard.';
+

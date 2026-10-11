@@ -82,3 +82,4 @@ export const mockCatalogProvider:CatalogProvider={name:"demo",async fetchProduct
       { externalId:"p80", audience:"unisex", name:"Toprak Minimal Saat Kayışı", brand:"Core Men", category:"Aksesuar", colors:["Toprak"], productUrl:"https://example.com", styleTags:["Minimal","Rahat"], merchant:"WEYRA Demo", price:599, currency:"TRY", inStock:true },
 ];}};
 
+

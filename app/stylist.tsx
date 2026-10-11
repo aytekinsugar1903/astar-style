@@ -1,3 +1,4 @@
+import {useAppStyles,useTheme} from '@/studio/theme';
 import { useEffect, useState } from "react";
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
@@ -6,10 +7,15 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { replyToStyleQuestion, type ClosetPiece, type StyleContext } from "@/stylist/engine";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useCloset} from "@/studio/closet";
+import {saveData} from "@/daily/SaveData";
 type Message = { id: string; from: "user" | "stylist"; text: string };
 type HumanRequest = { id: string; status: string; stylist_reply: string | null; created_at: string };
-export default function StylistScreen() {
-  const router = useRouter();
+export default function StylistScreen() {const s=useAppStyles(baseStyles);
+
+  const router = useRouter();const {items:localItems}=useCloset();const [drafts,setDrafts]=useState<Array<{id:string;question:string;itemIds:string[];createdAt:string}>>([]);
+  useEffect(()=>{void AsyncStorage.getItem("weyra:stylist-drafts:v1").then(raw=>raw&&setDrafts(JSON.parse(raw))).catch(()=>{});},[]);
   const { session } = useAuth();
   const { locale, t } = useI18n();
   const [input, setInput] = useState("");
@@ -38,15 +44,16 @@ export default function StylistScreen() {
   function send() {
     const question = input.trim().slice(0, 500);
     if (!question) return;
-    const answer = replyToStyleQuestion(question, closet, context, locale);
+    const answer = replyToStyleQuestion(question, isSupabaseConfigured?closet:localItems.filter(p=>p.id.startsWith("local-")).map(p=>({id:p.id,name:p.name,category:p.category,colors:p.colors,style_tags:[]})), context, locale);
     setContext(answer.context); setSelectedIds(answer.selectedIds); setMissingQueries(answer.missingQueries);
     setMessages(current => [...current, { id: `u${Date.now()}`, from: "user", text: question }, { id: `s${Date.now()}`, from: "stylist", text: answer.message }]);
     setInput("");
   }
   async function askHuman() {
-    if (!session) { router.push("/sign-in"); return; }
     const lastQuestion = [...messages].reverse().find(entry => entry.from === "user")?.text;
     if (!lastQuestion) { setMessage(t("stylistAskFirst")); return; }
+    if(!isSupabaseConfigured){try{const next=[{id:String(Date.now()),question:lastQuestion,itemIds:selectedIds,createdAt:new Date().toISOString()},...drafts];await AsyncStorage.setItem("weyra:stylist-drafts:v1",JSON.stringify(next));setDrafts(next);setMessage(t("humanDraftSaved"));}catch{setMessage(t("dailyStorageError"));}return;}
+    if(!session){router.push("/sign-in");return;}
     setBusy(true);
     const result = await supabase.from("stylist_requests").insert({ user_id: session.user.id, request_text: lastQuestion, outfit_item_ids: selectedIds }).select("id,status,stylist_reply,created_at").single();
     setBusy(false);
@@ -62,10 +69,13 @@ export default function StylistScreen() {
     <Pressable onPress={send} style={s.button} accessibilityRole="button"><Text style={s.buttonText}>{t("stylistSend")}</Text></Pressable>
     {!!selectedIds.length && <Text style={s.hint}>{t("stylistFromCloset", { count: selectedIds.length })}</Text>}
     {!!missingQueries.length && <Pressable onPress={() => router.push({ pathname: "/products", params: { query: missingQueries[0], budget: String(context.budget ? Math.floor(context.budget / missingQueries.length) : "") } })} style={s.secondary}><Text>{t("stylistSearchMissing")}</Text></Pressable>}
-    <Pressable onPress={() => void askHuman()} disabled={busy} style={s.secondary} accessibilityRole="button"><Text>{t("stylistHumanRequest")}</Text></Pressable>
-    <Text style={s.hint}>{t("stylistHumanNotice")}</Text>
+    <Pressable onPress={() => void askHuman()} disabled={busy} style={s.secondary} accessibilityRole="button"><Text>{t(isSupabaseConfigured?"stylistHumanRequest":"humanDraftAction")}</Text></Pressable>
+    <Text style={s.hint}>{t(isSupabaseConfigured?"stylistHumanNotice":"humanDraftNotice")}</Text>{drafts.map(d=><View key={d.id} style={s.request}><Text>{d.question}</Text><Text style={s.hint}>{t("humanDraftNotice")}</Text><Pressable style={s.secondary} accessibilityRole="button" onPress={()=>{void saveData(JSON.stringify({request:d,wardrobe:localItems.filter(p=>d.itemIds.includes(p.id)).map(p=>({id:p.id,name:p.name,category:p.category,colors:p.colors}))},null,2),"weyra-stylist-brief.json").catch(()=>setMessage(t("dailyStorageError")));}}><Text>{t("humanExport")}</Text></Pressable><Pressable style={s.secondary} accessibilityRole="button" onPress={()=>{const next=drafts.filter(x=>x.id!==d.id);void AsyncStorage.setItem("weyra:stylist-drafts:v1",JSON.stringify(next)).then(()=>setDrafts(next)).catch(()=>setMessage(t("dailyStorageError")));}}><Text>{t("removeCrop")}</Text></Pressable></View>)}
     {!!message && <Text style={s.hint}>{message}</Text>}
     {requests.map(request => <View key={request.id} style={s.request}><Text style={s.hint}>{request.stylist_reply ? t("stylistHumanAnswered") : t("stylistHumanPending")} · {new Date(request.created_at).toLocaleDateString(locale === "tr" ? "tr-TR" : "en-US")}</Text>{!!request.stylist_reply && <Text>{request.stylist_reply}</Text>}</View>)}
   </ScrollView></SafeAreaView>;
 }
 const s = StyleSheet.create({ safe: { flex: 1, backgroundColor: "#F5F1E8" }, page: { padding: 22, paddingBottom: 80, maxWidth: 680, alignSelf: "center", width: "100%" }, back: { color: "#6E2D3A", fontWeight: "700", marginTop: 12 }, title: { fontSize: 36, fontWeight: "700", color: "#171713", marginTop: 26 }, copy: { color: "#666158", lineHeight: 21, marginTop: 8, marginBottom: 18 }, bubble: { padding: 16, borderRadius: 18, marginBottom: 10 }, user: { backgroundColor: "#E4D7D8", alignSelf: "flex-end", maxWidth: "90%" }, answer: { backgroundColor: "#FFF", alignSelf: "flex-start", maxWidth: "95%" }, bubbleText: { color: "#28241F", lineHeight: 21 }, input: { backgroundColor: "white", minHeight: 65, borderRadius: 14, borderColor: "#C9BFB0", borderWidth: 1, padding: 12, marginTop: 12 }, button: { backgroundColor: "#171713", borderRadius: 999, padding: 16, alignItems: "center", marginTop: 12 }, buttonText: { color: "white", fontWeight: "800" }, secondary: { borderWidth: 1, borderColor: "#6E2D3A", borderRadius: 999, padding: 14, alignItems: "center", marginTop: 12 }, hint: { marginTop: 12, color: "#615B54", lineHeight: 20 }, request: { backgroundColor: "white", marginTop: 12, padding: 14, borderRadius: 14 } });
+
+
+const baseStyles=s;

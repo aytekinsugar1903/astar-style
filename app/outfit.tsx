@@ -1,24 +1,32 @@
-import { useState } from "react";
+import {useAppStyles,useTheme} from '@/studio/theme';
+import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useAuth } from "@/auth/AuthProvider";
 import { useI18n } from "@/i18n/I18nProvider";
 import type { TranslationKey } from "@/i18n/translations";
+import {useCloset,picture} from '@/studio/closet';
+import {suggestPieces} from '@/studio/outfits';
 import { mockAiProvider } from "@/ai/mock-provider";
 import type { OutfitSuggestion } from "@/ai/types";
 import { OUTFIT_TEMPLATE_COUNT } from "@/outfits/templates";
 import { track } from "@/analytics/track";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { functionErrorKey } from "@/lib/function-error";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDaily,changeDaily} from '@/daily/store';
+import {itemWears} from '@/daily/logic';
 const occasionKeys:TranslationKey[]=["occasionWedding","occasionInterview","occasionDinner","occasionHoliday","occasionDaily","occasionFirstDate","occasionParty","occasionGraduation"];
-export default function OutfitScreen(){
- const router=useRouter();const {session}=useAuth();const {locale,t}=useI18n();
+export default function OutfitScreen(){const s=useAppStyles(baseStyles);
+
+ const {items:garments,ready}=useCloset();const {state:daily}=useDaily();const [audience,setAudience]=useState("unisex");const [preferredColors,setPreferredColors]=useState<string[]>([]);useEffect(()=>{void AsyncStorage.getItem("weyra:style-profile:v1").then(raw=>{if(raw){const profile=JSON.parse(raw);if(["women","men","unisex"].includes(profile.audience))setAudience(profile.audience);if(Array.isArray(profile.preferredColors))setPreferredColors(profile.preferredColors);}}).catch(()=>{});},[]);const router=useRouter();const {session}=useAuth();const {locale,t}=useI18n();
  const [occasion,setOccasion]=useState(t("occasionWedding"));const [budget,setBudget]=useState("3000");
  const [temperature,setTemperature]=useState("20");const [surface,setSurface]=useState<"indoor"|"grass"|"cobblestone"|"sand">("indoor");
  const [timeOfDay,setTimeOfDay]=useState<"day"|"evening">("evening");const [excludedCount,setExcludedCount]=useState(0);
  const [results,setResults]=useState<OutfitSuggestion[]>([]);const [templateCount,setTemplateCount]=useState(OUTFIT_TEMPLATE_COUNT);
  const [busy,setBusy]=useState(false);const [message,setMessage]=useState("");const [generation,setGeneration]=useState(0);
  const seeProducts=(item:OutfitSuggestion)=>{const missing=item.missingPieces[0];router.push({pathname:"/products",params:{query:missing?.query??"",budget:String(missing?.maxPrice??(Number(budget)||""))}});};
+ const feedback=async(item:OutfitSuggestion,value:number)=>{try{await changeDaily(v=>({...v,feedback:{...v.feedback,...Object.fromEntries(item.wardrobeItemIds.map(id=>[id,value]))}}));setMessage(t("dailyFeedbackSaved"));}catch{setMessage(t("dailyStorageError"));}};
  const tryOutfit=(item:OutfitSuggestion)=>{const id=item.wardrobeItemIds[0];if(id){router.push({pathname:"/try-on",params:{wardrobeItemId:id}});return;}router.push("/try-on");};
  async function create(){
   setBusy(true);setMessage("");let ids=["demo-dress","demo-jacket","demo-shoes","demo-bag"];
@@ -31,7 +39,7 @@ export default function OutfitScreen(){
    void track("outfit_created",{wardrobe_item_count:ids.length,suggestion_count:suggestions.length});setBusy(false);return;
   }
   const suggestions=await mockAiProvider.createOutfits({locale,occasion,budget:Number(budget)||undefined,currency:"TRY",wardrobeItemIds:ids});
-  setResults(suggestions);setGeneration(value=>value+1);setBusy(false);
+  setResults(suggestions.map((item,index)=>{const selected=suggestPieces(garments,{index,generation,temperature:Number(temperature)||20,surface,occasion,audience,preferredColors,feedback:daily.feedback,wearCounts:Object.fromEntries(garments.map(p=>[p.id,itemWears(daily,p.id)]))}).items;const has=(categories:string[])=>selected.some(p=>categories.includes(p.category));const missing=has(['dress'])?has(['shoes'])?[]:[t('studioCopy6')]:[...(!has(['tshirt','shirt','knit'])?[t('avatarTop')]:[]),...(!has(['trousers','skirt'])?[t('avatarBottom')]:[]),...(!has(['shoes'])?[t('studioCopy6')]:[])];return {...item,explanation:t('outfitLocalExplanation'),wardrobeItemIds:selected.map(p=>p.id),missingPieces:missing.map(query=>({query,reason:t('dailyEmpty')}))};}));setExcludedCount(suggestPieces(garments,{index:0,generation,temperature:Number(temperature)||20,surface,occasion,audience,preferredColors,feedback:daily.feedback}).excluded);setGeneration(value=>value+1);setBusy(false);
  }
  return <SafeAreaView style={s.safe}><ScrollView contentContainerStyle={s.page}>
   <Pressable onPress={()=>router.back()} accessibilityRole="button"><Text style={s.back}>{t("back")}</Text></Pressable>
@@ -48,14 +56,17 @@ export default function OutfitScreen(){
   {!!message&&<Text style={s.message} accessibilityLiveRegion="polite">{message}</Text>}
   {excludedCount>0&&<Text style={s.ruleNotice}>{t("ruleFiltered",{count:excludedCount})}</Text>}
   {!!results.length&&<Text style={s.resultsTitle}>{t("outfitResults",{count:results.length})}</Text>}
+  {!isSupabaseConfigured&&!!results.length&&<Text style={s.note}>{t('outfitPhotosNotice')}</Text>}
   {results.map((item,index)=><View key={item.title+index} style={s.result}>
-    <Text style={s.resultKicker}>{t("outfitOption",{count:index+1})}</Text><Text style={s.resultTitle}>{item.title}</Text><Text style={s.resultCopy}>{item.explanation}</Text>
+    <Text style={s.resultKicker}>{t("outfitOption",{count:index+1})}</Text><Text style={s.resultTitle}>{item.title}</Text><Text style={s.resultCopy}>{item.explanation}</Text><View style={s.chips}><Pressable accessibilityRole="button" style={s.chip} onPress={()=>void feedback(item,1)}><Text style={s.chipText}>{t("dailyLike")}</Text></Pressable><Pressable accessibilityRole="button" style={s.chip} onPress={()=>void feedback(item,-1)}><Text style={s.chipText}>{t("dailyDislike")}</Text></Pressable></View>
+    {!isSupabaseConfigured&&<View style={{flexDirection:'row',flexWrap:'wrap',gap:8,marginTop:15}}>{item.wardrobeItemIds.map(id=>{const p=garments.find(g=>g.id===id);return p?<View key={id} style={{width:120,backgroundColor:'#FAFBF9',padding:8,borderRadius:12}}><Image accessibilityLabel={p.name} source={picture(p)} style={{width:104,height:135}} resizeMode="contain"/><Text style={{fontSize:12,color:'#17231F',marginTop:8}} numberOfLines={2}>{p.name}</Text><Text style={{fontSize:10,color:'#6C746F',marginTop:4}}>{t(p.id.startsWith('local-')?'yourPiece':'samplePiece')}</Text></View>:null;})}</View>}
     <Text style={s.line}>{t("wardrobePiecesUsed",{count:item.wardrobeItemIds.length})}</Text>
     <Text style={s.missing}>{item.missingPieces.length?t("missingPiecesLabel",{pieces:item.missingPieces.map(piece=>piece.query).join(" · ")}):t("outfitComplete")}</Text>
     <Pressable style={s.secondary} onPress={()=>seeProducts(item)} accessibilityRole="button"><Text style={s.secondaryText}>{t("seeMissingPieces")}</Text></Pressable>
+    {!isSupabaseConfigured&&<Pressable style={s.secondary} accessibilityRole="button" onPress={()=>router.push({pathname:'/board',params:{pieces:item.wardrobeItemIds.join(','),title:item.title}})}><Text style={s.secondaryText}>{t('outfitBoardAction')}</Text></Pressable>}
     <Pressable style={s.try} onPress={()=>tryOutfit(item)} accessibilityRole="button"><Text style={s.tryText}>{t("virtualTryOnAction")}</Text></Pressable>
   </View>)}
-  <Pressable style={s.history} onPress={()=>router.push("/outfits")} accessibilityRole="button"><Text style={s.historyText}>{t("viewOutfitHistory")}</Text></Pressable>
+  <Pressable style={s.history} onPress={()=>router.push(isSupabaseConfigured?"/outfits":"/planner")} accessibilityRole="button"><Text style={s.historyText}>{t("viewOutfitHistory")}</Text></Pressable>
   <Text style={s.note}>{t("mockAiNotice")}</Text>
  </ScrollView></SafeAreaView>;
 }
@@ -65,3 +76,6 @@ const s=StyleSheet.create({
  contextRow:{flexDirection:"row",gap:12},contextField:{flex:1},smallLabel:{fontSize:12,fontWeight:"700",color:"#635E56",marginTop:10,marginBottom:7},miniRow:{flexDirection:"row",gap:6},mini:{flex:1,backgroundColor:"#FFF",borderWidth:1,borderColor:"#DCD3C5",borderRadius:12,paddingVertical:15,alignItems:"center"},miniOn:{backgroundColor:"#171713"},miniText:{fontSize:12,fontWeight:"700",color:"#4B4740"},miniTextOn:{color:"#FFF"},ruleNotice:{color:"#6E2D3A",fontWeight:"700",marginTop:14},
  result:{backgroundColor:"#6E2D3A",borderRadius:26,padding:24,marginTop:14},resultKicker:{color:"#DCC7CA",fontSize:10,fontWeight:"800",letterSpacing:1.6},resultTitle:{color:"#FFF",fontSize:25,fontWeight:"600",marginTop:12},resultCopy:{color:"#F1E6E8",lineHeight:21,marginTop:10},line:{color:"#FFF",fontWeight:"700",marginTop:18},missing:{color:"#F1E6E8",lineHeight:19,marginTop:8},secondary:{backgroundColor:"#FFF",borderRadius:999,padding:14,alignItems:"center",marginTop:20},secondaryText:{color:"#171713",fontWeight:"800"},try:{padding:14,alignItems:"center"},tryText:{color:"#FFF",fontWeight:"800"},history:{borderWidth:1,borderColor:"#6E2D3A",borderRadius:999,padding:14,alignItems:"center",marginTop:20},historyText:{color:"#6E2D3A",fontWeight:"800"},note:{fontSize:11,color:"#777168",textAlign:"center",lineHeight:17,marginTop:22},
 });
+
+
+const baseStyles=s;

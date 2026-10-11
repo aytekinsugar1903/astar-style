@@ -5,3 +5,4 @@ create policy automation_runs_deny_client_access
 on public.automation_runs for all to authenticated
 using (false)
 with check (false);
+

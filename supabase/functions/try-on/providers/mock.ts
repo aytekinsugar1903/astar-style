@@ -8,3 +8,4 @@ export const mockTryOnProvider: TryOnProvider = {
     return { status: "succeeded" };
   },
 };
+

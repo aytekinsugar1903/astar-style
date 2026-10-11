@@ -11,3 +11,4 @@ export function buildClosetDNA(items: ClosetItemSignal[]): ClosetDNA {
   const topStyles = [...counts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5).map(([style,count])=>({style,percent: total ? Math.round(count/total*100) : 0}));
   return { topStyles, totalSignals: total };
 }
+

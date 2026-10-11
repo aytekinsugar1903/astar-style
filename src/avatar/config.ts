@@ -20,3 +20,4 @@ export function buildAvatarConfig(heightCm: number, weightKg: number, bodyType: 
     anchors: { shoulderY: 74, waistY: 151, hipY: 194, footY: 362, shoulderWidth: Math.round(baseWidth * shape[0]), waistWidth: Math.round(baseWidth * shape[1]) },
   };
 }
+

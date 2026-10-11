@@ -1,3 +1,4 @@
+import {useAppStyles,useTheme} from '@/studio/theme';
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -21,7 +22,8 @@ type SavedProduct = {
   inStock?: boolean | null;
 };
 
-export default function FavoritesScreen() {
+export default function FavoritesScreen() {const s=useAppStyles(baseStyles);
+
   const router = useRouter();
   const { session } = useAuth();
   const { locale, t } = useI18n();
@@ -160,3 +162,6 @@ const s = StyleSheet.create({
   notice: { fontSize: 11, lineHeight: 17, color: "#777168", textAlign: "center", marginTop: 20 },
 });
 
+
+
+const baseStyles=s;

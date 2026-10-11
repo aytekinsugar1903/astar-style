@@ -32,3 +32,4 @@ export function audienceLabel(audience:Audience,english:boolean){
   const labels:Record<Audience,[string,string]>={women:["Kadın","Women"],men:["Erkek","Men"],unisex:["Karma","Unisex"]};
   return labels[audience][english?1:0];
 }
+

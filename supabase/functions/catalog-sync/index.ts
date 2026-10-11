@@ -77,3 +77,4 @@ Deno.serve(async (req) => {
     return json({ error: error instanceof Error && ["CATALOG_PROVIDER_NOT_CONFIGURED","OFFICIAL_CATALOG_DISABLED"].includes(error.message) ? error.message : "INTERNAL_ERROR" }, 500);
   }
 });
+

@@ -1,0 +1,20 @@
+{
+  "checks": [
+    "18 original store cards",
+    "Prepared result honestly labelled",
+    "Before and after are distinct",
+    "Model change clears cached result",
+    "Mobile catalog reachable",
+    "No mobile overflow",
+    "Desktop two-column layout",
+    "Unsupported category cannot generate",
+    "Provider error is shown",
+    "Both input images uploaded",
+    "Provider SSE error consumed",
+    "Private wardrobe image cannot generate",
+    "Private selection made no uploads",
+    "No runtime errors",
+    "Dark store usable"
+  ],
+  "note": "Provider-error transport mocked; actual generation evidence recorded separately. Physical iPhone testing not performed."
+}

@@ -1,3 +1,4 @@
+import {useAppStyles,useTheme} from '@/studio/theme';
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -6,6 +7,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { track } from "@/analytics/track";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
+import Planner from "./planner";
 type Outfit = {
   id: string;
   title: string;
@@ -16,7 +18,8 @@ type Outfit = {
   outfit_items: Array<{ wardrobe_item_id: string }>;
 };
 
-export default function OutfitsScreen() {
+function CloudOutfitsScreen() {const s=useAppStyles(baseStyles);
+
   const router = useRouter();
   const { session } = useAuth();
   const { locale, t } = useI18n();
@@ -132,3 +135,8 @@ const s=StyleSheet.create({
  wornButton:{backgroundColor:"#171713",borderRadius:999,padding:13,alignItems:"center",marginTop:15},wornButtonText:{color:"#FFF",fontWeight:"800"},disabled:{opacity:.5},
  tryButton:{borderWidth:1,borderColor:"#6E2D3A",borderRadius:999,padding:13,alignItems:"center",marginTop:10},tryButtonText:{color:"#6E2D3A",fontWeight:"800"},
 });
+
+
+const baseStyles=s;
+
+export default function OutfitsScreen(){return isSupabaseConfigured?<CloudOutfitsScreen/>:<Planner/>;}

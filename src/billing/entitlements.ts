@@ -39,3 +39,4 @@ export async function loadMembership(userId?: string): Promise<MembershipPlan> {
 export function hasFeature(plan: MembershipPlan, feature: FeatureKey) {
   return planLimits[plan][feature] !== 0;
 }
+

@@ -66,3 +66,4 @@ Deno.serve(async(req)=>{
     }catch(error){for(const id of created)await user.from("outfits").delete().eq("id",id);if(reservation.event_id)await finishUsage(admin,reservation.event_id,startedAt,false);throw error;}
   }catch(error){console.error("outfit_failed",error);return json({error:"INTERNAL_ERROR"},500);}
 });
+

@@ -101,3 +101,4 @@ end;
 $$;
 revoke all on function public.mark_outfit_worn(uuid, text) from public, anon;
 grant execute on function public.mark_outfit_worn(uuid, text) to authenticated;
+

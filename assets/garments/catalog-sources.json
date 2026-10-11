@@ -1,0 +1,1600 @@
+[
+  {
+    "id": "photo-tshirt-9",
+    "name": "Gri baskılı bisiklet yaka tişört",
+    "category": "tshirt",
+    "subtype": "crew",
+    "colors": [
+      "Gri"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Silar",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:20181201_132511_Xmas_check_list,_Poland.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-tshirt-9.jpg",
+    "originalFile": "File:20181201 132511 Xmas check list, Poland.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-tshirt-10",
+    "name": "Beyaz yazılı bisiklet yaka tişört",
+    "category": "tshirt",
+    "subtype": "crew",
+    "colors": [
+      "Beyaz"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Silar",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:20181201_132610_meet_me_under_the_mistletoe.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-tshirt-10.jpg",
+    "originalFile": "File:20181201 132610 meet me under the mistletoe.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-tshirt-35",
+    "name": "Siyah grafik tişört · model fotoğrafı",
+    "category": "tshirt",
+    "subtype": "crew",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Geoff Peters from Vancouver, BC, Canada",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Art_shirt_(3050488515).jpg",
+    "license": "CC BY 2.0",
+    "asset": "catalog-tshirt-35.jpg",
+    "originalFile": "File:Art shirt (3050488515).jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  {
+    "id": "photo-tee-page-21",
+    "name": "Gri düğmeli henley tişört",
+    "category": "tshirt",
+    "subtype": "henley",
+    "colors": [
+      "Gri"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Bpierreb",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Col_tunisien.jpg",
+    "license": "CC BY-SA 3.0",
+    "asset": "catalog-tee-page-21.jpg",
+    "originalFile": "File:Col tunisien.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "id": "photo-tee-page-25",
+    "name": "Beyaz tığ işi tişört",
+    "category": "tshirt",
+    "subtype": "crew",
+    "colors": [
+      "Beyaz"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Louannguillin",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Crochet_tee_shirt.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-tee-page-25.jpg",
+    "originalFile": "File:Crochet tee shirt.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-knit-26",
+    "name": "Siyah beyaz çizgili kazak · model fotoğrafı",
+    "category": "knit",
+    "subtype": "crew",
+    "colors": [
+      "Siyah",
+      "Beyaz"
+    ],
+    "pattern": "striped",
+    "image_path": "",
+    "credit": "Kauey",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Black_and_white_striped_sweater.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-knit-26.jpg",
+    "originalFile": "File:Black and white striped sweater.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-knit-28",
+    "name": "Mavi çizgili kazak",
+    "category": "knit",
+    "subtype": "crew",
+    "colors": [
+      "Mavi"
+    ],
+    "pattern": "striped",
+    "image_path": "",
+    "credit": "Paul Sherlock",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Blue_Jumper.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-knit-28.jpg",
+    "originalFile": "File:Blue Jumper.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-knit-34",
+    "name": "H&M kareli kazak · model fotoğrafı",
+    "category": "knit",
+    "subtype": "crew",
+    "colors": [
+      "Siyah",
+      "Beyaz"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Kauey",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Checkered_Sweater_H%26M.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "H&M",
+    "asset": "catalog-knit-34.jpg",
+    "originalFile": "File:Checkered Sweater H&M.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-knit-36",
+    "name": "Zara geometrik kazak · model fotoğrafı",
+    "category": "knit",
+    "subtype": "crew",
+    "colors": [
+      "Kırmızı",
+      "Mavi"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Kauey",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Colorful_Zara_Sweater.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Zara",
+    "asset": "catalog-knit-36.jpg",
+    "originalFile": "File:Colorful Zara Sweater.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-knit-38",
+    "name": "Dale of Norway desenli kazak",
+    "category": "knit",
+    "subtype": "crew",
+    "colors": [
+      "Lacivert"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Menswear Market",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Dale_of_Norway_sweater.jpg",
+    "license": "CC BY 2.0",
+    "brand": "Dale of Norway",
+    "asset": "catalog-knit-38.jpg",
+    "originalFile": "File:Dale of Norway sweater.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  {
+    "id": "photo-knit-51",
+    "name": "H&M desenli koyu kazak · model fotoğrafı",
+    "category": "knit",
+    "subtype": "crew",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Kauey",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Grandpa_Sweater_full_pattern_H%26M.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "H&M",
+    "asset": "catalog-knit-51.jpg",
+    "originalFile": "File:Grandpa Sweater full pattern H&M.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-knit-52",
+    "name": "Gri örgü kazak",
+    "category": "knit",
+    "subtype": "crew",
+    "colors": [
+      "Gri"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Aslak Raanes",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Grey_knitted_sweater.jpg",
+    "license": "CC BY 2.0",
+    "asset": "catalog-knit-52.jpg",
+    "originalFile": "File:Grey knitted sweater.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  {
+    "id": "photo-knit-53",
+    "name": "H&M çizgili V yaka kazak",
+    "category": "knit",
+    "subtype": "vneck",
+    "colors": [
+      "Toprak"
+    ],
+    "pattern": "striped",
+    "image_path": "",
+    "credit": "m01229",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:H%26M_Striped_Sweater_-_yellow_and_gold_-_2006.jpg",
+    "license": "CC BY 2.0",
+    "brand": "H&M",
+    "asset": "catalog-knit-53.jpg",
+    "originalFile": "File:H&M Striped Sweater - yellow and gold - 2006.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  {
+    "id": "photo-shirt-28",
+    "name": "Krem cepli gömlek · manken fotoğrafı",
+    "category": "shirt",
+    "subtype": "classic",
+    "colors": [
+      "Beyaz"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Mayfair",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Blouse,_blouson,_cr%C3%A8me_met_parelmoer_knoopjes_en_zakje_op_de_borst,_objectnr_62500.JPG",
+    "license": "CC BY-SA 3.0",
+    "asset": "catalog-shirt-28.jpg",
+    "originalFile": "File:Blouse, blouson, crème met parelmoer knoopjes en zakje op de borst, objectnr 62500.JPG",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "id": "photo-shirt-45",
+    "name": "Bej kısa kollu gömlek",
+    "category": "shirt",
+    "subtype": "classic",
+    "colors": [
+      "Bej"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Kevinrc94",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Camisa_beige_con_negro.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-shirt-45.jpg",
+    "originalFile": "File:Camisa beige con negro.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-shirt-page2-0",
+    "name": "Sabri Dino çizgili gömlek",
+    "category": "shirt",
+    "subtype": "classic",
+    "colors": [
+      "Yeşil"
+    ],
+    "pattern": "striped",
+    "image_path": "",
+    "credit": "Ertly",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Sabri_Dino_brand_shirt.JPG",
+    "license": "CC BY-SA 3.0",
+    "brand": "Sabri Dino",
+    "asset": "catalog-shirt-page2-0.jpg",
+    "originalFile": "File:Sabri Dino brand shirt.JPG",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "id": "photo-shirt-page2-10",
+    "name": "Gri mavi çizgili gömlek",
+    "category": "shirt",
+    "subtype": "classic",
+    "colors": [
+      "Gri",
+      "Mavi"
+    ],
+    "pattern": "striped",
+    "image_path": "",
+    "credit": "Mohanraj55",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Shirt_images.jpg",
+    "license": "CC0",
+    "asset": "catalog-shirt-page2-10.jpg",
+    "originalFile": "File:Shirt images.jpg",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "photo-dress-shirts-8",
+    "name": "Mavi klasik gömlek",
+    "category": "shirt",
+    "subtype": "classic",
+    "colors": [
+      "Mavi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "ChristianGlaeser",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Blue_Business_Shirt.jpg",
+    "license": "CC BY-SA 3.0",
+    "asset": "catalog-dress-shirts-8.jpg",
+    "originalFile": "File:Blue Business Shirt.jpg",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  {
+    "id": "photo-dress-shirts-10",
+    "name": "Cottonstir beyaz klasik gömlek",
+    "category": "shirt",
+    "subtype": "classic",
+    "colors": [
+      "Beyaz"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Gala81",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Camicia_Cottonstir.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Cottonstir",
+    "asset": "catalog-dress-shirts-10.jpg",
+    "originalFile": "File:Camicia Cottonstir.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-dress-shirts-11",
+    "name": "Krem çift manşetli gömlek",
+    "category": "shirt",
+    "subtype": "classic",
+    "colors": [
+      "Beyaz"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Incal",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Camisade_pu%C3%B1o_doble.jpg",
+    "license": "CC BY-SA 3.0",
+    "asset": "catalog-dress-shirts-11.jpg",
+    "originalFile": "File:Camisade puño doble.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "id": "photo-dress-shirts-34",
+    "name": "Beyaz uzun kollu gömlek",
+    "category": "shirt",
+    "subtype": "classic",
+    "colors": [
+      "Beyaz"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "국립국어원",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:%EC%99%80%EC%9D%B4%EC%85%94%EC%B8%A0_01_01.jpg",
+    "license": "CC BY-SA 2.0 kr",
+    "asset": "catalog-dress-shirts-34.jpg",
+    "originalFile": "File:와이셔츠 01 01.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/kr/deed.en"
+  },
+  {
+    "id": "photo-dress-shirts-35",
+    "name": "Gri kareli gömlek",
+    "category": "shirt",
+    "subtype": "classic",
+    "colors": [
+      "Gri"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "국립국어원",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:%EC%99%80%EC%9D%B4%EC%85%94%EC%B8%A0_01_02.jpg",
+    "license": "CC BY-SA 2.0 kr",
+    "asset": "catalog-dress-shirts-35.jpg",
+    "originalFile": "File:와이셔츠 01 02.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/kr/deed.en"
+  },
+  {
+    "id": "photo-pants3-17",
+    "name": "Yeşil kargo pantolon",
+    "category": "trousers",
+    "subtype": "cargo",
+    "colors": [
+      "Yeşil"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Ocdp",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Cargo_pants_001.jpg",
+    "license": "CC0",
+    "asset": "catalog-pants3-17.jpg",
+    "originalFile": "File:Cargo pants 001.jpg",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "photo-pants3-42",
+    "name": "Bej cepli kargo pantolon",
+    "category": "trousers",
+    "subtype": "cargo",
+    "colors": [
+      "Bej"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Cici water",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Khaki_Cargo_Pants_Front.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-pants3-42.jpg",
+    "originalFile": "File:Khaki Cargo Pants Front.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-pants2-7",
+    "name": "Levi’s 501XX koyu kot pantolon",
+    "category": "trousers",
+    "subtype": "denim",
+    "colors": [
+      "Lacivert"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Tokunori",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:501xx-front.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Levi’s",
+    "asset": "catalog-pants2-7.jpg",
+    "originalFile": "File:501xx-front.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-pants2-20",
+    "name": "Dickies carpenter pantolon",
+    "category": "trousers",
+    "subtype": "denim",
+    "colors": [
+      "Bej"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Clothingphotoguy",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Brown_Dickies_Carpenter_Jeans_New.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Dickies",
+    "asset": "catalog-pants2-20.jpg",
+    "originalFile": "File:Brown Dickies Carpenter Jeans New.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-pants4-0",
+    "name": "Corteiz Alcatraz gri jogger",
+    "category": "trousers",
+    "subtype": "jogger",
+    "colors": [
+      "Gri"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Pr0m37h3u$",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Corteiz_Alcatraz_Joggers.jpg",
+    "license": "CC BY 4.0",
+    "brand": "Corteiz",
+    "asset": "catalog-pants4-0.jpg",
+    "originalFile": "File:Corteiz Alcatraz Joggers.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0"
+  },
+  {
+    "id": "photo-pants-page-0",
+    "name": "Quechua MH100 yürüyüş pantolonu · model fotoğrafı",
+    "category": "trousers",
+    "subtype": "cargo",
+    "colors": [
+      "Gri"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Guigag1",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Cal%C3%A7a_Quechua_de_Trilha_Mh100.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Quechua",
+    "asset": "catalog-pants-page-0.jpg",
+    "originalFile": "File:Calça Quechua de Trilha Mh100.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-shoes2-1",
+    "name": "Siyah penny loafer",
+    "category": "shoes",
+    "subtype": "loafer",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Samansmaee",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:946_black.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-shoes2-1.jpg",
+    "originalFile": "File:946 black.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-shoes2-16",
+    "name": "Mavi püsküllü loafer",
+    "category": "shoes",
+    "subtype": "loafer",
+    "colors": [
+      "Mavi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Peachyeung316",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Handmade_Lake_Blue_Loafers_Shoe.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-shoes2-16.jpg",
+    "originalFile": "File:Handmade Lake Blue Loafers Shoe.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-shoes2-21",
+    "name": "Kahverengi toka detaylı loafer",
+    "category": "shoes",
+    "subtype": "loafer",
+    "colors": [
+      "Kahverengi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Arun114",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Loafer_shoes_for_men.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-shoes2-21.jpg",
+    "originalFile": "File:Loafer shoes for men.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-shoes3-5",
+    "name": "Siyah kalın taban Chelsea bot",
+    "category": "shoes",
+    "subtype": "boot",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Free open sources aholaS",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:78_chelsea_boots.jpg",
+    "license": "CC BY 4.0",
+    "asset": "catalog-shoes3-5.jpg",
+    "originalFile": "File:78 chelsea boots.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0"
+  },
+  {
+    "id": "photo-shoes3-37",
+    "name": "Dr. Martens Coralie kapitone bot",
+    "category": "shoes",
+    "subtype": "boot",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Mishimishimishi",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Doc_Martens_Boots_-_Coralie_-_from_2013.jpeg",
+    "license": "Public domain",
+    "brand": "Dr. Martens",
+    "asset": "catalog-shoes3-37.jpg",
+    "originalFile": "File:Doc Martens Boots - Coralie - from 2013.jpeg",
+    "licenseUrl": null
+  },
+  {
+    "id": "photo-dress-13",
+    "name": "Asimetrik desenli elbise · model fotoğrafı",
+    "category": "dress",
+    "subtype": "evening",
+    "colors": [
+      "Siyah",
+      "Beyaz"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Alex Micheu Photography from VILLACH, Austria",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:A_model_wearing_the_dress_at_Postgassenfest_Villach_2013.jpg",
+    "license": "CC BY-SA 2.0",
+    "asset": "catalog-dress-13.jpg",
+    "originalFile": "File:A model wearing the dress at Postgassenfest Villach 2013.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  {
+    "id": "photo-dress-16",
+    "name": "Adure çizgili örgü elbise · model fotoğrafı",
+    "category": "dress",
+    "subtype": "maxi",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "striped",
+    "image_path": "",
+    "credit": "Grace Hans-Bello",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Adure_Knit_Dress_01_(1)_(1).jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Adure",
+    "asset": "catalog-dress-16.jpg",
+    "originalFile": "File:Adure Knit Dress 01 (1) (1).jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-dress-44",
+    "name": "Çiçekli A kesim elbise",
+    "category": "dress",
+    "subtype": "aline",
+    "colors": [
+      "Beyaz",
+      "Pembe"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Katy2002",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Birthday_Dress.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-dress-44.jpg",
+    "originalFile": "File:Birthday Dress.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-dress-45",
+    "name": "Siyah çiçekli uzun elbise · mağaza fotoğrafı",
+    "category": "dress",
+    "subtype": "maxi",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Peachyeung316",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Black_Floral_Long_Dress_with_comfortable_hat_in_the_fashion_shop_at_Tuen_Mun.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-dress-45.jpg",
+    "originalFile": "File:Black Floral Long Dress with comfortable hat in the fashion shop at Tuen Mun.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-dress-47",
+    "name": "Mavi işlemeli gece elbisesi · mağaza fotoğrafı",
+    "category": "dress",
+    "subtype": "evening",
+    "colors": [
+      "Mavi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Iwaqarhashmi",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Blue_and_Green_Evening_Dresses_with_Lace_and_Beading.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-dress-47.jpg",
+    "originalFile": "File:Blue and Green Evening Dresses with Lace and Beading.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-dress-search-48",
+    "name": "Wolford siyah mini elbise · model fotoğrafı",
+    "category": "dress",
+    "subtype": "mini",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Tobias ToMar Maier",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Wolford_fatal_dress_as_a_mini_dress_to_cover_the_see_trough_part_of_a_too_thin_jeggings.jpg",
+    "license": "CC BY-SA 3.0",
+    "brand": "Wolford",
+    "asset": "catalog-dress-search-48.jpg",
+    "originalFile": "File:Wolford fatal dress as a mini dress to cover the see trough part of a too thin jeggings.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "id": "photo-dresses3-14",
+    "name": "Sarı yazlık elbise · model fotoğrafı",
+    "category": "dress",
+    "subtype": "mini",
+    "colors": [
+      "Sarı"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Skaja Lee from Valencia, España",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:OBravo_Urban_2021_Summer-105_(51176706107).jpg",
+    "license": "CC BY-SA 2.0",
+    "asset": "catalog-dresses3-14.jpg",
+    "originalFile": "File:OBravo Urban 2021 Summer-105 (51176706107).jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  {
+    "id": "photo-skirts3-13",
+    "name": "Kristian Leigh kareli etek · model fotoğrafı",
+    "category": "skirt",
+    "subtype": "pencil",
+    "colors": [
+      "Siyah",
+      "Beyaz"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Marek Koudelka",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Kristian_Leigh_pencil_skirt.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Kristian Leigh",
+    "asset": "catalog-skirts3-13.jpg",
+    "originalFile": "File:Kristian Leigh pencil skirt.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-skirts3-15",
+    "name": "Moschino siyah etek",
+    "category": "skirt",
+    "subtype": "pencil",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Housing Works Thrift Shops from New York, NY, USA",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Moschino_Pleather_Skirt_(3148704288).jpg",
+    "license": "CC BY-SA 2.0",
+    "brand": "Moschino",
+    "asset": "catalog-skirts3-15.jpg",
+    "originalFile": "File:Moschino Pleather Skirt (3148704288).jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  {
+    "id": "photo-skirts3-18",
+    "name": "Kahverengi örgü etek · model fotoğrafı",
+    "category": "skirt",
+    "subtype": "pencil",
+    "colors": [
+      "Kahverengi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Flickr user \"iluvrhinestones\"",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:PencilSkirt_LaceupBoots_WideBelt.jpg",
+    "license": "CC BY-SA 2.0",
+    "asset": "catalog-skirts3-18.jpg",
+    "originalFile": "File:PencilSkirt LaceupBoots WideBelt.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  {
+    "id": "photo-skirts3-22",
+    "name": "Pembe desenli kalem etek · model fotoğrafı",
+    "category": "skirt",
+    "subtype": "pencil",
+    "colors": [
+      "Pembe"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Flickr user \"Jamie\"",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Pink_pencil_skirt.jpg",
+    "license": "CC BY-SA 2.0",
+    "asset": "catalog-skirts3-22.jpg",
+    "originalFile": "File:Pink pencil skirt.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  {
+    "id": "photo-skirts3-23",
+    "name": "Pembe düz kalem etek · model fotoğrafı",
+    "category": "skirt",
+    "subtype": "pencil",
+    "colors": [
+      "Pembe"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Jamie",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Pink_Thrifted_Pencil_Skirt,_White_Sandals,_Mint_Green_Satchel,_and_a_Blue_Anchor_Print_Top_(19953112334).jpg",
+    "license": "CC BY-SA 2.0",
+    "asset": "catalog-skirts3-23.jpg",
+    "originalFile": "File:Pink Thrifted Pencil Skirt, White Sandals, Mint Green Satchel, and a Blue Anchor Print Top (19953112334).jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  {
+    "id": "photo-skirts3-24",
+    "name": "Siyah klasik kalem etek · model fotoğrafı",
+    "category": "skirt",
+    "subtype": "pencil",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Jamie",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Purple_Cardigan,_Black_Pencil_Skirt,_Checkered_Top,_and_Silver_Heels_(17632734246).jpg",
+    "license": "CC BY-SA 2.0",
+    "asset": "catalog-skirts3-24.jpg",
+    "originalFile": "File:Purple Cardigan, Black Pencil Skirt, Checkered Top, and Silver Heels (17632734246).jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  {
+    "id": "photo-skirts3-33",
+    "name": "Siyah deri kalem etek · model fotoğrafı",
+    "category": "skirt",
+    "subtype": "pencil",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "pyelno",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Vintage_Button_Back_Satin_Blouse_%26_Leather_Pencil_Skirt.png",
+    "license": "Public domain",
+    "asset": "catalog-skirts3-33.jpg",
+    "originalFile": "File:Vintage Button Back Satin Blouse & Leather Pencil Skirt.png",
+    "licenseUrl": null
+  },
+  {
+    "id": "photo-skirt-38",
+    "name": "Mavi çizgili kloş etek · model fotoğrafı",
+    "category": "skirt",
+    "subtype": "aline",
+    "colors": [
+      "Mavi"
+    ],
+    "pattern": "striped",
+    "image_path": "",
+    "credit": "Mark Allyn",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Circle_skirt.jpg",
+    "license": "CC BY 2.5",
+    "asset": "catalog-skirt-38.jpg",
+    "originalFile": "File:Circle skirt.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.5"
+  },
+  {
+    "id": "photo-jacket-13",
+    "name": "Biotex bej seyahat ceketi",
+    "category": "jacket",
+    "subtype": "utility",
+    "colors": [
+      "Bej"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Monobistudio",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Biotex-travel-jkt-sand-home.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Biotex",
+    "asset": "catalog-jacket-13.jpg",
+    "originalFile": "File:Biotex-travel-jkt-sand-home.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-jacket-14",
+    "name": "Mavi siyah denim ceket · manken fotoğrafı",
+    "category": "jacket",
+    "subtype": "denim",
+    "colors": [
+      "Mavi",
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Philo Wagner (?)",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Blauw_denim_jasje,_objectnr_68398.JPG",
+    "license": "CC BY-SA 3.0",
+    "asset": "catalog-jacket-14.jpg",
+    "originalFile": "File:Blauw denim jasje, objectnr 68398.JPG",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "id": "photo-jacket-15",
+    "name": "Nike mavi spor ceket · manken fotoğrafı",
+    "category": "jacket",
+    "subtype": "sport",
+    "colors": [
+      "Mavi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Museum Rotterdam",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Blauw_en_wit_kort_sportjack_met_afritsbare_mouwen,_ritssluiting_aan_de_voorzijde,_applicatie_%E2%80%9CNIKE%E2%80%9D_op_voor-_en_achterzijde,_op_iedere_mouw_en_losse_mouwen_opdruk_%E2%80%9CNIKE%E2%80%9D,_objectnr_76166-1-3.JPG",
+    "license": "CC BY-SA 3.0",
+    "brand": "Nike",
+    "asset": "catalog-jacket-15.jpg",
+    "originalFile": "File:Blauw en wit kort sportjack met afritsbare mouwen, ritssluiting aan de voorzijde, applicatie “NIKE” op voor- en achterzijde, op iedere mouw en losse mouwen opdruk “NIKE”, objectnr 76166-1-3.JPG",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "id": "photo-jacket-17",
+    "name": "Kahverengi kapitone ceket",
+    "category": "jacket",
+    "subtype": "puffer",
+    "colors": [
+      "Kahverengi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Jasonlee9102",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Boardjacket.JPG",
+    "license": "CC BY-SA 3.0",
+    "asset": "catalog-jacket-17.jpg",
+    "originalFile": "File:Boardjacket.JPG",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "id": "photo-jacket-18",
+    "name": "Mavi bomber ceket",
+    "category": "jacket",
+    "subtype": "bomber",
+    "colors": [
+      "Mavi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Spazzo",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Bomber_jacket.jpg",
+    "license": "Public domain",
+    "asset": "catalog-jacket-18.jpg",
+    "originalFile": "File:Bomber jacket.jpg",
+    "licenseUrl": null
+  },
+  {
+    "id": "photo-jacket-27",
+    "name": "Carhartt siyah kapüşonlu ceket",
+    "category": "jacket",
+    "subtype": "utility",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "weeniebunvintage on depop, real name Isaac Barbosa",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Carhartt.jpg",
+    "license": "CC BY 4.0",
+    "brand": "Carhartt",
+    "asset": "catalog-jacket-27.jpg",
+    "originalFile": "File:Carhartt.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0"
+  },
+  {
+    "id": "photo-jacket-28",
+    "name": "Cerruti 1881 desenli blazer",
+    "category": "jacket",
+    "subtype": "blazer",
+    "colors": [
+      "Kahverengi"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "JackChanCF",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Cerruti_1881_Jacket.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Cerruti 1881",
+    "asset": "catalog-jacket-28.jpg",
+    "originalFile": "File:Cerruti 1881 Jacket.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-jacket-46",
+    "name": "Gri Donegal tüvit blazer",
+    "category": "jacket",
+    "subtype": "blazer",
+    "colors": [
+      "Gri"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "サフィル",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Donegal_tweed_norfolk_jacket.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-jacket-46.jpg",
+    "originalFile": "File:Donegal tweed norfolk jacket.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-bag-31",
+    "name": "Siyah zincirli gece çantası",
+    "category": "bag",
+    "subtype": "clutch",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Goldi64",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Abendtasche_schwarz.jpg",
+    "license": "CC BY-SA 3.0",
+    "asset": "catalog-bag-31.jpg",
+    "originalFile": "File:Abendtasche schwarz.jpg",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  {
+    "id": "photo-bag-33",
+    "name": "Adele Dejak desenli clutch",
+    "category": "bag",
+    "subtype": "clutch",
+    "colors": [
+      "Kahverengi"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Adele Dejak",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Adele_Dejak_Clutch_h004.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Adele Dejak",
+    "asset": "catalog-bag-33.jpg",
+    "originalFile": "File:Adele Dejak Clutch h004.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-bag-44",
+    "name": "Alexandre Pavão kırmızı çanta",
+    "category": "bag",
+    "subtype": "shoulder",
+    "colors": [
+      "Kırmızı"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Brenoalvesp",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Alexandre_Pav%C3%A3o_Red.jpg",
+    "license": "CC BY 4.0",
+    "brand": "Alexandre Pavão",
+    "asset": "catalog-bag-44.jpg",
+    "originalFile": "File:Alexandre Pavão Red.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0"
+  },
+  {
+    "id": "photo-bag-46",
+    "name": "Amaris Mira bordo omuz çantası",
+    "category": "bag",
+    "subtype": "shoulder",
+    "colors": [
+      "Kırmızı"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Amaris Leather",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Amaris_Mira_handbag.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Amaris Mira",
+    "asset": "catalog-bag-46.jpg",
+    "originalFile": "File:Amaris Mira handbag.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-bag-page-2",
+    "name": "Classic siyah omuz çantası",
+    "category": "bag",
+    "subtype": "shoulder",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Claudio Ammon",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Bag_%C2%ABClassic%C2%BB_Schwarz..jpg",
+    "license": "CC BY-SA 3.0",
+    "asset": "catalog-bag-page-2.jpg",
+    "originalFile": "File:Bag «Classic» Schwarz..jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "id": "photo-bag-page-3",
+    "name": "Style siyah büyük çanta",
+    "category": "bag",
+    "subtype": "shoulder",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Claudio Ammon",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Bag_%C2%ABStyle%C2%BB_Schwarz.png",
+    "license": "CC BY-SA 3.0",
+    "asset": "catalog-bag-page-3.jpg",
+    "originalFile": "File:Bag «Style» Schwarz.png",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "id": "photo-bag-page-19",
+    "name": "Kahverengi püsküllü boho çanta",
+    "category": "bag",
+    "subtype": "shoulder",
+    "colors": [
+      "Kahverengi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Whoisjohngalt",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Boho-Chic_handbag.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-bag-page-19.jpg",
+    "originalFile": "File:Boho-Chic handbag.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-bag-page-49",
+    "name": "Lacivert krem çizgili tote çanta",
+    "category": "bag",
+    "subtype": "tote",
+    "colors": [
+      "Lacivert",
+      "Beyaz"
+    ],
+    "pattern": "striped",
+    "image_path": "",
+    "credit": "Tom Beatty",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Canvas_two-tone_tote_Navy_and_Natural7_(9038437258).jpg",
+    "license": "CC BY 2.0",
+    "asset": "catalog-bag-page-49.jpg",
+    "originalFile": "File:Canvas two-tone tote Navy and Natural7 (9038437258).jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  {
+    "id": "photo-belts3-3",
+    "name": "Metal tokalı deri kemer",
+    "category": "accessory",
+    "subtype": "belt",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Sumasa",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:A_Leather_Belt.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-belts3-3.jpg",
+    "originalFile": "File:A Leather Belt.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-belts3-11",
+    "name": "Siyah bizon derisi kemer",
+    "category": "accessory",
+    "subtype": "belt",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "LeatherGuy9855",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Black_bison_leather_belt.jpg",
+    "license": "CC0",
+    "asset": "catalog-belts3-11.jpg",
+    "originalFile": "File:Black bison leather belt.jpg",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "photo-belts3-12",
+    "name": "Corbeau mavi deri kemer",
+    "category": "accessory",
+    "subtype": "belt",
+    "colors": [
+      "Mavi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Angelo de Lombardi",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Blauwe_leren_riem,_%E2%80%9CCorbeau%E2%80%9D,_objectnr_87250-1.JPG",
+    "license": "CC BY-SA 3.0",
+    "brand": "Corbeau",
+    "asset": "catalog-belts3-12.jpg",
+    "originalFile": "File:Blauwe leren riem, “Corbeau”, objectnr 87250-1.JPG",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "id": "photo-hat-page-8",
+    "name": "Borsalino gri fedora şapka",
+    "category": "accessory",
+    "subtype": "hat",
+    "colors": [
+      "Gri"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Kjetil Ree",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:A_fedora_hat,_made_by_Borsalino.jpg",
+    "license": "CC BY 2.5",
+    "brand": "Borsalino",
+    "asset": "catalog-hat-page-8.jpg",
+    "originalFile": "File:A fedora hat, made by Borsalino.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.5"
+  },
+  {
+    "id": "photo-hat-page-47",
+    "name": "Wegener lacivert fedora şapka",
+    "category": "accessory",
+    "subtype": "hat",
+    "colors": [
+      "Lacivert"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Toxophilus",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Wegener_fedora,_2026.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Wegener",
+    "asset": "catalog-hat-page-47.jpg",
+    "originalFile": "File:Wegener fedora, 2026.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-hats3-29",
+    "name": "Mavi beyzbol şapkası",
+    "category": "accessory",
+    "subtype": "hat",
+    "colors": [
+      "Mavi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "TexasRebel",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Baseball_cap.jpg",
+    "license": "Public domain",
+    "asset": "catalog-hats3-29.jpg",
+    "originalFile": "File:Baseball cap.jpg",
+    "licenseUrl": null
+  },
+  {
+    "id": "photo-accessory-22",
+    "name": "Anni Teriani pembe desenli fular · model fotoğrafı",
+    "category": "accessory",
+    "subtype": "scarf",
+    "colors": [
+      "Pembe"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Aniinna",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Anni_Teriani_Scarf_Collection_Lovely_Lines_Bronze_Award_A%27_Design_winner_in_2021,_MILAN,_ITALY_03.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Anni Teriani",
+    "asset": "catalog-accessory-22.jpg",
+    "originalFile": "File:Anni Teriani Scarf Collection Lovely Lines Bronze Award A' Design winner in 2021, MILAN, ITALY 03.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-accessory-23",
+    "name": "Anni Teriani mavi desenli fular · model fotoğrafı",
+    "category": "accessory",
+    "subtype": "scarf",
+    "colors": [
+      "Mavi"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Aniinna",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Anni_Teriani_Scarf_Collection_Lovely_Lines_Bronze_Award_A%27_Design_winner_in_2021,_MILAN,_ITALY_04.jpg",
+    "license": "CC BY-SA 4.0",
+    "brand": "Anni Teriani",
+    "asset": "catalog-accessory-23.jpg",
+    "originalFile": "File:Anni Teriani Scarf Collection Lovely Lines Bronze Award A' Design winner in 2021, MILAN, ITALY 04.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-accessory-33",
+    "name": "Mavi kaşmir atkı",
+    "category": "accessory",
+    "subtype": "scarf",
+    "colors": [
+      "Mavi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "https://www.kaschmirprodukte.de",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Cashmere_Wool_Scarves.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-accessory-33.jpg",
+    "originalFile": "File:Cashmere Wool Scarves.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-accessory-39",
+    "name": "Yeşil uzun atkı · manken fotoğrafı",
+    "category": "accessory",
+    "subtype": "scarf",
+    "colors": [
+      "Yeşil"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Fons den Dekker",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Colsjaal.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-accessory-39.jpg",
+    "originalFile": "File:Colsjaal.jpg",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  {
+    "id": "photo-tshirt-23",
+    "name": "Gri baskılı grafik tişört",
+    "category": "tshirt",
+    "subtype": "crew",
+    "colors": [
+      "Gri"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "JackGavin",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:ACLU_Constitution_Tee,_2016.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-tshirt-23.jpg"
+  },
+  {
+    "id": "photo-tee-page-27",
+    "name": "Siyah grafik tişört · mağaza fotoğrafı",
+    "category": "tshirt",
+    "subtype": "crew",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "PiangiPhantom",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:DarnaTshirt.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-tee-page-27.jpg"
+  },
+  {
+    "id": "photo-knit-13",
+    "name": "Kırmızı beyaz desenli kazak",
+    "category": "knit",
+    "subtype": "crew",
+    "colors": [
+      "Kırmızı",
+      "Beyaz"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Wikimedia Commons · public domain",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:%22WIN%22_patterned_sweater.JPG",
+    "license": "Public domain",
+    "asset": "catalog-knit-13.jpg"
+  },
+  {
+    "id": "photo-knit-29",
+    "name": "Lacivert baskılı kazak",
+    "category": "knit",
+    "subtype": "crew",
+    "colors": [
+      "Lacivert"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "Tokumeigakarinoaoshima",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:BOSS_jamper_2.JPG",
+    "license": "CC0",
+    "asset": "catalog-knit-29.jpg"
+  },
+  {
+    "id": "photo-dress-shirts-28",
+    "name": "Gri uzun kollu gömlek · manken fotoğrafı",
+    "category": "shirt",
+    "subtype": "classic",
+    "colors": [
+      "Gri"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Museum Rotterdam",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Uniformhemd_van_de_ambulance_GGD,_objectnr_67996-4.JPG",
+    "license": "CC BY-SA 3.0",
+    "asset": "catalog-dress-shirts-28.jpg"
+  },
+  {
+    "id": "photo-pants3-13",
+    "name": "Siyah geniş cepli kargo · model fotoğrafı",
+    "category": "trousers",
+    "subtype": "cargo",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Militky8",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Boj%C3%B3wki.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-pants3-13.jpg"
+  },
+  {
+    "id": "photo-pants3-16",
+    "name": "Lacivert kargo · model fotoğrafı",
+    "category": "trousers",
+    "subtype": "cargo",
+    "colors": [
+      "Lacivert"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "User:Mattes",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Cargo_pant,_female.JPG",
+    "license": "Public domain",
+    "asset": "catalog-pants3-16.jpg"
+  },
+  {
+    "id": "photo-shoes2-2",
+    "name": "Bej süet püsküllü loafer",
+    "category": "shoes",
+    "subtype": "suede",
+    "colors": [
+      "Bej"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Peachyeung316",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:A_brown_Loafer_Shoes_from_TODS.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-shoes2-2.jpg"
+  },
+  {
+    "id": "photo-shoes2-7",
+    "name": "Koyu kahverengi düz loafer",
+    "category": "shoes",
+    "subtype": "loafer",
+    "colors": [
+      "Kahverengi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "ArtistsCry13",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Brown_Loafers_From_the_%2790s.JPG",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-shoes2-7.jpg"
+  },
+  {
+    "id": "photo-shoes2-22",
+    "name": "Kahverengi deri loafer",
+    "category": "shoes",
+    "subtype": "loafer",
+    "colors": [
+      "Kahverengi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "www.einlege-sohlen.de - http://www.einlege-sohlen.de",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Loafer-leder-braun.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-shoes2-22.jpg"
+  },
+  {
+    "id": "photo-shoes2-23",
+    "name": "Siyah dikiş detaylı loafer",
+    "category": "shoes",
+    "subtype": "loafer",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Arun114",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Loafers_for_Men_in_Black.jpg",
+    "license": "CC BY-SA 4.0",
+    "asset": "catalog-shoes2-23.jpg"
+  },
+  {
+    "id": "photo-shoes2-33",
+    "name": "Pembe yuvarlak burun ayakkabı",
+    "category": "shoes",
+    "subtype": "heel",
+    "colors": [
+      "Pembe"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Mickey in a Dress",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Red_loafers.jpeg",
+    "license": "Public domain",
+    "asset": "catalog-shoes2-33.jpg"
+  },
+  {
+    "id": "photo-dresses3-2",
+    "name": "Çiçekli yazlık mini elbise · model fotoğrafı",
+    "category": "dress",
+    "subtype": "mini",
+    "colors": [
+      "Beyaz",
+      "Pembe"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Super Rabbit One from UK",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Summer_dress_(147201979).jpg",
+    "license": "CC BY-SA 2.0",
+    "asset": "catalog-dresses3-2.jpg"
+  },
+  {
+    "id": "photo-dresses3-3",
+    "name": "Renkli desenli yazlık elbise · model fotoğrafı",
+    "category": "dress",
+    "subtype": "mini",
+    "colors": [
+      "Yeşil",
+      "Kırmızı"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "USAID Africa Bureau",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Summer_dress_(5634765615).jpg",
+    "license": "Public domain",
+    "asset": "catalog-dresses3-3.jpg"
+  },
+  {
+    "id": "photo-skirt-page-26",
+    "name": "Gri çizgili midi etek · model fotoğrafı",
+    "category": "skirt",
+    "subtype": "midi",
+    "colors": [
+      "Gri"
+    ],
+    "pattern": "striped",
+    "image_path": "",
+    "credit": "Janmad",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Skirt_wiki.jpg",
+    "license": "CC BY-SA 2.5",
+    "asset": "catalog-skirt-page-26.jpg"
+  },
+  {
+    "id": "photo-bag-page-17",
+    "name": "Siyah dokulu el çantası",
+    "category": "bag",
+    "subtype": "shoulder",
+    "colors": [
+      "Siyah"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Tahrirchiqiz",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Black_handbag.jpg",
+    "license": "CC BY 4.0",
+    "asset": "catalog-bag-page-17.jpg"
+  },
+  {
+    "id": "photo-bag-page-24",
+    "name": "Hardal sarısı el çantası",
+    "category": "bag",
+    "subtype": "shoulder",
+    "colors": [
+      "Sarı"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Shoichi Iwashita",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Bolsa-camelo-couro-gianni-versace-1_(24912828486).jpg",
+    "license": "CC BY 2.0",
+    "asset": "catalog-bag-page-24.jpg"
+  },
+  {
+    "id": "photo-bag-page-30",
+    "name": "Kırmızı el çantası",
+    "category": "bag",
+    "subtype": "shoulder",
+    "colors": [
+      "Kırmızı"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "Shoichi Iwashita",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Bolsa-couro-vermelho-gianni-versace_(24821162972).jpg",
+    "license": "CC BY 2.0",
+    "asset": "catalog-bag-page-30.jpg"
+  },
+  {
+    "id": "photo-hat-page-14",
+    "name": "Kahverengi keçe şapka",
+    "category": "accessory",
+    "subtype": "hat",
+    "colors": [
+      "Kahverengi"
+    ],
+    "pattern": "solid",
+    "image_path": "",
+    "credit": "derivative work: Wikisteve (talk)\nHatt.jpg: User:Kjetil r",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Brown_fur_felt_fedora.jpg",
+    "license": "CC BY 2.5",
+    "asset": "catalog-hat-page-14.jpg"
+  },
+  {
+    "id": "photo-hat-page-21",
+    "name": "Gri kareli şapka",
+    "category": "accessory",
+    "subtype": "hat",
+    "colors": [
+      "Gri"
+    ],
+    "pattern": "printed",
+    "image_path": "",
+    "credit": "David Ring",
+    "creditUrl": "https://commons.wikimedia.org/wiki/File:Fedora_(clothing).jpg",
+    "license": "CC0",
+    "asset": "catalog-hat-page-21.jpg"
+  }
+]

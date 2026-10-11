@@ -50,3 +50,4 @@ Deno.serve(async(req)=>{
   return json({provider:"birefnet",transparent:true,estimatedCostUsd:Number(result.estimated_cost_usd??0),status:"enriching"});
  }catch(error){console.error("background_remove_failed",error);return json({error:"OPERATION_FAILED"},400);}
 });
+

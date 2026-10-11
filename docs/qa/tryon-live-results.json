@@ -1,0 +1,25 @@
+{
+  "actualGenerations": [
+    {
+      "productId": "livo-7820140511371",
+      "result": "tryon-dress.webp",
+      "provider": "FASHN VTON1.5 public demo",
+      "category": "one-pieces",
+      "model": "person6",
+      "steps": 30,
+      "segmentationFree": true,
+      "status": "completed",
+      "visualIssues": [
+        "Small original sleeve trace remains"
+      ],
+      "fitValidated": false
+    }
+  ],
+  "followupTests": {
+    "shirt": "provider returned SSE error with null payload",
+    "trousers": "provider returned SSE error with null payload",
+    "dressMaskRefinement": "provider returned SSE error with null payload",
+    "shirtMaskRefinement": "provider returned SSE error with null payload"
+  },
+  "conclusion": "Free public demo produces real outputs but is not a reliable production backend."
+}

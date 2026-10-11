@@ -13,3 +13,4 @@ export function filterEligible(items:RuleItem[],context:Context){
  });
  return{eligible,excluded};
 }
+

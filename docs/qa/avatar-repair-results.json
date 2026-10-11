@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "Homepage duplicate store shelf removed",
+    "Avatar opens from hanger",
+    "Photo demo no longer replaces avatar",
+    "Product details stay inside studio",
+    "Actual catalog photograph loads",
+    "Male model and front control usable",
+    "No horizontal overflow",
+    "Desktop catalog next to avatar",
+    "No runtime errors"
+  ],
+  "note": "Local web verification; no physical iPhone test."
+}

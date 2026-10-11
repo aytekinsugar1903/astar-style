@@ -1,3 +1,4 @@
+import {useAppStyles} from '@/studio/theme';
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
@@ -5,6 +6,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
 export default function SignInScreen() {
+ const styles=useAppStyles(signInStyles);
   const router = useRouter();
   const { t } = useI18n();
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
@@ -79,3 +81,6 @@ const styles = StyleSheet.create({
   switch: { color: "#6E2D3A", textAlign: "center", marginTop: 20, fontWeight: "700" },
 });
 
+
+
+const signInStyles=styles;

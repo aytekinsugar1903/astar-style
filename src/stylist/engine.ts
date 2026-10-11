@@ -27,3 +27,4 @@ export function replyToStyleQuestion(question: string, closet: ClosetPiece[], pr
     : `${names ? `Start with your closet: ${names}.` : "No matching pieces found in your saved wardrobe."} ${queries.length ? `Missing: ${queries.join(", ")}.` : "No new purchase needed."}${money ? ` Total budget: ${money}; live prices are needed for a spending estimate.` : " Tell me your budget in TRY to plan missing pieces."} A photo preview cannot guarantee fit.`;
   return { message, selectedIds: selected.map(item => item.id), missingQueries: queries, context: { occasion, budget } };
 }
+

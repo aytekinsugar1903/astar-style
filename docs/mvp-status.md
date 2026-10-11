@@ -71,3 +71,4 @@ These are intentionally not activated because they require an external account, 
 - Demo catalog content is synthetic and links only to example.com.
 - User photos are private and are not sent to third parties while mock providers are active.
 - Every AI/try-on call has a cost-log and quota boundary ready for a future provider.
+

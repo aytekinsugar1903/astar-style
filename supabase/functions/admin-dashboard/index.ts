@@ -44,3 +44,4 @@ Deno.serve(async (req) => {
     return json({ error: "INTERNAL_ERROR" }, 500);
   }
 });
+

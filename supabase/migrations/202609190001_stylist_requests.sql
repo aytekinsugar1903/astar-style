@@ -18,3 +18,4 @@ create policy stylist_requests_owner_submit on public.stylist_requests
 revoke all on public.stylist_requests from anon, authenticated;
 grant select, insert on public.stylist_requests to authenticated;
 grant all on public.stylist_requests to service_role;
+

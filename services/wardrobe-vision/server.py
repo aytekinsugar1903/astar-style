@@ -59,3 +59,4 @@ def process(body: ProcessRequest, authorization: str | None = Header(default=Non
         raise
     except Exception:
         raise HTTPException(422, "Image processing failed")
+

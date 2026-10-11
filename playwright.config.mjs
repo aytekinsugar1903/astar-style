@@ -10,6 +10,7 @@ export default defineConfig({
   use: {
     baseURL: "http://127.0.0.1:4173",
     browserName: "chromium",
+    launchOptions: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE } : {},
     viewport: { width: 390, height: 844 },
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
@@ -21,3 +22,4 @@ export default defineConfig({
     timeout: 30_000,
   },
 });
+

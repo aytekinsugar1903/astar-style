@@ -42,3 +42,4 @@ def encode_png(image: Image.Image) -> bytes:
     buffer = BytesIO()
     image.save(buffer, format="PNG", optimize=True)
     return buffer.getvalue()
+

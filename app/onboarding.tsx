@@ -1,3 +1,5 @@
+import {useAppStyles,useTheme} from '@/studio/theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
@@ -29,7 +31,8 @@ const colorOptions: Option[] = [
   { value: "Pastel", label: "colorPastel" },
 ];
 
-export default function OnboardingScreen() {
+export default function OnboardingScreen() {const s=useAppStyles(baseStyles);
+
   const router = useRouter();
   const { session } = useAuth();
   const { locale, t } = useI18n();
@@ -45,7 +48,8 @@ export default function OnboardingScreen() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!isSupabaseConfigured || !session) return;
+    if (!isSupabaseConfigured) {void AsyncStorage.getItem('weyra:style-profile:v1').then(raw=>{if(!raw)return;const p=JSON.parse(raw);if(Array.isArray(p.tags))setTags(p.tags.filter((v:unknown)=>typeof v==='string'));if(Array.isArray(p.preferredColors))setPreferredColors(p.preferredColors.filter((v:unknown)=>typeof v==='string'));if(['women','men','unisex'].includes(p.audience))setAudience(p.audience);if(typeof p.heightCm==='number')setHeightCm(String(p.heightCm));if(typeof p.weightKg==='number')setWeightKg(String(p.weightKg));if(['hourglass','triangle','inverted_triangle','rectangle','oval'].includes(p.bodyType))setBodyType(p.bodyType);if(['light','medium','tan','deep'].includes(p.skinTone))setSkinTone(p.skinTone);setAccepted(p.accepted===true);}).catch(()=>setMessage(t('avatarStorageError')));return;}
+    if (!session) return;
 
     void Promise.all([
       supabase.from("style_profiles").select("style_tags,preferred_colors,body_preferences,avatar_config").eq("user_id", session.user.id).maybeSingle(),
@@ -79,7 +83,7 @@ export default function OnboardingScreen() {
     if (!Number.isFinite(parsedHeight) || parsedHeight < 120 || parsedHeight > 220 || !Number.isFinite(parsedWeight) || parsedWeight < 30 || parsedWeight > 250) {
       setMessage(t("bodyMeasurementsInvalid")); return;
     }
-    if (!isSupabaseConfigured) { router.replace("/wardrobe"); return; }
+    if (!isSupabaseConfigured) {setBusy(true);try{await AsyncStorage.setItem('weyra:style-profile:v1',JSON.stringify({tags,preferredColors,audience,heightCm:parsedHeight,weightKg:parsedWeight,bodyType,skinTone,accepted}));router.replace('/wardrobe');}catch{setMessage(t('avatarStorageError'));}finally{setBusy(false);}return;}
     if (!session) { router.replace("/sign-in"); return; }
 
     setBusy(true);
@@ -189,3 +193,6 @@ const s = StyleSheet.create({
   message:{color:"#6E2D3A",marginTop:14},button:{backgroundColor:"#6E2D3A",borderRadius:999,padding:17,alignItems:"center",marginTop:24},buttonText:{color:"#FFF",fontWeight:"800"},
   disabled:{opacity:.5},
 });
+
+
+const baseStyles=s;

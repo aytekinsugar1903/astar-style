@@ -16,3 +16,4 @@ Deno.serve(async req => {
     return json({ answered: true });
   } catch (error) { console.error("stylist_reply_failed", error); return json({ error: "INTERNAL_ERROR" }, 500); }
 });
+

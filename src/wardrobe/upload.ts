@@ -30,3 +30,4 @@ export async function uploadWardrobeImage(
   if (uploaded.error) throw uploaded.error;
   return path;
 }
+

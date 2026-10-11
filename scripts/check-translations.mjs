@@ -69,3 +69,4 @@ if (missingInEnglish.length || missingInTurkish.length || unknownKeys.length) {
 }
 
 console.log(`Localization check passed: ${tr.size} keys in Turkish and English.`);
+

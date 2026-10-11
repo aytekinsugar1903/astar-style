@@ -98,3 +98,4 @@ from astra_demo_seed s join public.products p on p.source='demo' and p.external_
 where not exists(select 1 from public.product_offers o where o.product_id=p.id);
 commit;
 
+

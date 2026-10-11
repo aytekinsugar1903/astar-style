@@ -22,3 +22,4 @@ export const supabase = createClient<Database>(url, publishableKey, {
     detectSessionInUrl: Platform.OS === "web",
   },
 });
+

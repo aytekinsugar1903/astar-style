@@ -5,3 +5,4 @@ export const mockProducts: CatalogProduct[] = demoProductDefinitions.map((item) 
   category:item.trCategory, color:item.trColor, styleTags:item.trTags, price:item.price,
   currency:"TRY", productUrl:"https://example.com", inStock:item.inStock, styleScore:item.styleScore,
 }));
+

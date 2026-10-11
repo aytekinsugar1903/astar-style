@@ -1,6 +1,18 @@
+import type {ImageSourcePropType} from 'react-native';
+import type {CatalogVariant} from './feed';
 export type CatalogProduct = {
   id: string;
   dbId?: string;
+  photoSource?:ImageSourcePropType;
+  credit?:string;
+  creditUrl?:string;
+  license?:string;
+  variants?:CatalogVariant[];
+  originalCategory?:string;
+  categoryKey?:string;
+  priceKnown?:boolean;
+  stockKnown?:boolean;
+  styleScoreKnown?:boolean;
   source?: string;
   audience?: "women" | "men" | "unisex";
   imageUrl?: string;
@@ -18,3 +30,4 @@ export type CatalogProduct = {
   inStock: boolean;
   styleScore: number;
 };
+

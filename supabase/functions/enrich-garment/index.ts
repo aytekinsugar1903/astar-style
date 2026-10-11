@@ -20,3 +20,4 @@ Deno.serve(async(req)=>{
   return json({provider:"text_catalog_suggestions",estimatedCostUsd:0,matched_metadata:metadata});
  }catch(error){console.error("enrich_garment_failed",error);return json({error:"OPERATION_FAILED"},400);}
 });
+

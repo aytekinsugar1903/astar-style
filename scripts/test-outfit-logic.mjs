@@ -25,3 +25,4 @@ const fullCloset = ["shirt", "pants", "shoes", "jacket"].flatMap(category => Arr
 const variants = new Set(Array.from({ length: 256 }, (_, seed) => choose(fullCloset, "classic", seed, "men").map(item => item.id).join("|")));
 assert.ok(variants.size >= 200, `expected 200 distinct outfits, received ${variants.size}`);
 console.log(`Outfit templates, event exclusions, 72 audience selections, and ${variants.size} distinct full-closet looks passed.`);
+

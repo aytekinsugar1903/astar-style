@@ -42,3 +42,4 @@ export function eligibleWardrobe<T extends RuleItem>(items: T[], context: Occasi
   const excludedIds = new Set(excluded.map((item) => item.id));
   return { eligible: items.filter((item) => !excludedIds.has(item.id)), excluded };
 }
+

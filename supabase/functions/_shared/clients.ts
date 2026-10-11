@@ -12,3 +12,4 @@ export function clients(req: Request) {
     admin: createClient(url, service, { auth: { persistSession: false, autoRefreshToken: false } }),
   };
 }
+

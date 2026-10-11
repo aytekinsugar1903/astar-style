@@ -67,3 +67,4 @@ Deno.serve(async req => {
     return json({ error: "IMAGE_PROCESSING_FAILED" }, 400);
   }
 });
+

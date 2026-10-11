@@ -1,3 +1,4 @@
+import {useAppStyles,useTheme} from '@/studio/theme';
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
@@ -9,6 +10,8 @@ import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { functionErrorKey } from "@/lib/function-error";
 import { uploadWardrobeImage } from "@/wardrobe/upload";
 import { track } from "@/analytics/track";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {sampleGarments,saveLocalGarments} from "@/studio/closet";
 
 type Item = {
   id: string;
@@ -26,12 +29,10 @@ type Item = {
   imageUrl?: string;
 };
 
-const demoItems: Item[] = [
-  { id: "1", name: "Siyah gece elbisesi", category: "dress", colors: ["Siyah"], image_path: "" },
-  { id: "2", name: "Krem blazer", category: "jacket", colors: ["Krem"], image_path: "" },
-];
+const demoItems: Item[] = sampleGarments;
 
 const categoryKeys: Record<string, TranslationKey> = {
+  knit: "categoryKnit",
   dress: "categoryDress",
   pants: "categoryPants",
   trousers: "categoryPants",
@@ -49,7 +50,8 @@ const editableCategories = ["dress", "trousers", "skirt", "shirt", "tshirt", "ja
 type EditableCategory = typeof editableCategories[number];
 const similarCount = (value: unknown) => value && typeof value === "object" && !Array.isArray(value) && "similar_to" in value && Array.isArray(value.similar_to) ? value.similar_to.length : 0;
 
-export default function WardrobeScreen() {
+export default function WardrobeScreen() {const s=useAppStyles(baseStyles);
+
   const router = useRouter();
   const { session } = useAuth();
   const { locale, t } = useI18n();
@@ -69,7 +71,8 @@ export default function WardrobeScreen() {
   const [editCategory, setEditCategory] = useState<EditableCategory>("other");
 
   const load = useCallback(async () => {
-    if (!isSupabaseConfigured || !session) return;
+    if (!isSupabaseConfigured) { const raw=await AsyncStorage.getItem("weyra:local-wardrobe:v2"); setItems([...(raw?JSON.parse(raw):[]),...demoItems]); return; }
+    if (!session) return;
 
     const { data, error } = await supabase
       .from("wardrobe_items")
@@ -109,20 +112,15 @@ export default function WardrobeScreen() {
   }
 
   async function pickImage(source: "camera" | "library") {
-    if (!isSupabaseConfigured) {
-      setMessage(t("demoGarmentAdded"));
-      setItems((value) => [{ id: String(Date.now()), name: "Yeni parça", category: "other", colors: [], image_path: "" }, ...value]);
-      return;
-    }
-    if (!session) { router.replace("/sign-in"); return; }
+    if (isSupabaseConfigured && !session) { router.replace("/sign-in"); return; }
 
     const permission = source === "camera"
       ? await ImagePicker.requestCameraPermissionsAsync()
       : await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) { setMessage(t(source === "camera" ? "cameraPermissionWardrobe" : "galleryPermissionWardrobe")); return; }
     const options: ImagePicker.ImagePickerOptions = source === "library"
-      ? { mediaTypes: ["images"], quality: .9, allowsMultipleSelection: true, selectionLimit: 30 }
-      : { mediaTypes: ["images"], quality: .9, allowsEditing: true };
+      ? { mediaTypes: ["images"], quality: .55, base64: !isSupabaseConfigured, allowsMultipleSelection: true, selectionLimit: 30 }
+      : { mediaTypes: ["images"], quality: .55, base64: !isSupabaseConfigured, allowsEditing: true };
     const picked = source === "camera" ? await ImagePicker.launchCameraAsync(options) : await ImagePicker.launchImageLibraryAsync(options);
     if (picked.canceled) return;
     const valid = picked.assets.filter(asset => (asset.width ?? 0) >= 720 && (asset.height ?? 0) >= 720);
@@ -144,7 +142,15 @@ export default function WardrobeScreen() {
   }
 
   async function confirmPending() {
-    if (!pending || !session) return;
+    if (!pending) return;
+    if (!isSupabaseConfigured) {
+      if (!pending.base64 || pending.base64.length>4000000) { setMessage(t("localPhotoTooLarge")); return; }
+      try { const local={id:"local-"+Date.now(),name:pendingName.trim()||t("newGarment"),category:pendingCategory,colors:pendingColor?[pendingColor]:[],image_path:"",imageUrl:"data:"+(pending.mimeType??"image/jpeg")+";base64,"+pending.base64};
+      await saveLocalGarments([local,...items.filter(p=>!p.id.startsWith("photo-")).map(p=>({...p,name:p.name??t("unnamedItem")}))]);
+      setPendingBatch(current=>current.slice(1));setPendingName("");setMessage(t("localPhotoSaved"));await load();
+      } catch { setMessage(t("localStorageFailed")); } return;
+    }
+    if (!session) return;
 
     setBusy(true);
     setMessage(t("secureUploading"));
@@ -197,7 +203,7 @@ export default function WardrobeScreen() {
   }
 
   async function splitPending() {
-    if (!pending || !session) return;
+    if (!pending || !session) { setMessage(t("localSplitUnavailable")); return; }
     setBusy(true);
     let temporaryPath: string | null = null;
     try {
@@ -217,8 +223,8 @@ export default function WardrobeScreen() {
 
   async function removeItem(item: Item) {
     if (!isSupabaseConfigured) {
-      setItems((value) => value.filter((entry) => entry.id !== item.id));
-      setMessage(t("demoGarmentRemoved"));
+      const next=items.filter(entry=>entry.id!==item.id);
+      try {await saveLocalGarments(next.filter(p=>!p.id.startsWith("photo-")).map(p=>({...p,name:p.name??t("unnamedItem")})));setItems(next);setMessage(t("demoGarmentRemoved"));} catch {setMessage(t("localStorageFailed"));}
       return;
     }
     if (!session) { router.replace("/sign-in"); return; }
@@ -277,7 +283,8 @@ export default function WardrobeScreen() {
           <Pressable onPress={() => router.back()} accessibilityRole="button"><Text style={s.back}>{t("backHome")}</Text></Pressable>
           <Text style={s.count}>{t("wardrobeCount", { count: items.length })}</Text>
         </View>
-        <Text style={s.title}>{t("wardrobeScreenTitle")}</Text>\n        <View style={s.viewSwitch}><Pressable style={s.switchOn}><Text style={s.switchOnText}>Izgara</Text></Pressable><Pressable style={s.switchOff} onPress={() => router.push("/showcase")}><Text style={s.switchOffText}>Vitrin / Askılık</Text></Pressable></View>
+        <Text style={s.title}>{t("wardrobeScreenTitle")}</Text>
+        <View style={s.viewSwitch}><Pressable style={s.switchOn}><Text style={s.switchOnText}>Izgara</Text></Pressable><Pressable style={s.switchOff} onPress={() => router.push("/showcase")}><Text style={s.switchOffText}>Vitrin / Askılık</Text></Pressable></View>
         <Text style={s.copy}>{t("wardrobeCopy")}</Text>
         <Pressable style={[s.add, busy && s.disabled]} onPress={addItem} disabled={busy || !!deletingId} accessibilityRole="button">
           <Text style={s.addText}>{busy ? t("uploading") : t("addGarment")}</Text>
@@ -303,8 +310,8 @@ export default function WardrobeScreen() {
             return (
               <View key={item.id} style={s.card}>
                 <View style={s.image}>
-                  {item.imageUrl
-                    ? <Image source={{ uri: item.imageUrl }} style={s.photo} resizeMode="cover" accessibilityLabel={name} />
+                  {(item.imageUrl || sampleGarments.find(p=>p.id===item.id)?.source)
+                    ? <Image source={item.imageUrl?{ uri: item.imageUrl }:sampleGarments.find(p=>p.id===item.id)!.source!} style={s.photo} resizeMode="contain" accessibilityLabel={name} />
                     : <Text style={s.imageText}>WEYRA</Text>}
                 </View>
                 <Text style={s.item}>{name}</Text>
@@ -387,3 +394,6 @@ const s = StyleSheet.create({
   emptyTitle: { fontSize: 20, fontWeight: "700" },
   emptyCopy: { color: "#6B665F", lineHeight: 20, marginTop: 8 },
 });
+
+
+const baseStyles=s;
