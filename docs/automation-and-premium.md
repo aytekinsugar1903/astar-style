@@ -24,3 +24,4 @@ The JWT-protected `operations-runner` Edge Function is admin-only and supports:
 Every run is persisted in `automation_runs`. The mobile roles have no table privileges and no RLS policy for this operational data.
 
 Scheduling remains intentionally inactive. When production scheduling is approved, Supabase Cron may invoke the function with a secret stored in Vault. The function must never be scheduled with a key hardcoded in SQL.
+

@@ -1,0 +1,13 @@
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { gunzipSync } from 'node:zlib';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const target = resolve(root, 'public/image-engine/ort-wasm-simd-threaded.wasm');
+const data = gunzipSync(readFileSync(resolve(root, 'vendor/ort-wasm-simd-threaded.wasm.gz')));
+const expected = '3398c10d07d229bd91b364548e130e0e51a8e5704b88c7c083ebbeb78842dee2';
+if (createHash('sha256').update(data).digest('hex') !== expected) throw new Error('Bundled ONNX runtime integrity check failed');
+mkdirSync(dirname(target), { recursive: true });
+writeFileSync(target, data);
+console.log('Restored verified ONNX runtime (' + data.length + ' bytes).');

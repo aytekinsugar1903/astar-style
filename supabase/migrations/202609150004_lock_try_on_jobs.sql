@@ -18,3 +18,4 @@ with check (
 create policy try_on_owner_delete_queued
 on public.try_on_jobs for delete to authenticated
 using ((select auth.uid()) = user_id and status = 'queued');
+

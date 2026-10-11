@@ -1,3 +1,9 @@
+import {notifyCloset} from "@/studio/closet";
+import {notifyCatalog} from "@/catalog/imported";
+import {notifyDaily} from "@/daily/store";
+import {BACKUP_KEYS} from "@/daily/backup";
+import {useAppStyles,useTheme} from '@/studio/theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Alert, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
@@ -6,7 +12,8 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { isLocale, Locale } from "@/i18n/translations";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
-export default function ProfileScreen() {
+export default function ProfileScreen() {const s=useAppStyles(baseStyles);
+
   const router = useRouter();
   const { session, signOut } = useAuth();
   const { locale, setLocale, t } = useI18n();
@@ -23,7 +30,7 @@ export default function ProfileScreen() {
   const deletionConfirmed = deletePhrase.trim().toLocaleUpperCase(localeTag) === requiredDeletePhrase;
 
   useEffect(() => {
-    if (!isSupabaseConfigured) return;
+    if (!isSupabaseConfigured) {void Promise.all([AsyncStorage.getItem('weyra:profile:v1'),AsyncStorage.getItem('weyra:style-profile:v1')]).then(([raw,style])=>{if(raw){const p=JSON.parse(raw);setDisplayName(typeof p.displayName==='string'?p.displayName:'');}if(style){const p=JSON.parse(style);if(Array.isArray(p.tags))setStyleTags(p.tags);if(Array.isArray(p.preferredColors))setPreferredColors(p.preferredColors);}}).catch(()=>setMessage(t('avatarStorageError')));return;}
     if (!session) {
       router.replace("/sign-in");
       return;
@@ -45,6 +52,7 @@ export default function ProfileScreen() {
   }, [router, session, setLocale]);
 
   async function save() {
+    if (!isSupabaseConfigured) {setBusy(true);try{await AsyncStorage.setItem('weyra:profile:v1',JSON.stringify({displayName:displayName.trim()}));setMessage(t('profileSaved'));}catch{setMessage(t('avatarStorageError'));}finally{setBusy(false);}return;}
     if (!session) return;
     setBusy(true);
     setMessage("");
@@ -74,7 +82,9 @@ export default function ProfileScreen() {
   }
 
   async function deleteAccount() {
-    if (!session || !deletionConfirmed) return;
+    if (!deletionConfirmed) return;
+    if(!isSupabaseConfigured){setBusy(true);try{await AsyncStorage.multiRemove([...BACKUP_KEYS]);notifyCloset();notifyCatalog();notifyDaily();router.replace("/");}catch{setMessage(t("deleteFailed"));}finally{setBusy(false);}return;}
+    if(!session)return;
     setBusy(true);
     setMessage("");
 
@@ -98,6 +108,7 @@ export default function ProfileScreen() {
       return;
     }
 
+    if(!isSupabaseConfigured){void deleteAccount();return;}
     Alert.alert(
       t("deleteAlertTitle"),
       t("deleteAlertCopy"),
@@ -129,8 +140,8 @@ export default function ProfileScreen() {
             autoCapitalize="words"
             accessibilityLabel={t("displayName")}
           />
-          <Text style={s.email}>{session?.user.email ?? t("demoUser")}</Text>
-          <Pressable style={[s.primary, busy && s.disabled]} onPress={save} disabled={busy || !session} accessibilityRole="button">
+          <Text style={s.email}>{session?.user.email ?? t("demoUser")}</Text>{!isSupabaseConfigured&&<Text style={s.copy}>{t("profileLocalNotice")}</Text>}
+          <Pressable style={[s.primary, busy && s.disabled]} onPress={save} disabled={busy || (isSupabaseConfigured && !session)} accessibilityRole="button">
             <Text style={s.primaryText}>{busy ? t("saving") : t("saveProfile")}</Text>
           </Pressable>
         </View>
@@ -172,7 +183,7 @@ export default function ProfileScreen() {
           </Pressable>
         )}
 
-        <View style={s.privacy}>
+        <Pressable style={s.secondary} accessibilityRole="button" onPress={()=>router.push("/backup")}><Text style={s.secondaryText}>{t("backupTitle")}</Text></Pressable><View style={s.privacy}>
           <Text style={s.privacyTitle}>{t("privacyTitle")}</Text>
           <Text style={s.privacyText}>{t("privacyCopy")}</Text>
         </View>
@@ -265,3 +276,6 @@ const s = StyleSheet.create({
   deleteButtonText: { color: "#FFF", fontWeight: "800" },
   cancelDelete: { color: "#6B665F", textAlign: "center", padding: 14, fontWeight: "700" },
 });
+
+
+const baseStyles=s;

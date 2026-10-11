@@ -20,3 +20,4 @@ export interface CatalogProvider {
   readonly name: string;
   fetchProducts(): Promise<CatalogFeedItem[]>;
 }
+

@@ -8,25 +8,26 @@ async function removeUserFiles(
   bucket: string,
   userId: string,
 ) {
-  const pageSize = 1000;
-  while (true) {
-    const { data, error } = await admin.storage.from(bucket).list(userId, {
-      limit: pageSize,
-      offset: 0,
-      sortBy: { column: "name", order: "asc" },
-    });
-    if (error) throw error;
-
-    const paths = (data ?? [])
-      .filter((item) => Boolean(item.id))
-      .map((item) => `${userId}/${item.name}`);
-
-    if (paths.length) {
-      const removed = await admin.storage.from(bucket).remove(paths);
-      if (removed.error) throw removed.error;
+  const pending = [userId];
+  const visited = new Set<string>();
+  while (pending.length) {
+    const folder = pending.pop()!;
+    if (visited.has(folder)) continue;
+    visited.add(folder);
+    // Deleting files at offset 0 avoids skipping files as each page shrinks.
+    while (true) {
+      const { data, error } = await admin.storage.from(bucket).list(folder, { limit: 100 });
+      if (error) throw error;
+      const paths = (data ?? []).filter((item) => Boolean(item.id)).map((item) => `${folder}/${item.name}`);
+      const folders = (data ?? []).filter((item) => !item.id).map((item) => `${folder}/${item.name}`);
+      pending.push(...folders.filter((path) => !visited.has(path)));
+      if (paths.length) {
+        const removed = await admin.storage.from(bucket).remove(paths);
+        if (removed.error) throw removed.error;
+      }
+      // Pages containing only folders would otherwise repeat forever.
+      if (!paths.length || (data ?? []).length < 100) break;
     }
-
-    if ((data ?? []).length < pageSize) break;
   }
 }
 
@@ -66,3 +67,4 @@ Deno.serve(async (req) => {
     }, 400);
   }
 });
+

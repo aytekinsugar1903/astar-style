@@ -58,3 +58,4 @@ The server rejects invalid prices, currencies, audiences, commission rates, unsa
 4. Start with a small daily cost limit and internal test account.
 5. Verify deletion, result retention, failure handling and cost events.
 6. Enable a limited rollout before general availability.
+

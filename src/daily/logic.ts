@@ -1,0 +1,14 @@
+export type SavedLook={id:string;title:string;placed:Record<string,{x:number;y:number}>};
+export type Wear={date:string;lookId:string;itemIds:string[]};
+export type Plan={id:string;date:string;lookId:string;title:string;itemIds:string[];note:string};
+export type Packing={id:string;name:string;itemIds:string[];checked:string[]};
+export type DailyState={wears:Wear[];plans:Plan[];packing:Packing[];feedback:Record<string,number>;prices:Record<string,number>};
+export const emptyDaily=():DailyState=>({wears:[],plans:[],packing:[],feedback:{},prices:{}});
+export function localDate(now=new Date()){return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;}
+export function validDate(value:string){if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const d=new Date(value+'T12:00:00Z');return Number.isFinite(d.getTime())&&d.toISOString().slice(0,10)===value;}
+export function recordWear(state:DailyState,look:SavedLook,date=localDate()):DailyState{if(!validDate(date)||date>localDate())throw new Error('dailyBadDate');const itemIds=Object.keys(look.placed);if(!itemIds.length)throw new Error('dailyNoLook');return {...state,wears:[...state.wears.filter(w=>!(w.date===date&&w.lookId===look.id)),{date,lookId:look.id,itemIds}]};}
+export function itemWears(state:DailyState,id:string){return new Set(state.wears.filter(w=>w.itemIds.includes(id)).map(w=>w.date)).size;}
+export function costPerWear(state:DailyState,id:string){const n=itemWears(state,id),price=state.prices[id];return n&&price!==undefined?price/n:undefined;}
+export function packingItems(looks:SavedLook[]){return [...new Set(looks.flatMap(l=>Object.keys(l.placed)))];}
+export function addPlan(state:DailyState,look:SavedLook,date:string,note:string):DailyState{if(!validDate(date))throw new Error('dailyBadDate');return {...state,plans:[...state.plans.filter(p=>!(p.date===date&&p.lookId===look.id)),{id:date+':'+look.id,date,lookId:look.id,title:look.title,itemIds:Object.keys(look.placed),note:note.trim().slice(0,300)}]};}
+export function validateDaily(x:any):x is DailyState{const strings=(a:any)=>Array.isArray(a)&&a.length<=30000&&a.every(v=>typeof v==='string'&&v.length<500);return !!x&&Array.isArray(x.wears)&&Array.isArray(x.plans)&&Array.isArray(x.packing)&&x.wears.length<=30000&&x.plans.length<=30000&&x.packing.length<=1000&&x.wears.every((w:any)=>validDate(w.date)&&typeof w.lookId==='string'&&strings(w.itemIds))&&x.plans.every((p:any)=>typeof p.id==='string'&&validDate(p.date)&&typeof p.lookId==='string'&&typeof p.title==='string'&&typeof p.note==='string'&&strings(p.itemIds))&&x.packing.every((p:any)=>typeof p.id==='string'&&typeof p.name==='string'&&strings(p.itemIds)&&strings(p.checked)&&p.checked.every((id:string)=>p.itemIds.includes(id)))&&x.feedback&&Object.values(x.feedback).every(v=>v===-1||v===1)&&x.prices&&Object.values(x.prices).every(v=>typeof v==='number'&&Number.isFinite(v)&&v>=0&&v<=10000000);}

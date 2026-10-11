@@ -17,3 +17,4 @@ export function localizeFacet(value:string,locale:Locale){
   }
   return value;
 }
+

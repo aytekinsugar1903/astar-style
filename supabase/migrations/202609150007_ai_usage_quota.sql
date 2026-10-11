@@ -108,3 +108,4 @@ grant execute on function public.reserve_ai_usage(uuid, text, text, text, numeri
 
 comment on function public.reserve_ai_usage(uuid, text, text, text, numeric, integer, integer, numeric)
 is 'Atomically reserves per-user AI usage and enforces request and daily estimated-cost limits. Service role only.';
+

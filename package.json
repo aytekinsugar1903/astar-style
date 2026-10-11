@@ -1,5 +1,5 @@
 {
-  "name": "astra-style",
+  "name": "weyra",
   "version": "0.2.0",
   "private": true,
   "main": "expo-router/entry",
@@ -13,28 +13,45 @@
     "test:i18n": "node scripts/check-translations.mjs",
     "build:e2e": "expo export --platform web",
     "test:e2e": "playwright test",
-    "test:providers": "node scripts/check-provider-guards.mjs"
+    "test:providers": "node scripts/check-provider-guards.mjs",
+    "test:outfits": "node --experimental-strip-types scripts/test-outfit-logic.mjs",
+    "test:stylist": "node --experimental-strip-types scripts/test-stylist.mjs",
+    "test:catalog": "node scripts/check-photo-catalog.mjs",
+    "test:daily": "node scripts/test-daily.mjs",
+    "test:catalog-feed": "node scripts/test-catalog-feed.mjs",
+    "test:catalog-refresh": "node scripts/test-catalog-refresh.mjs",
+    "postinstall": "node scripts/restore-large-assets.mjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
     "@supabase/supabase-js": "2.57.4",
     "expo": "~54.0.0",
     "expo-constants": "~18.0.0",
+    "expo-image-manipulator": "~14.0.8",
     "expo-image-picker": "~17.0.0",
     "expo-linking": "~8.0.0",
     "expo-router": "~6.0.0",
     "expo-status-bar": "~3.0.0",
+    "expo-system-ui": "~6.0.9",
+    "expo-video": "~3.0.16",
+    "fast-xml-parser": "^5.11.2",
+    "onnxruntime-web": "^1.30.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.5",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
+    "react-native-svg": "15.12.1",
+    "react-native-url-polyfill": "2.0.0",
     "react-native-web": "~0.21.0",
-    "react-native-url-polyfill": "2.0.0"
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
     "@types/react": "~19.1.0",
+    "@types/three": "^0.186.0",
+    "@xmldom/xmldom": "^0.9.12",
+    "sharp": "^0.35.5",
     "typescript": "~5.9.2"
   }
 }

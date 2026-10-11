@@ -36,3 +36,4 @@ on public.automation_runs(job_name, started_at desc);
 
 alter table public.automation_runs enable row level security;
 revoke all on public.automation_runs from anon, authenticated;
+

@@ -8,3 +8,4 @@ export const mockGarmentProvider: GarmentAnalysisProvider = {
     return { category: "other", colors: [], style_tags: ["analiz-bekliyor"], seasons: ["all"], ai_confidence: 0 };
   },
 };
+

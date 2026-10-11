@@ -212,3 +212,4 @@ create policy user_photos_delete on storage.objects for delete to authenticated
 
 create policy try_on_results_select on storage.objects for select to authenticated
   using (bucket_id = 'try-on-results' and (storage.foldername(name))[1] = (select auth.uid())::text);
+

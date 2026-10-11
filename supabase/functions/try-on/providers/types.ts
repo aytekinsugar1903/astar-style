@@ -11,3 +11,4 @@ export interface TryOnProvider {
   readonly estimatedCostUsd: number;
   run(input: { personImageUrl: string; garmentImageUrl: string }): Promise<TryOnResult>;
 }
+

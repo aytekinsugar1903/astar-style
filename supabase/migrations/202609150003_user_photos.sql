@@ -21,3 +21,4 @@ create policy user_photos_owner_update on public.user_photos for update to authe
   with check ((select auth.uid()) = user_id);
 create policy user_photos_owner_delete on public.user_photos for delete to authenticated
   using ((select auth.uid()) = user_id);
+

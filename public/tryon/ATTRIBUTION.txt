@@ -1,0 +1,3 @@
+FASHN VTON 1.5 example assets
+Source: https://huggingface.co/spaces/fashn-ai/fashn-vton-1.5/tree/main/assets/examples
+Space declares Apache-2.0. Sample images used as published demonstration inputs; no user photographs are sent by WEYRA.

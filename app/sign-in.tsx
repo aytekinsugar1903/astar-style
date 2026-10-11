@@ -1,3 +1,4 @@
+import {useAppStyles} from '@/studio/theme';
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
@@ -5,6 +6,7 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
 export default function SignInScreen() {
+ const styles=useAppStyles(signInStyles);
   const router = useRouter();
   const { t } = useI18n();
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
@@ -33,7 +35,7 @@ export default function SignInScreen() {
   return (
     <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <View style={styles.panel}>
-        <Text style={styles.brand}>ASTRA STYLE</Text>
+        <Text style={styles.brand}>WEYRA</Text>
         <Text style={styles.title}>{mode === "sign-in" ? t("authWelcome") : t("authCreateTitle")}</Text>
         <Text style={styles.copy}>{t("authCopy")}</Text>
         <TextInput
@@ -78,3 +80,7 @@ const styles = StyleSheet.create({
   disabled: { opacity: 0.55 }, buttonText: { color: "#FFFFFF", fontWeight: "800" },
   switch: { color: "#6E2D3A", textAlign: "center", marginTop: 20, fontWeight: "700" },
 });
+
+
+
+const signInStyles=styles;

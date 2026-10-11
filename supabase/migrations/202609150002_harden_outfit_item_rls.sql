@@ -41,3 +41,4 @@ using (
     where w.id = wardrobe_item_id and w.user_id = (select auth.uid())
   )
 );
+

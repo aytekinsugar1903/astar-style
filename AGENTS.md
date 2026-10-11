@@ -1,4 +1,4 @@
-# ASTRA STYLE agent rules
+# WEYRA agent rules
 
 - Keep iOS, Android and web working from the shared Expo codebase.
 - Never expose service-role, AI, payment or try-on secrets in EXPO_PUBLIC variables.
@@ -8,3 +8,4 @@
 - Do not scrape marketplaces without explicit permission and documented terms.
 - Every user image feature must include deletion and private-storage behavior.
 - Turkish and English copy must use translation keys when localization is introduced.
+

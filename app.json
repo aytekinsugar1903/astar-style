@@ -1,33 +1,39 @@
 {
   "expo": {
-    "name": "ASTRA STYLE",
-    "slug": "astra-style",
-    "scheme": "astrastyle",
+    "name": "WEYRA",
+    "slug": "weyra",
+    "scheme": "weyra",
     "version": "0.2.0",
     "orientation": "portrait",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "plugins": [
       "expo-router",
       [
         "expo-image-picker",
         {
-          "photosPermission": "ASTRA STYLE accesses only the photos you choose for your wardrobe and virtual try-on.",
-          "cameraPermission": false,
+          "photosPermission": "WEYRA accesses only the photos you choose for your wardrobe and virtual try-on.",
+          "cameraPermission": "WEYRA uses the camera only when you choose to photograph a wardrobe item.",
           "microphonePermission": false
         }
-      ]
+      ],
+      "expo-video"
     ],
-    "experiments": { "typedRoutes": true },
+    "experiments": {
+      "typedRoutes": true
+    },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.astrastyle.app",
+      "bundleIdentifier": "com.weyra.app",
       "buildNumber": "1"
     },
     "android": {
-      "package": "com.astrastyle.app",
+      "package": "com.weyra.app",
       "versionCode": 1
     },
-    "web": { "bundler": "metro", "output": "static" }
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    }
   }
 }

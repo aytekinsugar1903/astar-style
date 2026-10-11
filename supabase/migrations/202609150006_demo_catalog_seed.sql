@@ -23,3 +23,4 @@ on conflict (id) do update set
   price=excluded.price, currency=excluded.currency, in_stock=excluded.in_stock,
   affiliate_url=excluded.affiliate_url, commission_rate=excluded.commission_rate,
   updated_at=now();
+

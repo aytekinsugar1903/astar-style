@@ -34,3 +34,4 @@ export interface TryOnProvider {
   createTryOn(input: { personImageUrl: string; garmentImageUrl: string }): Promise<{ jobId: string }>;
   getResult(jobId: string): Promise<{ status: "queued" | "processing" | "succeeded" | "failed"; imageUrl?: string }>;
 }
+

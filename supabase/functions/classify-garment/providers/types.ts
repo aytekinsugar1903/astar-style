@@ -12,3 +12,4 @@ export interface GarmentAnalysisProvider {
   readonly estimatedCostUsd: number;
   analyze(imageUrl: string): Promise<GarmentAnalysis>;
 }
+

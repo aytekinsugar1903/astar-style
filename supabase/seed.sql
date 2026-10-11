@@ -12,7 +12,7 @@ insert into astra_demo_seed values
 ('p5','Lacivert Kruvaze Elbise','Nova Edit','Elbise',ARRAY['Lacivert']::text[],'{"style_tags":["Klasik","Ofis"],"audience":"women"}'::jsonb,2190,'TRY',true),
 ('p6','Pastel Şifon Elbise','Luna Form','Elbise',ARRAY['Pastel']::text[],'{"style_tags":["Romantik"],"audience":"women"}'::jsonb,2390,'TRY',true),
 ('p7','Toprak Keten Elbise','Terra Line','Elbise',ARRAY['Toprak']::text[],'{"style_tags":["Rahat","Zamansız"],"audience":"women"}'::jsonb,1690,'TRY',true),
-('p8','Kırmızı Statement Elbise','Astra Edit','Elbise',ARRAY['Kırmızı']::text[],'{"style_tags":["Cesur","Romantik"],"audience":"women"}'::jsonb,3290,'TRY',true),
+('p8','Kırmızı Statement Elbise','Weyra Edit','Elbise',ARRAY['Kırmızı']::text[],'{"style_tags":["Cesur","Romantik"],"audience":"women"}'::jsonb,3290,'TRY',true),
 ('p9','Siyah Kısa Ceket','Mode Lab','Ceket',ARRAY['Siyah']::text[],'{"style_tags":["Sokak","Minimal"],"audience":"women"}'::jsonb,1990,'TRY',true),
 ('p10','Lacivert Ofis Blazer','Forma','Ceket',ARRAY['Lacivert']::text[],'{"style_tags":["Ofis","Klasik"],"audience":"women"}'::jsonb,3190,'TRY',true),
 ('p11','Toprak Süet Görünümlü Ceket','Terra Line','Ceket',ARRAY['Toprak']::text[],'{"style_tags":["Rahat","Sokak"],"audience":"women"}'::jsonb,2890,'TRY',true),
@@ -28,7 +28,7 @@ insert into astra_demo_seed values
 ('p21','Toprak Kargo Pantolon','Urban Form','Pantolon',ARRAY['Toprak']::text[],'{"style_tags":["Sokak","Rahat"],"audience":"women"}'::jsonb,1490,'TRY',true),
 ('p22','Pastel Geniş Paça Pantolon','Luna Form','Pantolon',ARRAY['Pastel']::text[],'{"style_tags":["Romantik","Rahat"],"audience":"women"}'::jsonb,1690,'TRY',false),
 ('p23','Siyah Midi Etek','Demo Studio','Etek',ARRAY['Siyah']::text[],'{"style_tags":["Minimal","Klasik"],"audience":"women"}'::jsonb,1190,'TRY',true),
-('p24','Bordo Pilili Etek','Astra Edit','Etek',ARRAY['Bordo']::text[],'{"style_tags":["Romantik","Klasik"],"audience":"women"}'::jsonb,1390,'TRY',true),
+('p24','Bordo Pilili Etek','Weyra Edit','Etek',ARRAY['Bordo']::text[],'{"style_tags":["Romantik","Klasik"],"audience":"women"}'::jsonb,1390,'TRY',true),
 ('p25','Krem Saten Etek','Flow Studio','Etek',ARRAY['Krem']::text[],'{"style_tags":["Romantik","Zamansız"],"audience":"women"}'::jsonb,1490,'TRY',true),
 ('p26','Mavi Denim Etek','Urban Form','Etek',ARRAY['Mavi']::text[],'{"style_tags":["Sokak","Rahat"],"audience":"women"}'::jsonb,1090,'TRY',true),
 ('p27','Beyaz Poplin Gömlek','Forma','Gömlek',ARRAY['Beyaz']::text[],'{"style_tags":["Ofis","Zamansız"],"audience":"women"}'::jsonb,990,'TRY',true),
@@ -39,7 +39,7 @@ insert into astra_demo_seed values
 ('p32','Siyah Premium Tişört','Core Edit','Tişört',ARRAY['Siyah']::text[],'{"style_tags":["Minimal","Rahat"],"audience":"women"}'::jsonb,699,'TRY',true),
 ('p33','Beyaz Bisiklet Yaka Tişört','Core Edit','Tişört',ARRAY['Beyaz']::text[],'{"style_tags":["Zamansız","Rahat"],"audience":"women"}'::jsonb,599,'TRY',true),
 ('p34','Bordo Fitilli Üst','Mode Lab','Tişört',ARRAY['Bordo']::text[],'{"style_tags":["Sokak","Minimal"],"audience":"women"}'::jsonb,799,'TRY',true),
-('p35','Siyah Yapılı Omuz Çantası','Astra Edit','Çanta',ARRAY['Siyah']::text[],'{"style_tags":["Klasik","Zamansız"],"audience":"unisex"}'::jsonb,1890,'TRY',true),
+('p35','Siyah Yapılı Omuz Çantası','Weyra Edit','Çanta',ARRAY['Siyah']::text[],'{"style_tags":["Klasik","Zamansız"],"audience":"unisex"}'::jsonb,1890,'TRY',true),
 ('p36','Krem Mini Çanta','Soft Form','Çanta',ARRAY['Krem']::text[],'{"style_tags":["Romantik","Minimal"],"audience":"unisex"}'::jsonb,1390,'TRY',true),
 ('p37','Toprak Büyük Tote Çanta','Terra Line','Çanta',ARRAY['Toprak']::text[],'{"style_tags":["Rahat","Ofis"],"audience":"unisex"}'::jsonb,1690,'TRY',true),
 ('p38','Altın Tonlu Halka Küpe','Demo Jewel','Aksesuar',ARRAY['Toprak']::text[],'{"style_tags":["Klasik","Cesur"],"audience":"unisex"}'::jsonb,499,'TRY',true),
@@ -89,11 +89,13 @@ insert into public.products(source,external_id,name,brand,category,colors,image_
 select 'demo',external_id,name,brand,category,colors,null,'https://example.com',metadata,true,now()
 from astra_demo_seed
 on conflict(source,external_id) do update set name=excluded.name,brand=excluded.brand,category=excluded.category,colors=excluded.colors,metadata=excluded.metadata,active=true,updated_at=now();
-update public.product_offers o set merchant='ASTRA Demo',price=s.price,currency=s.currency,in_stock=s.in_stock,affiliate_url=null,commission_rate=null,updated_at=now()
+update public.product_offers o set merchant='WEYRA Demo',price=s.price,currency=s.currency,in_stock=s.in_stock,affiliate_url=null,commission_rate=null,updated_at=now()
 from astra_demo_seed s join public.products p on p.source='demo' and p.external_id=s.external_id
 where o.product_id=p.id;
 insert into public.product_offers(product_id,merchant,price,currency,in_stock,affiliate_url,commission_rate,updated_at)
-select p.id,'ASTRA Demo',s.price,s.currency,s.in_stock,null,null,now()
+select p.id,'WEYRA Demo',s.price,s.currency,s.in_stock,null,null,now()
 from astra_demo_seed s join public.products p on p.source='demo' and p.external_id=s.external_id
 where not exists(select 1 from public.product_offers o where o.product_id=p.id);
 commit;
+
+
