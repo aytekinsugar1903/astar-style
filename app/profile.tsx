@@ -126,9 +126,9 @@ export default function ProfileScreen() {const s=useAppStyles(baseStyles);
           <Text style={s.back}>{t("backHome")}</Text>
         </Pressable>
 
-        <Text style={s.kicker}>{t("accountKicker")}</Text>
+        <Text style={s.kicker}>{t(isSupabaseConfigured ? "accountKicker" : "profileDeviceKicker")}</Text>
         <Text style={s.title}>{t("profileTitle")}</Text>
-        <Text style={s.copy}>{t("profileCopy")}</Text>
+        <Text style={s.copy}>{t(isSupabaseConfigured ? "profileCopy" : "profileCopyLocal")}</Text>
 
         <View style={s.panel}>
           <Text style={s.label}>{t("displayName")}</Text>
@@ -190,9 +190,9 @@ export default function ProfileScreen() {const s=useAppStyles(baseStyles);
 
         {!!message && <Text style={s.message} accessibilityLiveRegion="polite">{message}</Text>}
 
-        <Pressable style={s.signOut} onPress={leave} disabled={busy} accessibilityRole="button">
+        {isSupabaseConfigured && <Pressable style={s.signOut} onPress={leave} disabled={busy} accessibilityRole="button">
           <Text style={s.signOutText}>{t("signOut")}</Text>
-        </Pressable>
+        </Pressable>}
 
         <View style={s.danger}>
           <Text style={s.dangerTitle}>{t("deleteTitle")}</Text>

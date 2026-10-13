@@ -1,6 +1,6 @@
 import {useAppStyles} from '@/studio/theme';
 import { useState } from "react";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useI18n } from "@/i18n/I18nProvider";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
@@ -14,6 +14,7 @@ export default function SignInScreen() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  if (!isSupabaseConfigured) return <Redirect href="/" />;
 
   async function submit() {
     setMessage("");

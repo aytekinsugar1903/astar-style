@@ -58,6 +58,7 @@ export default function ProductDetailScreen() {const s=useAppStyles(baseStyles);
   const product = effective ? localizeProduct(effective, locale) : undefined;
 
   async function toggleSaved() {
+    if (!isSupabaseConfigured) return;
     if (!session) { router.push("/sign-in"); return; }
     if (!dbProductId) { setMessage(t("productNotReady")); return; }
 
@@ -105,14 +106,14 @@ export default function ProductDetailScreen() {const s=useAppStyles(baseStyles);
         <Text style={s.status}>{t(product.stockKnown===false?"catalogStockUnknown":product.inStock?"inStock":"outOfStock")} · {t(effective.source==="imported"?"catalogImportedLabel":effective.source==="open-photo"?"catalogPhotoLabel":effective.source === "demo" || !effective.source ? "demoProduct" : "officialCatalogProduct")}</Text>
         {(variant||effective.source==='open-photo')&&<><Pressable style={s.button} onPress={()=>router.push({pathname:'/avatar',params:{piece:variant?.id??effective.id}})}><Text style={s.buttonText}>{t('catalogDress')}</Text></Pressable><Text style={s.note}>{t(variant?.wearable?'catalog3dAssetNotice':'catalogApproxNotice')}</Text></>}
         {!!effective.license&&<Text style={s.note}>{effective.credit} · {effective.license}</Text>}
-        <Pressable style={[s.save, busy && s.disabled]} onPress={toggleSaved} disabled={busy} accessibilityRole="button">
+        {isSupabaseConfigured && <Pressable style={[s.save, busy && s.disabled]} onPress={toggleSaved} disabled={busy} accessibilityRole="button">
           <Text style={s.saveText}>{saved ? t("saved") : t("save")}</Text>
-        </Pressable>
+        </Pressable>}
         <Pressable disabled={product.stockKnown!==false&&!product.inStock} style={[s.button, product.stockKnown!==false&&!product.inStock && s.disabled]} onPress={openMerchant} accessibilityRole="link">
           <Text style={s.buttonText}>{t(effective.source==='open-photo'?"catalogOpenSource":"goToMerchant")}</Text>
         </Pressable>
         {!!message && <Text style={s.message} accessibilityLiveRegion="polite">{message}</Text>}
-        <Pressable onPress={() => router.push("/favorites")} accessibilityRole="button"><Text style={s.savedLink}>{t("seeMySaved")}</Text></Pressable>
+        {isSupabaseConfigured && <Pressable onPress={() => router.push("/favorites")} accessibilityRole="button"><Text style={s.savedLink}>{t("seeMySaved")}</Text></Pressable>}
         <Text style={s.note}>{t("merchantNotice")}</Text>
       </ScrollView>
     </SafeAreaView>

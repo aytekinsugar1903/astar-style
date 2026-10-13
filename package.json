@@ -1,6 +1,6 @@
 {
   "name": "weyra",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "private": true,
   "main": "expo-router/entry",
   "scripts": {
@@ -18,7 +18,7 @@
     "test:stylist": "node --experimental-strip-types scripts/test-stylist.mjs",
     "test:catalog": "node scripts/check-photo-catalog.mjs",
     "test:daily": "node scripts/test-daily.mjs",
-    "test:catalog-feed": "node scripts/test-catalog-feed.mjs",
+    "test:catalog-feed": "node --experimental-strip-types scripts/test-catalog-feed.mjs",
     "test:catalog-refresh": "node scripts/test-catalog-refresh.mjs",
     "postinstall": "node scripts/restore-large-assets.mjs"
   },
@@ -26,11 +26,13 @@
     "@react-native-async-storage/async-storage": "2.2.0",
     "@supabase/supabase-js": "2.57.4",
     "expo": "~54.0.0",
+    "expo-build-properties": "~1.0.10",
     "expo-constants": "~18.0.0",
     "expo-image-manipulator": "~14.0.8",
     "expo-image-picker": "~17.0.0",
     "expo-linking": "~8.0.0",
     "expo-router": "~6.0.0",
+    "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.0",
     "expo-system-ui": "~6.0.9",
     "expo-video": "~3.0.16",

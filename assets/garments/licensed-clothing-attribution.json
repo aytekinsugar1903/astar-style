@@ -1,46 +1,5 @@
 {
-  "capturedAt": "2026-10-03",
-  "notes": "Unmodified Commons thumbnails, source-page brand descriptions independently checked. These are photo examples, not live retail catalog feeds; no alternate color or size inventory inferred.",
-  "files": [
-    {
-      "title": "File:Uniqlo 2026-09-07 shirt Philippines.jpg",
-      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/Uniqlo_2026-09-07_shirt_Philippines.jpg/960px-Uniqlo_2026-09-07_shirt_Philippines.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-      "source": "https://commons.wikimedia.org/wiki/File:Uniqlo_2026-09-07_shirt_Philippines.jpg",
-      "license": "CC BY 4.0",
-      "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
-      "artist": "P1898"
-    },
-    {
-      "title": "File:Young man wearing UNIQLO Minions T-shirt, front view.jpg",
-      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Young_man_wearing_UNIQLO_Minions_T-shirt%2C_front_view.jpg/960px-Young_man_wearing_UNIQLO_Minions_T-shirt%2C_front_view.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-      "source": "https://commons.wikimedia.org/wiki/File:Young_man_wearing_UNIQLO_Minions_T-shirt,_front_view.jpg",
-      "license": "CC BY-SA 4.0",
-      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-      "artist": "Alex Neman"
-    },
-    {
-      "title": "File:Young man wearing UNIQLO Minions T-shirt, rear view.jpg",
-      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/Young_man_wearing_UNIQLO_Minions_T-shirt%2C_rear_view.jpg/960px-Young_man_wearing_UNIQLO_Minions_T-shirt%2C_rear_view.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-      "source": "https://commons.wikimedia.org/wiki/File:Young_man_wearing_UNIQLO_Minions_T-shirt,_rear_view.jpg",
-      "license": "CC BY-SA 4.0",
-      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-      "artist": "Alex Neman"
-    },
-    {
-      "title": "File:Pink Coral Aloha Shirt from HM.jpg",
-      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Pink_Coral_Aloha_Shirt_from_HM.jpg/960px-Pink_Coral_Aloha_Shirt_from_HM.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-      "source": "https://commons.wikimedia.org/wiki/File:Pink_Coral_Aloha_Shirt_from_HM.jpg",
-      "license": "CC BY-SA 4.0",
-      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-      "artist": "Peachyeung316"
-    },
-    {
-      "title": "File:T-shirt mocup white.jpg",
-      "url": "https://upload.wikimedia.org/wikipedia/commons/e/e4/T-shirt_mocup_white.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
-      "source": "https://commons.wikimedia.org/wiki/File:T-shirt_mocup_white.jpg",
-      "license": "CC0",
-      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-      "artist": "EdaBojci"
-    }
-  ]
+  "capturedAt": "2026-10-13",
+  "notes": "Brand-logo and character photographs are not included in this release. Remaining sample photographs are attributed in PHOTOGRAPHY.md and on each garment record.",
+  "files": []
 }

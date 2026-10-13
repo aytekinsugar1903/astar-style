@@ -27,14 +27,14 @@ test("onboarding completes in demo mode", async ({ page }) => {
 
 test("wardrobe and outfit demo flows work", async ({ page }) => {
   await page.goto("/wardrobe");
-  await expect(page.getByText("124 parça", { exact: true })).toBeVisible();
+  await expect(page.getByText("80 parça", { exact: true })).toBeVisible();
   const chooser=page.waitForEvent('filechooser');
   await page.getByText("+ Kıyafet ekle", { exact: true }).click();
-  await (await chooser).setFiles('assets/garments/jeans.jpg');
+  await (await chooser).setFiles('assets/garments/tshirt.jpg');
   await page.getByText("Dolaba ekle",{exact:true}).click();
-  await expect(page.getByText("125 parça", { exact: true })).toBeVisible();
+  await expect(page.getByText("81 parça", { exact: true })).toBeVisible();
   await page.reload();
-  await expect(page.getByText("125 parça", { exact: true })).toBeVisible();
+  await expect(page.getByText("81 parça", { exact: true })).toBeVisible();
 
   await page.goto("/outfit");
   await expect(page.getByText("768 farklı kadın, erkek ve unisex kombin şablonu hazır.", { exact: true })).toBeVisible();
@@ -60,7 +60,7 @@ test("men collection exposes a broad catalog", async ({ page }) => {
 
 test("product filtering reaches product detail", async ({ page }) => {
   await page.goto("/products");
-  await expect(page.getByText("213 ürün", { exact: false })).toBeVisible();
+  await expect(page.getByText("169 ürün", { exact: false })).toBeVisible();
   await page.getByLabel("En yüksek bütçe (TL)").fill("2000");
   await page.getByText("Dökümlü Siyah Elbise", { exact: true }).click();
 
@@ -73,16 +73,23 @@ test("virtual try-on shows a real selected photo and states unavailable generati
   await page.goto("/try-on");
   const chooser=page.waitForEvent('filechooser');
   await page.getByText("Fotoğraf seç", { exact: true }).click();
-  await (await chooser).setFiles('assets/garments/jeans.jpg');
+  await (await chooser).setFiles('assets/garments/jeans-blue.jpg');
   await expect(page.getByText("Seçtiğin fotoğraf yalnızca", { exact: false })).toBeVisible();
   await page.getByText("Gardırobumdaki parçayı dene", { exact: false }).click();
   await expect(page.getByText("Gerçekçi sanal giydirme henüz bağlı değil", { exact: false })).toBeVisible();
 });
 
-test("saved products require authentication", async ({ page }) => {
+test("cloud accounts stay hidden in the local release", async ({ page }) => {
+  await page.goto("/products");
+  await expect(page.getByText("Kaydettiklerimi gör", { exact: false })).toHaveCount(0);
   await page.goto("/favorites");
-  await expect(page).toHaveURL(/\/sign-in/);
-  await expect(page.getByText("Tekrar hoş geldin.", { exact: true })).toBeVisible();
+  await expect(page.getByText("Giriş yap", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Tekrar hoş geldin.", { exact: true })).toHaveCount(0);
+  await page.goto("/sign-in");
+  await expect(page.getByText("Giriş yap", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Tekrar hoş geldin.", { exact: true })).toHaveCount(0);
+  await page.goto("/admin");
+  await expect(page.getByText("WEYRA Control", { exact: true })).toHaveCount(0);
 });
 
 test("stylist answers in conversation and exposes human request boundary", async ({ page }) => {
@@ -136,7 +143,7 @@ test("wardrobe can switch from grid to rack", async ({ page }) => {
 
 test('category rack opens every real photo in each category and stays within the viewport',async({page})=>{
  await page.goto('/');await expect(page.getByTestId('category-rack').getByRole('button')).toHaveCount(10);await expect(page.getByTestId('garment-rack')).toHaveCount(0);
- for(const [category,total] of [['Tişört',15],['Kazak',12],['Gömlek',12],['Pantolon',12],['Ayakkabı',15],['Elbise',12],['Etek',11],['Ceket',10],['Çanta',13],['Aksesuar',12]]){
+ for(const [category,total] of [['Tişört',10],['Kazak',6],['Gömlek',9],['Pantolon',7],['Ayakkabı',9],['Elbise',9],['Etek',9],['Ceket',6],['Çanta',8],['Aksesuar',7]]){
   await openRack(page,category);await expect(page.getByTestId('category-rack')).toHaveCount(0);await expect(page.getByTestId('garment-rack').getByRole('button')).toHaveCount(total);
   await expect.poll(()=>page.getByTestId('garment-rack').locator('img').evaluateAll(imgs=>imgs.filter(i=>i.complete&&i.naturalWidth>0).length)).toBe(total);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
@@ -159,8 +166,8 @@ test('observed offers compare shipping-inclusive totals without claiming live pr
 
 
 test('category models and colours filter actual photos',async({page})=>{
- await page.goto('/');await openRack(page,'Tişört');await page.getByText('V yaka',{exact:true}).click();
- await expect(page.getByLabel('Beyaz V yaka tişört',{exact:true})).toBeVisible();await expect(page.getByLabel('Mavi basic tişört',{exact:true})).toHaveCount(0);
+ await page.goto('/');await openRack(page,'Tişört');await page.getByText('Polo / yakalı',{exact:true}).click();
+ await expect(page.getByLabel('Polo yaka tişört',{exact:true})).toBeVisible();await expect(page.getByLabel('Mavi basic tişört',{exact:true})).toHaveCount(0);
  await openRack(page,'Pantolon');await page.getByText('Keten',{exact:true}).click();await expect(page.getByText('Bu model ve renkte fotoğraf henüz yok.',{exact:false})).toBeVisible();
 });
 test('colour selection replaces the actual tee photo and carries selected piece',async({page})=>{
@@ -177,7 +184,7 @@ test('six avatar regions change independently, persist and reset',async({page})=
  await page.getByRole('button',{name:'Omuzlar İncelt',exact:true}).click();await page.getByLabel('Boy',{exact:true}).fill('185');await page.getByText('Ölçülerimi kaydet',{exact:true}).click();await page.reload();await page.getByRole('button',{name:'Ölçülerim · cm',exact:true}).click();
  await expect(page.getByLabel('Boy',{exact:true})).toHaveValue('185');await expect(page.getByText('Alt baldır · 105%',{exact:true})).toBeVisible();await expect(page.getByText('Omuzlar · 95%',{exact:true})).toBeVisible();
  await page.getByText('Bölge oranlarını sıfırla',{exact:true}).click();for(const label of labels)await expect(page.getByText(label+' · 100%',{exact:true})).toBeVisible();
- await page.getByText('Ölçü profilimi sil',{exact:true}).click();await page.reload();await page.getByRole('button',{name:'Ölçülerim · cm',exact:true}).click();await expect(page.getByLabel('Boy',{exact:true})).toHaveValue('172');
+ await page.getByRole('button',{name:'Ölçü profilimi sil',exact:true}).click();await page.reload();await page.getByRole('button',{name:'Ölçülerim · cm',exact:true}).click();await expect(page.getByLabel('Boy',{exact:true})).toHaveValue('172');
 });
 test('avatar regional controls respect width limits',async({page})=>{
  await page.goto('/avatar');await page.getByRole('button',{name:'Ölçülerim · cm',exact:true}).click();for(let i=0;i<8;i++)await page.getByRole('button',{name:'Bel Kalınlaştır',exact:true}).click();await expect(page.getByText('Bel · 140%',{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Bel Kalınlaştır',exact:true})).toBeDisabled();
@@ -188,7 +195,7 @@ test('old two-part avatar profiles migrate to six regions',async({page})=>{
  for(const label of ['Bel','Göğüs','Omuzlar'])await expect(page.getByText(label+' · 110%',{exact:true})).toBeVisible();for(const label of ['Alt baldır','Üst baldır','Kalça'])await expect(page.getByText(label+' · 90%',{exact:true})).toBeVisible();
 });
 test('avatar rejects impossible measurements and rack choice opens correct slot',async({page})=>{
- await page.goto('/avatar?piece=photo-jeans');await expect(page.getByText('Siyah denim pantolon',{exact:true}).last()).toBeVisible();await page.getByRole('button',{name:'Ölçülerim · cm',exact:true}).click();
+ await page.goto('/avatar?piece=photo-blue-jeans');await expect(page.getByText('Mavi kot pantolon',{exact:true}).last()).toBeVisible();await page.getByRole('button',{name:'Ölçülerim · cm',exact:true}).click();
  await page.getByLabel('Boy',{exact:true}).fill('20');await page.getByText('Ölçülerimi kaydet',{exact:true}).click();await expect(page.getByText('Ölçüleri belirtilen aralıklarda gir.',{exact:false})).toBeVisible();
 });
 
@@ -213,13 +220,13 @@ test('personal reference photo persists beside avatar and can be deleted',async(
 });
 
 test('brand filter works inside a category and opening another resets choices',async({page})=>{
- await page.goto('/');await openRack(page,'Ayakkabı');await page.getByText('adidas',{exact:true}).click();await expect(page.getByTestId('garment-rack').getByRole('button')).toHaveCount(2);
- await expect(page.getByLabel('adidas NMD R1 · beyaz sneaker',{exact:true})).toBeVisible();await openRack(page,'Tişört');await expect(page.getByTestId('garment-rack').getByRole('button')).toHaveCount(15);
+ await page.goto('/');await openRack(page,'Ayakkabı');await page.getByText('Marka belirtilmedi',{exact:true}).click();await expect(page.getByTestId('garment-rack').getByRole('button')).toHaveCount(9);
+ await expect(page.getByLabel('Siyah derby kundura',{exact:true})).toBeVisible();await openRack(page,'Tişört');await expect(page.getByTestId('garment-rack').getByRole('button')).toHaveCount(10);
  expect((await page.getByLabel('Mavi basic tişört',{exact:true}).boundingBox()).width).toBeLessThan(130);
 });
 
 test('closet photo produces two distinct real crops with metadata and deletion',async({page})=>{
- await page.goto('/capture');const chooser=page.waitForEvent('filechooser');await page.getByText('Dolap fotoğrafı seç',{exact:true}).click();await (await chooser).setFiles('assets/garments/jordan.jpg');
+ await page.goto('/capture');const chooser=page.waitForEvent('filechooser');await page.getByText('Dolap fotoğrafı seç',{exact:true}).click();await (await chooser).setFiles('assets/garments/formal.jpg');
  const area=page.getByLabel('Dolap fotoğrafında parça alanı',{exact:true});await expect(area).toBeVisible();
  await area.click({position:{x:12,y:15}});const bounds=await area.boundingBox();await area.click({position:{x:bounds.width*.55,y:bounds.height*.65}});await page.getByText('Bu parçayı ayır',{exact:true}).click();
  await expect(page.getByRole('img',{name:'Parça 1'})).toBeVisible();await page.getByLabel('Parça adı',{exact:true}).fill('Ayırdığım ayakkabı');await page.getByPlaceholder('Marka (isteğe bağlı)',{exact:true}).fill('Deneme markam');
@@ -237,7 +244,7 @@ test('garment search, favorites and editing persist',async({page})=>{
  await page.reload();await openRack(page,'Tişört');await page.getByRole('button',{name:'Favorilerim',exact:true}).click();await expect(page.getByTestId('garment-rack').getByRole('button')).toHaveCount(1);
  await page.getByLabel('İsim veya markayla ara').fill('olmayan parça');await expect(page.getByTestId('garment-rack').getByRole('button')).toHaveCount(0);
  await page.getByLabel('İsim veya markayla ara').fill('');
- const chooser=page.waitForEvent('filechooser');await page.getByText('+ Kıyafet ekle',{exact:true}).click();await (await chooser).setFiles('assets/garments/jeans.jpg');
+ const chooser=page.waitForEvent('filechooser');await page.getByText('+ Kıyafet ekle',{exact:true}).click();await (await chooser).setFiles('assets/garments/jeans-blue.jpg');
  await page.getByPlaceholder('Kıyafet adı').fill('Deneme tişörtüm');await page.getByText('Askılığıma ekle',{exact:true}).click();
  await page.getByRole('button',{name:'Kendi dolabım',exact:true}).click();await page.getByTestId('garment-rack').getByRole('button',{name:'Deneme tişörtüm',exact:true}).click();
  await page.getByRole('button',{name:'Parçayı düzenle',exact:true}).click();await page.getByPlaceholder('Kıyafet adı').fill('Yeni ad');await page.getByText('Değişiklikleri kaydet',{exact:true}).click();
@@ -246,7 +253,7 @@ test('garment search, favorites and editing persist',async({page})=>{
 
 test('free local background removal produces transparent pixels and preserves original',async({page})=>{
  test.setTimeout(90000);await page.goto('/');const outgoing=[];page.on('request',r=>{if(r.method()!=='GET')outgoing.push(r.url());});
- const chooser=page.waitForEvent('filechooser');await page.getByText('+ Kıyafet ekle',{exact:true}).click();await (await chooser).setFiles('assets/garments/jeans.jpg');
+ const chooser=page.waitForEvent('filechooser');await page.getByText('+ Kıyafet ekle',{exact:true}).click();await (await chooser).setFiles('assets/garments/jeans-blue.jpg');
  await page.getByRole('button',{name:'Arka planı temizle',exact:true}).click();await expect(page.getByText('Orijinal fotoğrafa dön',{exact:true})).toBeVisible({timeout:60000});
  const result=await page.evaluate(()=>{const img=[...document.querySelectorAll('img')].find(i=>i.src.startsWith('data:image/png;base64,'));if(!img)return null;const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;c.getContext('2d').drawImage(img,0,0);const pixels=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let transparent=0,opaque=0;for(let i=3;i<pixels.length;i+=4){if(pixels[i]===0)transparent++;if(pixels[i]>200)opaque++;}return {transparent,opaque};});
  expect(result?.transparent).toBeGreaterThan(100);expect(result?.opaque).toBeGreaterThan(100);expect(outgoing).toEqual([]);
@@ -258,7 +265,7 @@ test('local profile name persists',async({page})=>{await page.goto('/profile');a
 
 test('experimental local separation proposes two disconnected real garments',async({page})=>{
  test.setTimeout(90000);await page.goto('/capture');
- const inputs=['assets/garments/tshirt.jpg','assets/garments/jeans.jpg'].map(p=>'data:image/jpeg;base64,'+readFileSync(p).toString('base64'));
+ const inputs=['assets/garments/tshirt.jpg','assets/garments/jeans-blue.jpg'].map(p=>'data:image/jpeg;base64,'+readFileSync(p).toString('base64'));
  const fixture=await page.evaluate(async sources=>{const c=document.createElement('canvas');c.width=1000;c.height=700;const ctx=c.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,1000,700);for(let i=0;i<sources.length;i++){const img=new Image();img.src=sources[i];await img.decode();const scale=Math.min(330/img.naturalWidth,520/img.naturalHeight);const w=img.naturalWidth*scale,h=img.naturalHeight*scale;ctx.drawImage(img,70+i*520,70,w,h);}return c.toDataURL('image/png').split(',')[1];},inputs);
  const chooser=page.waitForEvent('filechooser');await page.getByText('Dolap fotoğrafı seç',{exact:true}).click();await (await chooser).setFiles({name:'closet.png',mimeType:'image/png',buffer:Buffer.from(fixture,'base64')});
  await page.getByRole('button',{name:'Ayrı duran parçaları bul · deneysel',exact:true}).click();await expect(page.getByLabel('Parça adı')).toHaveCount(2,{timeout:60000});
@@ -288,7 +295,7 @@ test('rack hover turns forward without moving hit areas, then returns sideways',
  const box=await rail.boundingBox();await page.mouse.move(box.x+box.width-25,box.y+110);await page.mouse.down();await page.mouse.move(box.x+30,box.y+112,{steps:15});await page.mouse.up();await expect.poll(()=>rail.evaluate(el=>el.scrollLeft)).toBeGreaterThan(100);await expect(rail).toBeVisible();
 });
 test('touch rack previews on first tap and opens category on second tap',async({browser})=>{
- const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});const page=await context.newPage();try{await page.goto('http://127.0.0.1:4173');const tee=page.getByTestId('rack-category-tshirt');await tee.tap();await expect(page.getByTestId('category-rack')).toBeVisible();await expect.poll(()=>page.getByTestId('rack-turn-tshirt').evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');await tee.tap();await page.getByRole('button',{name:'Kapat',exact:true}).click();await expect(page.getByTestId('garment-rack').getByRole('button')).toHaveCount(15);}finally{await context.close();}
+ const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});const page=await context.newPage();try{await page.goto('http://127.0.0.1:4173');const tee=page.getByTestId('rack-category-tshirt');await tee.tap();await expect(page.getByTestId('category-rack')).toBeVisible();await expect.poll(()=>page.getByTestId('rack-turn-tshirt').evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');await tee.tap();await page.getByRole('button',{name:'Kapat',exact:true}).click();await expect(page.getByTestId('garment-rack').getByRole('button')).toHaveCount(10);}finally{await context.close();}
 });
 
 test('touch swipe moves rack without opening a category',async({browser})=>{
