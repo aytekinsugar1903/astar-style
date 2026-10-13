@@ -37,7 +37,7 @@ test("wardrobe and outfit demo flows work", async ({ page }) => {
   await expect(page.getByText("81 parça", { exact: true })).toBeVisible();
 
   await page.goto("/outfit");
-  await expect(page.getByText("768 farklı kadın, erkek ve unisex kombin şablonu hazır.", { exact: true })).toBeVisible();
+  await expect.poll(async () => Number((await page.getByTestId("outfit-combination-count").textContent())?.replace(/\D/g, ""))).toBeGreaterThan(768);
   await page.getByText("Parti", { exact: true }).click();
   await expect(page.getByLabel("Etkinlik")).toHaveValue("Parti");
   await page.getByText("Kombinleri hazırla", { exact: false }).click();
@@ -283,6 +283,25 @@ test('local onboarding choices persist into the profile',async({page})=>{
  await page.goto('/onboarding');await page.getByText('Minimal',{exact:true}).click();await page.getByText('Siyah',{exact:true}).click();await page.getByText('Fotoğraflarımın yalnızca',{exact:false}).click();await page.getByText('Gardırobuma geç',{exact:false}).click();await page.goto('/profile');await expect(page.getByText('Minimal',{exact:true})).toBeVisible();await expect(page.getByText('Siyah',{exact:true})).toBeVisible();
 });
 
+
+test('outfit pages through wardrobe and catalog combinations', async ({ page }) => {
+  await page.goto('/outfit');
+  await expect.poll(async () => Number((await page.getByTestId('outfit-combination-count').textContent())?.replace(/\D/g, ''))).toBeGreaterThan(768);
+  await page.getByText('Parti', { exact: true }).click();
+  await page.getByText('Kombinleri hazırla', { exact: false }).click();
+  await expect(page.getByText('Parti · Minimal seçenek 1', { exact: true })).toBeVisible();
+  await expect(page.getByText('6 farklı kombin seçeneği', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Sonraki kombinasyonlar', exact: true }).click();
+  await expect(page.getByText('Parti · Minimal seçenek 7', { exact: true })).toBeVisible();
+  await expect(page.getByText('6 farklı kombin seçeneği', { exact: true })).toBeVisible();
+});
+
+test('board keeps every linked garment', async ({ page }) => {
+  await page.goto('/board?pieces=photo-white-tee,photo-blue-jeans,photo-formal,photo-jacket-denim,photo-cardigan');
+  for (const name of ['Beyaz bisiklet yaka tişört', 'Mavi kot pantolon', 'Siyah derby kundura', 'Mavi kot ceket · model fotoğrafı', 'Kırmızı düğmeli hırka']) {
+    await expect(page.getByLabel(name).first()).toBeVisible();
+  }
+});
 
 test('rack hover keeps pieces upright without moving hit areas',async({page})=>{
  await page.goto('/');const knit=page.getByTestId('rack-category-knit');const turn=page.getByTestId('rack-turn-knit');

@@ -10,7 +10,7 @@ import {parseCatalogFeed,type ImportedProduct,type CatalogVariant} from './feed'
 import {FeedFile} from './FeedFile';
 type Row={id:string;name:string;brand:string;category:string;product?:ImportedProduct;garment?:Garment};
 const categoryLabels={tshirt:'studioCopy2',knit:'studioCopy3',shirt:'studioCopy4',trousers:'studioCopy5',shoes:'studioCopy6',dress:'studioCopy7',jacket:'studioCopy8',skirt:'studioCopy9',bag:'studioCopy10',accessory:'studioCopy11'} as const;
-const slotCategory=(category:string)=>category==='shoes'?'shoes':category==='bag'?'bag':category==='accessory'?'accessory':['trousers','skirt','dress'].includes(category)?'bottom':'top';
+const slotCategory=(category:string)=>category==='shoes'?'shoes':category==='bag'?'bag':category==='accessory'?'accessory':category==='jacket'?'outer':['trousers','skirt','dress'].includes(category)?'bottom':'top';
 export function CatalogInRoom({products,garments,slot,onChoose,selectedId,onRemove,initialCategory,mode='model'}:{mode?:'photo'|'model';products:ImportedProduct[];garments:Garment[];slot:ModelSlot;onChoose:(p:Garment)=>void;selectedId?:string;onRemove:()=>void;initialCategory?:string}){
  const s=useAppStyles(styles),{t}=useI18n();const [category,setCategory]=useState('all'),[firm,setFirm]=useState('all'),[query,setQuery]=useState(''),[rowId,setRowId]=useState(''),[variantId,setVariantId]=useState(''),[imageIndex,setImageIndex]=useState(0),[limit,setLimit]=useState(18),[failedImage,setFailedImage]=useState('');
  const [importOpen,setImportOpen]=useState(false),[feed,setFeed]=useState(''),[sourceName,setSourceName]=useState(''),[sourceUrl,setSourceUrl]=useState(''),[busy,setBusy]=useState(false),[message,setMessage]=useState('');
