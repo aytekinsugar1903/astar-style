@@ -21,6 +21,9 @@ const covers: Record<string, number> = {
 };
 const aspect: Record<string, number> = { dress: 0.872, accessory: 0.8, jacket: 0.956, shoes: 1.7482517482517483, knit: 0.71, shirt: 0.88, trousers: 0.588, skirt: 0.57, bag: 1.1764705882352942, tshirt: 0.946 };
 const order = ['jacket', 'knit', 'tshirt', 'shirt', 'trousers', 'dress', 'skirt', 'shoes', 'bag', 'accessory'];
+const slot = 78;
+const railPad = 64;
+const railWidth = order.length * slot + railPad * 2;
 
 function HangingCategory({ id, label, active, onFocus, onLeave, onOpen, index }: { id: string; label: string; active: boolean; onFocus: () => void; onLeave: () => void; onOpen: () => void; index: number }) {
   const tone = usePortfolio();
@@ -45,7 +48,7 @@ function HangingCategory({ id, label, active, onFocus, onLeave, onOpen, index }:
     ],
   }));
   return (
-    <Pressable testID={'rack-category-' + id} accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ selected: active }} aria-pressed={active} onHoverIn={onFocus} onHoverOut={onLeave} onPress={() => active ? onOpen() : onFocus()} style={{ width: 78, height: 248, alignItems: 'center', zIndex: active ? 30 : 10 - index }}>
+    <Pressable testID={'rack-category-' + id} accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ selected: active }} aria-pressed={active} onHoverIn={onFocus} onHoverOut={onLeave} onPress={() => active ? onOpen() : onFocus()} style={{ width: slot, height: 248, alignItems: 'center', zIndex: active ? 30 : 10 - index }}>
       <Svg pointerEvents="none" width={78} height={30} style={{ position: 'absolute', top: 6 }}><Path d="M39 17 V6 Q45 5 44 0" stroke={tone.ink} strokeWidth={1} fill="none" /></Svg>
       <View pointerEvents="none" style={[StyleSheet.absoluteFill, { alignItems: 'center' }]}>
         <Animated.View testID={'rack-turn-' + id} style={[{ position: 'absolute', top: 22, width: 160, height: 210 }, style]}>
@@ -76,8 +79,8 @@ export function CategoryRail({ categories, items, onSelect }: { categories: stri
   function open(id: string) { if (!dragging.current && Date.now() - dragEnded.current > 250) onSelect(id); }
   return (
     <View {...pan.panHandlers} style={[styles.stage, { backgroundColor: tone.raised }]}>
-      <ScrollView ref={scroll} testID="category-rack" horizontal showsHorizontalScrollIndicator={false} onScroll={(e) => { offset.current = e.nativeEvent.contentOffset.x; }} scrollEventThrottle={16} onScrollBeginDrag={() => { dragging.current = true; }} onScrollEndDrag={() => { dragging.current = false; dragEnded.current = Date.now(); }} contentContainerStyle={{ width: 836, height: 294, paddingHorizontal: 28, paddingTop: 20 }}>
-        <View pointerEvents="none" style={{ position: 'absolute', top: 26, left: 12, width: 812, height: 1, backgroundColor: tone.line }} />
+      <ScrollView ref={scroll} testID="category-rack" horizontal showsHorizontalScrollIndicator={false} onScroll={(e) => { offset.current = e.nativeEvent.contentOffset.x; }} scrollEventThrottle={16} onScrollBeginDrag={() => { dragging.current = true; }} onScrollEndDrag={() => { dragging.current = false; dragEnded.current = Date.now(); }} contentContainerStyle={{ width: railWidth, height: 294, paddingHorizontal: railPad, paddingTop: 20 }}>
+        <View pointerEvents="none" style={{ position: 'absolute', top: 26, left: railPad - 8, width: order.length * slot + 16, height: 1, backgroundColor: tone.line }} />
         {order.map((id, index) => <HangingCategory key={id} id={id} label={categories.find((c) => c[0] === id)?.[1] ?? id} active={id === focus} index={index} onFocus={() => { if (!dragging.current && Date.now() - dragEnded.current > 250) setFocus(id); }} onLeave={() => setFocus((current) => current === id ? null : current)} onOpen={() => open(id)} />)}
       </ScrollView>
       <View style={styles.caption}>

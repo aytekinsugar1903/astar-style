@@ -6,8 +6,10 @@ import Animated, { Easing, cancelAnimation, runOnJS, useAnimatedStyle, useShared
 import * as Haptics from 'expo-haptics';
 import { picture, type Garment } from './closet';
 import { motion, sansFont, scriptFont, usePortfolio } from './motion';
+import { useCutout } from './useCutout';
 
 function Piece({ item, index, active, open, slide, sway }: { item: Garment; index: number; active: number; open: SharedValue<number>; slide: SharedValue<number>; sway: SharedValue<number> }) {
+  const cut = useCutout(picture(item));
   const style = useAnimatedStyle(() => {
     const delta = index - active;
     const away = delta === 0 ? 0 : Math.sign(delta);
@@ -22,7 +24,7 @@ function Piece({ item, index, active, open, slide, sway }: { item: Garment; inde
   });
   return (
     <Animated.View pointerEvents="none" style={[styles.piece, style]}>
-      <Image source={picture(item)} contentFit="contain" style={styles.photo} accessibilityLabel={item.name} />
+      {cut ? <Image source={cut} contentFit="contain" style={styles.photo} accessibilityLabel={item.name} /> : <View style={styles.photo} />}
     </Animated.View>
   );
 }
