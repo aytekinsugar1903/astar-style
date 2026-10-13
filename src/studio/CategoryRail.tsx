@@ -1,32 +1,101 @@
-import {useEffect,useMemo,useRef,useState} from 'react';
-import {useI18n} from '@/i18n/I18nProvider';
-import {Animated,Image,PanResponder,Platform,Pressable,ScrollView,StyleSheet,Text,View} from 'react-native';
-import Svg,{Defs,LinearGradient,Stop,Rect,Path,Ellipse} from 'react-native-svg';
-import {useTheme} from './theme';
-import type {Garment} from './closet';
-const covers:Record<string,number>={tshirt:require('../../assets/rack/tshirt.png'),knit:require('../../assets/rack/knit.png'),shirt:require('../../assets/rack/shirt.png'),trousers:require('../../assets/rack/trousers.png'),shoes:require('../../assets/rack/shoes.png'),dress:require('../../assets/rack/dress.png'),jacket:require('../../assets/rack/jacket.png'),skirt:require('../../assets/rack/skirt.png'),bag:require('../../assets/rack/bag.png'),accessory:require('../../assets/rack/accessory.png')};
-const aspect:Record<string,number>={"dress": 0.872, "accessory": 0.8, "jacket": 0.956, "shoes": 1.7482517482517483, "knit": 0.71, "shirt": 0.88, "trousers": 0.588, "skirt": 0.57, "bag": 1.1764705882352942, "tshirt": 0.946};
-const order=['jacket','knit','tshirt','shirt','trousers','dress','skirt','shoes','bag','accessory'];
-function HangingCategory({id,label,active,onFocus,onLeave,onOpen,index}:{id:string;label:string;active:boolean;onFocus:()=>void;onLeave:()=>void;onOpen:()=>void;index:number}){
- const imageHeight=id==='shoes'?110:id==='bag'?155:['trousers','dress','skirt','accessory'].includes(id)?210:190;
- const rotation=useRef(new Animated.Value(0)).current;
- useEffect(()=>{Animated.spring(rotation,{toValue:active?1:0,friction:7,tension:65,useNativeDriver:false}).start();},[active,rotation]);
- return <Pressable testID={'rack-category-'+id} accessibilityRole="button" accessibilityLabel={label} accessibilityState={{selected:active}} aria-pressed={active} onHoverIn={onFocus} onHoverOut={onLeave} onPress={()=>active?onOpen():onFocus()} style={{width:78,height:248,alignItems:'center',zIndex:active?30:10-index}}>
- <Svg pointerEvents="none" width={78} height={30} style={{position:'absolute',top:6}}><Path d="M39 17 V6 Q45 5 44 0" stroke="#76604B" strokeWidth={2} fill="none"/></Svg>
- <View pointerEvents="none" style={[StyleSheet.absoluteFill,{alignItems:'center'}]}><Animated.View testID={'rack-turn-'+id} style={{position:'absolute',top:22,width:160,height:210,transform:[{perspective:850},{rotateY:rotation.interpolate({inputRange:[0,1],outputRange:['-72deg','0deg']})},{rotateZ:rotation.interpolate({inputRange:[0,.65,1],outputRange:[index%2?'2deg':'-2deg',index%2?'-5deg':'5deg','0deg']})}]}}><Image source={covers[id]} resizeMode="contain" style={{width:imageHeight*aspect[id],height:imageHeight,alignSelf:'center'}}/></Animated.View></View>
- <Text numberOfLines={1} style={{position:'absolute',bottom:0,fontSize:11,color:'#747D73'}}>{label}</Text>
- </Pressable>;
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useI18n } from '@/i18n/I18nProvider';
+import { Image } from 'expo-image';
+import { PanResponder, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming, Easing, cancelAnimation } from 'react-native-reanimated';
+import Svg, { Path } from 'react-native-svg';
+import type { Garment } from './closet';
+import { motion, sansFont, usePortfolio } from './motion';
+
+const covers: Record<string, number> = {
+  tshirt: require('../../assets/rack/tshirt.png'),
+  knit: require('../../assets/rack/knit.png'),
+  shirt: require('../../assets/rack/shirt.png'),
+  trousers: require('../../assets/rack/trousers.png'),
+  shoes: require('../../assets/rack/shoes.png'),
+  dress: require('../../assets/rack/dress.png'),
+  jacket: require('../../assets/rack/jacket.png'),
+  skirt: require('../../assets/rack/skirt.png'),
+  bag: require('../../assets/rack/bag.png'),
+  accessory: require('../../assets/rack/accessory.png'),
+};
+const aspect: Record<string, number> = { dress: 0.872, accessory: 0.8, jacket: 0.956, shoes: 1.7482517482517483, knit: 0.71, shirt: 0.88, trousers: 0.588, skirt: 0.57, bag: 1.1764705882352942, tshirt: 0.946 };
+const order = ['jacket', 'knit', 'tshirt', 'shirt', 'trousers', 'dress', 'skirt', 'shoes', 'bag', 'accessory'];
+
+function HangingCategory({ id, label, active, onFocus, onLeave, onOpen, index }: { id: string; label: string; active: boolean; onFocus: () => void; onLeave: () => void; onOpen: () => void; index: number }) {
+  const tone = usePortfolio();
+  const imageHeight = id === 'shoes' ? 110 : id === 'bag' ? 155 : ['trousers', 'dress', 'skirt', 'accessory'].includes(id) ? 210 : 190;
+  const turn = useSharedValue(active ? 1 : 0);
+  const sway = useSharedValue(0);
+  useEffect(() => {
+    turn.value = withTiming(active ? 1 : 0, { duration: 380, easing: motion.easeOut });
+  }, [active, turn]);
+  useEffect(() => {
+    sway.value = withRepeat(withSequence(
+      withTiming(1, { duration: motion.sway, easing: Easing.inOut(Easing.sin) }),
+      withTiming(-1, { duration: motion.sway, easing: Easing.inOut(Easing.sin) }),
+    ), -1, true);
+    return () => cancelAnimation(sway);
+  }, [sway]);
+  const style = useAnimatedStyle(() => ({
+    transform: [
+      { perspective: 850 },
+      { rotateY: `${-72 + turn.value * 72}deg` },
+      { rotateZ: `${((index % 2 ? 2 : -2) + sway.value * 1.6) * (1 - turn.value)}deg` },
+    ],
+  }));
+  return (
+    <Pressable testID={'rack-category-' + id} accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ selected: active }} aria-pressed={active} onHoverIn={onFocus} onHoverOut={onLeave} onPress={() => active ? onOpen() : onFocus()} style={{ width: 78, height: 248, alignItems: 'center', zIndex: active ? 30 : 10 - index }}>
+      <Svg pointerEvents="none" width={78} height={30} style={{ position: 'absolute', top: 6 }}><Path d="M39 17 V6 Q45 5 44 0" stroke={tone.ink} strokeWidth={1} fill="none" /></Svg>
+      <View pointerEvents="none" style={[StyleSheet.absoluteFill, { alignItems: 'center' }]}>
+        <Animated.View testID={'rack-turn-' + id} style={[{ position: 'absolute', top: 22, width: 160, height: 210 }, style]}>
+          <Image source={covers[id]} contentFit="contain" style={{ width: imageHeight * aspect[id], height: imageHeight, alignSelf: 'center' }} />
+        </Animated.View>
+      </View>
+      <Text numberOfLines={1} style={{ position: 'absolute', bottom: 0, fontSize: 10, letterSpacing: 0.6, textTransform: 'uppercase', fontFamily: sansFont, color: tone.ink }}>{label}</Text>
+    </Pressable>
+  );
 }
-export function CategoryRail({categories,items,onSelect}:{categories:string[][];items:Garment[];onSelect:(id:string)=>void}){
- const {dark}=useTheme();const {t}=useI18n();const [focus,setFocus]=useState<string|null>(null);const scroll=useRef<ScrollView>(null);const offset=useRef(0);const origin=useRef(0);const dragging=useRef(false);const dragEnded=useRef(0);
- const pan=useMemo(()=>PanResponder.create({onMoveShouldSetPanResponderCapture:(_,g)=>Platform.OS==='web'&&Math.abs(g.dx)>8&&Math.abs(g.dx)>Math.abs(g.dy),onPanResponderGrant:()=>{origin.current=offset.current;dragging.current=true;},onPanResponderMove:(_,g)=>scroll.current?.scrollTo({x:Math.max(0,origin.current-g.dx),animated:false}),onPanResponderRelease:()=>{dragging.current=false;dragEnded.current=Date.now();},onPanResponderTerminate:()=>{dragging.current=false;dragEnded.current=Date.now();}}),[]);
- function open(id:string){if(!dragging.current&&Date.now()-dragEnded.current>250)onSelect(id);}
- return <View {...pan.panHandlers} style={[styles.stage,{backgroundColor:dark?'#26312B':'#ECECE8'}]}>
- <ScrollView ref={scroll} testID="category-rack" horizontal showsHorizontalScrollIndicator={false} onScroll={e=>{offset.current=e.nativeEvent.contentOffset.x;}} scrollEventThrottle={16} onScrollBeginDrag={()=>{dragging.current=true;}} onScrollEndDrag={()=>{dragging.current=false;dragEnded.current=Date.now();}} contentContainerStyle={{width:836,height:294,paddingHorizontal:28,paddingTop:20}}>
- <Svg pointerEvents="none" width={836} height={284} style={StyleSheet.absoluteFill}><Defs><LinearGradient id="chrome" x1="0" y1="0" x2="0" y2="1"><Stop offset="0" stopColor="#777D79"/><Stop offset=".28" stopColor="#FFFFFF"/><Stop offset=".55" stopColor="#7B837D"/><Stop offset=".8" stopColor="#E9EEEA"/><Stop offset="1" stopColor="#838B84"/></LinearGradient></Defs><Rect x={12} y={25} width={812} height={5} rx={2} fill="url(#chrome)"/><Rect x={12} y={20} width={4} height={16} rx={1} fill="url(#chrome)"/><Rect x={820} y={20} width={4} height={16} rx={1} fill="url(#chrome)"/><Ellipse cx={418} cy={262} rx={368} ry={6} fill={dark?'#000':'#73756E'} opacity={.08}/></Svg>
- {order.map((id,index)=><HangingCategory key={id} id={id} label={categories.find(c=>c[0]===id)?.[1]??id} active={id===focus} index={index} onFocus={()=>{if(!dragging.current&&Date.now()-dragEnded.current>250)setFocus(id);}} onLeave={()=>setFocus(current=>current===id?null:current)} onOpen={()=>open(id)}/>)}
- </ScrollView>
- <View style={styles.caption}><Text style={[styles.hint,{color:dark?'#C2CFC4':'#747D73'}]}>{t('rackMotionHint')}</Text><View style={{flexDirection:'row',alignItems:'center',gap:16,marginTop:12}}><Pressable accessibilityRole="button" accessibilityLabel={t('rackMoveLeft')} onPress={()=>scroll.current?.scrollTo({x:Math.max(0,offset.current-230),animated:true})} style={styles.arrow}><Text style={{color:dark?'#EDF2EC':'#27322B'}}>←</Text></Pressable>{focus?<Pressable accessibilityRole="button" accessibilityLabel={t('rackOpenCategory')} onPress={()=>open(focus)} style={styles.open}><Text style={{color:dark?'#EDF2EC':'#27322B'}}>{categories.find(c=>c[0]===focus)?.[1]} · {items.filter(p=>p.category===focus).length} →</Text></Pressable>:<Text style={{color:dark?'#EDF2EC':'#27322B',flex:1,textAlign:'center'}}>10 {t('rackCategoryCount')}</Text>}<Pressable accessibilityRole="button" accessibilityLabel={t('rackMoveRight')} onPress={()=>scroll.current?.scrollTo({x:offset.current+230,animated:true})} style={styles.arrow}><Text style={{color:dark?'#EDF2EC':'#27322B'}}>→</Text></Pressable></View></View>
- </View>;
+
+export function CategoryRail({ categories, items, onSelect }: { categories: string[][]; items: Garment[]; onSelect: (id: string) => void }) {
+  const tone = usePortfolio();
+  const { t } = useI18n();
+  const [focus, setFocus] = useState<string | null>(null);
+  const scroll = useRef<ScrollView>(null);
+  const offset = useRef(0);
+  const origin = useRef(0);
+  const dragging = useRef(false);
+  const dragEnded = useRef(0);
+  const pan = useMemo(() => PanResponder.create({
+    onMoveShouldSetPanResponderCapture: (_, g) => Platform.OS === 'web' && Math.abs(g.dx) > 8 && Math.abs(g.dx) > Math.abs(g.dy),
+    onPanResponderGrant: () => { origin.current = offset.current; dragging.current = true; },
+    onPanResponderMove: (_, g) => scroll.current?.scrollTo({ x: Math.max(0, origin.current - g.dx), animated: false }),
+    onPanResponderRelease: () => { dragging.current = false; dragEnded.current = Date.now(); },
+    onPanResponderTerminate: () => { dragging.current = false; dragEnded.current = Date.now(); },
+  }), []);
+  function open(id: string) { if (!dragging.current && Date.now() - dragEnded.current > 250) onSelect(id); }
+  return (
+    <View {...pan.panHandlers} style={[styles.stage, { backgroundColor: tone.raised }]}>
+      <ScrollView ref={scroll} testID="category-rack" horizontal showsHorizontalScrollIndicator={false} onScroll={(e) => { offset.current = e.nativeEvent.contentOffset.x; }} scrollEventThrottle={16} onScrollBeginDrag={() => { dragging.current = true; }} onScrollEndDrag={() => { dragging.current = false; dragEnded.current = Date.now(); }} contentContainerStyle={{ width: 836, height: 294, paddingHorizontal: 28, paddingTop: 20 }}>
+        <View pointerEvents="none" style={{ position: 'absolute', top: 26, left: 12, width: 812, height: 1, backgroundColor: tone.line }} />
+        {order.map((id, index) => <HangingCategory key={id} id={id} label={categories.find((c) => c[0] === id)?.[1] ?? id} active={id === focus} index={index} onFocus={() => { if (!dragging.current && Date.now() - dragEnded.current > 250) setFocus(id); }} onLeave={() => setFocus((current) => current === id ? null : current)} onOpen={() => open(id)} />)}
+      </ScrollView>
+      <View style={styles.caption}>
+        <Text style={[styles.hint, { color: tone.ink, fontFamily: sansFont }]}>{t('rackMotionHint')}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, marginTop: 12 }}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t('rackMoveLeft')} onPress={() => scroll.current?.scrollTo({ x: Math.max(0, offset.current - 230), animated: true })} style={[styles.arrow, { borderColor: tone.line }]}><Text style={{ color: tone.ink }}>←</Text></Pressable>
+          {focus ? <Pressable accessibilityRole="button" accessibilityLabel={t('rackOpenCategory')} onPress={() => open(focus)} style={[styles.open, { borderColor: tone.line }]}><Text style={{ color: tone.ink, fontFamily: sansFont, letterSpacing: 0.4 }}>{categories.find((c) => c[0] === focus)?.[1]} · {items.filter((p) => p.category === focus).length} →</Text></Pressable> : <Text style={{ color: tone.ink, flex: 1, textAlign: 'center', fontFamily: sansFont, letterSpacing: 1.4, textTransform: 'uppercase', fontSize: 11 }}>10 {t('rackCategoryCount')}</Text>}
+          <Pressable accessibilityRole="button" accessibilityLabel={t('rackMoveRight')} onPress={() => scroll.current?.scrollTo({ x: offset.current + 230, animated: true })} style={[styles.arrow, { borderColor: tone.line }]}><Text style={{ color: tone.ink }}>→</Text></Pressable>
+        </View>
+      </View>
+    </View>
+  );
 }
-const styles=StyleSheet.create({stage:{borderRadius:12,marginTop:16,paddingTop:22,overflow:'hidden'},caption:{alignItems:'center',paddingHorizontal:20,paddingBottom:24},hint:{fontSize:12,textAlign:'center',lineHeight:18},arrow:{padding:12,borderRadius:22,borderWidth:1,borderColor:'#9CA99D'},open:{flex:1,alignItems:'center',padding:12,borderRadius:24,borderWidth:1,borderColor:'#9CA99D'}});
+
+const styles = StyleSheet.create({
+  stage: { borderRadius: 0, marginTop: 18, paddingTop: 8, overflow: 'hidden' },
+  caption: { alignItems: 'center', paddingHorizontal: 20, paddingBottom: 22 },
+  hint: { fontSize: 11, textAlign: 'center', lineHeight: 16, letterSpacing: 0.6 },
+  arrow: { padding: 12, borderRadius: 22, borderWidth: 1 },
+  open: { flex: 1, alignItems: 'center', padding: 12, borderRadius: 24, borderWidth: 1 },
+});
