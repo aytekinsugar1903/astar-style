@@ -1,6 +1,6 @@
 import {useAppStyles,useTheme} from '@/studio/theme';
 import { useEffect, useState } from "react";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useI18n } from "@/i18n/I18nProvider";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
@@ -51,7 +51,10 @@ export default function AdminScreen() {const s=useAppStyles(baseStyles);
     });
   }, [t]);
 
+  if (!isSupabaseConfigured) return <Redirect href="/" />;
+
   async function syncCatalog() {
+    if (!isSupabaseConfigured) return;
     setSyncBusy(true);
     setSyncMessage("");
     const { data, error } = await supabase.functions.invoke("catalog-sync", { body: {} });
@@ -63,6 +66,7 @@ export default function AdminScreen() {const s=useAppStyles(baseStyles);
     setSyncBusy(false);
   }
   async function sendReply(id: string) {
+    if (!isSupabaseConfigured) return;
     const reply = replies[id]?.trim();
     if (!reply) return;
     const result = await supabase.functions.invoke("stylist-reply", { body: { requestId: id, reply } });

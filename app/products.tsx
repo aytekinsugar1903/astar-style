@@ -57,7 +57,7 @@ export default function ProductsScreen() {const s=useAppStyles(baseStyles);
     return () => { active = false; };
   }, [session?.user.id, t]);
 
-  const catalog=useMemo(()=>[...imported.products.map(catalogProduct),...baseCatalog],[imported.products,baseCatalog]);
+  const catalog=useMemo(()=>[...imported.products.filter(product=>product.sourceId!=="livostyle-open").map(catalogProduct),...baseCatalog],[imported.products,baseCatalog]);
   useEffect(()=>{setCategory(ALL);setQuery(initialQuery);setColor(ALL);setStyle(ALL);setAudience(ALL);setBudget(initialBudget);setStockOnly(false);},[shoeScope,brandFilter,initialQuery,initialBudget]);
   const categories = useMemo(() => [ALL, ...new Set(catalog.map((item) => item.category))], [catalog]);
   const colors = useMemo(() => [ALL, ...new Set(catalog.flatMap(item=>item.variants?.map(v=>v.color)??[item.color]).filter(Boolean))], [catalog]);
@@ -106,7 +106,7 @@ export default function ProductsScreen() {const s=useAppStyles(baseStyles);
         <Text style={s.title}>{brandFilter||t("productSearchTitle")}</Text>{shoeScope&&<Pressable accessibilityRole="button" onPress={()=>router.push("/shoe-brands")}><Text style={s.savedText}>{t("shoeChooseFirm")} →</Text></Pressable>}
 <Text style={s.copy}>{t("productSearchCopy")}</Text><Pressable onPress={()=>router.push("/catalog-import")}><Text style={s.savedText}>{t("catalogImportTitle")}</Text></Pressable>
         {(initialQuery || initialBudget) && <View style={s.context}><Text style={s.contextText}>{t("outfitShoppingContext")}</Text></View>}
-        <Pressable style={s.saved} onPress={() => router.push("/favorites")} accessibilityRole="button"><Text style={s.savedText}>{t("seeSaved")}</Text></Pressable>
+        {isSupabaseConfigured && <Pressable style={s.saved} onPress={() => router.push("/favorites")} accessibilityRole="button"><Text style={s.savedText}>{t("seeSaved")}</Text></Pressable>}
         <TextInput style={s.input} placeholder={t("productSearchPlaceholder")} value={query} onChangeText={setQuery} accessibilityLabel={t("productSearchTitle")} />
         <TextInput style={s.input} placeholder={t("maxBudgetPlaceholder")} keyboardType="numeric" value={budget} onChangeText={setBudget} accessibilityLabel={t("maxBudgetPlaceholder")} />
         <View style={s.facet}>

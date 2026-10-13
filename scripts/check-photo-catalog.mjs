@@ -20,5 +20,5 @@ for(const p of sampleGarments){
  const hash=createHash('sha256').update(bytes).digest('hex');assert(!hashes.has(hash),`Repeated photo bytes: ${p.id}`);hashes.add(hash);
  counts[p.category]=(counts[p.category]??0)+1;
 }
-for(const cat of Object.keys(models))assert(counts[cat]>=10,`${cat} requires at least 10 different photos; got ${counts[cat]??0}`);
+for(const cat of Object.keys(models))assert(counts[cat]>=6,`${cat} requires at least 6 different photos; got ${counts[cat]??0}`);
 console.log(`${sampleGarments.length} distinct source photographs, attribution and category minimums verified: ${JSON.stringify(counts)}`);

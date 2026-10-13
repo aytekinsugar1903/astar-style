@@ -27,11 +27,11 @@ Detaylar: [docs/architecture.md](docs/architecture.md)
 
 ### Kombin öğrenme döngüsü
 
-Etkinlik stilisti, stil profili ve beğenilen kombin sinyallerini kullanır. Üretilen kombinler kullanıcı hesabına kaydedilir; beğeniler sonraki sıralamayı kişiselleştirir. Mevcut sağlayıcı ücretsiz mock modundadır.
+Etkinlik stilisti, stil profili ve beğenilen kombin sinyallerini kullanır. Üretilen kombinler bu cihazda saklanır; beğeniler sonraki sıralamayı kişiselleştirir. Mevcut sağlayıcı yerel mock modundadır.
 
-### Geniş ücretsiz demo kapsamı
+### Yerel demo kapsamı
 
-Ücretsiz katalog 80 sentetik üründen oluşur ve kadın, erkek ve unisex koleksiyonları kapsar. Ürün araması kategori, renk, stil, stok ve bütçe filtrelerini birlikte uygular. Kombin motoru 3 koleksiyon × 8 etkinlik × 4 mevsim × 8 stil üzerinden 768 temel şablon üretir ve her istekte en uygun 6 farklı seçeneği döndürür.
+Yerel katalog 80 sentetik üründen oluşur ve kadın, erkek ve unisex koleksiyonları kapsar. Ürün araması kategori, renk, stil, stok ve bütçe filtrelerini birlikte uygular. Kombin motoru 3 koleksiyon × 8 etkinlik × 4 mevsim × 8 stil üzerinden 768 temel şablon üretir ve her istekte en uygun 6 farklı seçeneği döndürür.
 
 
 

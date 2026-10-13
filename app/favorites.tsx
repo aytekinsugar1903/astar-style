@@ -1,13 +1,13 @@
 import {useAppStyles,useTheme} from '@/studio/theme';
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "@/auth/AuthProvider";
 import { useI18n } from "@/i18n/I18nProvider";
 import { localizeProduct } from "@/catalog/localize";
 import { productColor } from "@/catalog/color";
 import { mockProducts } from "@/catalog/mock-products";
-import { supabase } from "@/lib/supabase";
+import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { track } from "@/analytics/track";
 
 type SavedProduct = {
@@ -32,6 +32,7 @@ export default function FavoritesScreen() {const s=useAppStyles(baseStyles);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    if (!isSupabaseConfigured) return;
     if (!session) {
       router.replace("/sign-in");
       return;
@@ -78,6 +79,7 @@ export default function FavoritesScreen() {const s=useAppStyles(baseStyles);
   }
 
   const localeTag = locale === "tr" ? "tr-TR" : "en-US";
+  if (!isSupabaseConfigured) return <Redirect href="/" />;
 
   return (
     <SafeAreaView style={s.safe}>

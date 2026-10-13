@@ -12,7 +12,11 @@
       }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_DEMO_MODE": "true",
+        "EXPO_PUBLIC_PREMIUM_ENABLED": "false"
+      }
     }
   },
   "submit": {

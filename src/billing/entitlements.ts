@@ -1,5 +1,8 @@
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
+/** Paid plans stay in the schema, but v1 ships with every feature unlimited. */
+export const premiumEnabled = process.env.EXPO_PUBLIC_PREMIUM_ENABLED === "true";
+
 export type MembershipPlan = "free" | "premium";
 export type FeatureKey =
   | "outfit_generation"
@@ -25,8 +28,13 @@ export const planLimits: Record<MembershipPlan, Record<FeatureKey, number | "unl
   },
 };
 
+export function featureLimit(plan: MembershipPlan, feature: FeatureKey): number | "unlimited" {
+  if (!premiumEnabled) return "unlimited";
+  return planLimits[plan][feature];
+}
+
 export async function loadMembership(userId?: string): Promise<MembershipPlan> {
-  if (!isSupabaseConfigured || !userId) return "free";
+  if (!premiumEnabled || !isSupabaseConfigured || !userId) return "free";
   const { data, error } = await supabase.from("subscriptions")
     .select("plan,status,current_period_end")
     .eq("user_id", userId)
@@ -37,6 +45,6 @@ export async function loadMembership(userId?: string): Promise<MembershipPlan> {
 }
 
 export function hasFeature(plan: MembershipPlan, feature: FeatureKey) {
-  return planLimits[plan][feature] !== 0;
+  return featureLimit(plan, feature) !== 0;
 }
 
