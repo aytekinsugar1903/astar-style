@@ -19,7 +19,7 @@ const covers: Record<string, number> = {
   bag: require('../../assets/rack/bag.png'),
   accessory: require('../../assets/rack/accessory.png'),
 };
-const aspect: Record<string, number> = { dress: 0.872, accessory: 0.8, jacket: 0.956, shoes: 1.7482517482517483, knit: 0.71, shirt: 0.88, trousers: 0.588, skirt: 0.57, bag: 1.1764705882352942, tshirt: 0.946 };
+const aspect: Record<string, number> = { dress: 0.872, accessory: 0.8, jacket: 0.352, shoes: 1.5337423312883436, knit: 0.71, shirt: 0.88, trousers: 0.692, skirt: 0.364, bag: 1.1764705882352942, tshirt: 0.946 };
 const order = ['jacket', 'knit', 'tshirt', 'shirt', 'trousers', 'dress', 'skirt', 'shoes', 'bag', 'accessory'];
 const slot = 78;
 const railPad = 64;
@@ -42,16 +42,15 @@ function HangingCategory({ id, label, active, onFocus, onLeave, onOpen, index }:
   }, [sway]);
   const style = useAnimatedStyle(() => ({
     transform: [
-      { perspective: 850 },
-      { rotateY: `${-72 + turn.value * 72}deg` },
-      { rotateZ: `${((index % 2 ? 2 : -2) + sway.value * 1.6) * (1 - turn.value)}deg` },
+      { rotateY: '0deg' },
+      { rotateZ: `${((index % 2 ? 0.6 : -0.6) + sway.value * 0.4) * (1 - turn.value)}deg` },
     ],
   }));
   return (
     <Pressable testID={'rack-category-' + id} accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ selected: active }} aria-pressed={active} onHoverIn={onFocus} onHoverOut={onLeave} onPress={() => active ? onOpen() : onFocus()} style={{ width: slot, height: 248, alignItems: 'center', zIndex: active ? 30 : 10 - index }}>
       <Svg pointerEvents="none" width={78} height={30} style={{ position: 'absolute', top: 6 }}><Path d="M39 17 V6 Q45 5 44 0" stroke={tone.ink} strokeWidth={1} fill="none" /></Svg>
       <View pointerEvents="none" style={[StyleSheet.absoluteFill, { alignItems: 'center' }]}>
-        <Animated.View testID={'rack-turn-' + id} style={[{ position: 'absolute', top: 22, width: 160, height: 210 }, style]}>
+        <Animated.View testID={'rack-turn-' + id} style={[{ position: 'absolute', top: 22, left: (slot - 160) / 2, width: 160, height: 210 }, style]}>
           <Image source={covers[id]} contentFit="contain" style={{ width: imageHeight * aspect[id], height: imageHeight, alignSelf: 'center' }} />
         </Animated.View>
       </View>

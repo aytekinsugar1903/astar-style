@@ -284,12 +284,12 @@ test('local onboarding choices persist into the profile',async({page})=>{
 });
 
 
-test('rack hover turns forward without moving hit areas, then returns sideways',async({page})=>{
+test('rack hover keeps pieces upright without moving hit areas',async({page})=>{
  await page.goto('/');const knit=page.getByTestId('rack-category-knit');const turn=page.getByTestId('rack-turn-knit');
- await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(-72deg)');const before=await knit.boundingBox();
+ await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');const before=await knit.boundingBox();
  await knit.hover();await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');
  const after=await knit.boundingBox();expect(after.x).toBe(before.x);expect(after.width).toBe(before.width);
- await page.getByTestId('rack-category-tshirt').hover();await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(-72deg)');await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(-72deg)');
+ await page.getByTestId('rack-category-tshirt').hover();await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');await expect.poll(()=>page.getByTestId('rack-turn-tshirt').evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');
  const rail=page.getByTestId('category-rack');await page.getByRole('button',{name:'Askılığı sağa kaydır',exact:true}).click();await expect.poll(()=>rail.evaluate(el=>el.scrollLeft)).toBeGreaterThan(100);
  await page.getByRole('button',{name:'Askılığı sola kaydır',exact:true}).click();await expect.poll(()=>rail.evaluate(el=>el.scrollLeft)).toBeLessThan(10);
  const box=await rail.boundingBox();await page.mouse.move(box.x+box.width-25,box.y+110);await page.mouse.down();await page.mouse.move(box.x+30,box.y+112,{steps:15});await page.mouse.up();await expect.poll(()=>rail.evaluate(el=>el.scrollLeft)).toBeGreaterThan(100);await expect(rail).toBeVisible();
