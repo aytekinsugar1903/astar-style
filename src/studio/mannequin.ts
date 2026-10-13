@@ -3,11 +3,11 @@ import {MarchingCubes} from 'three/examples/jsm/objects/MarchingCubes.js';
 import type {Garment} from './closet';
 import type {BodyRegions} from './avatarShape';
 import {colors} from './taxonomy';
-export type ModelKind='female'|'male';
-export type ModelSlot='top'|'bottom'|'outer'|'shoes'|'bag'|'accessory';
+export type {ModelKind,ModelSlot} from './slots';
+export {modelSlot} from './slots';
+import type {ModelKind,ModelSlot} from './slots';
 export type ModelMeasures={height:number;chest:number;waist:number;hip:number;inseam:number;thigh:number};
 export type ModelLook=Partial<Record<ModelSlot,Garment>>;
-export function modelSlot(p:Garment):ModelSlot{return p.category==='shoes'?'shoes':p.category==='bag'?'bag':p.category==='accessory'?'accessory':p.category==='jacket'?'outer':['trousers','skirt','dress'].includes(p.category)?'bottom':'top';}
 export function disposeModel(root:T.Object3D){const materials=new Set<T.Material>(),textures=new Set<T.Texture>();root.traverse(o=>{if(o instanceof T.Mesh){o.geometry.dispose();for(const m of Array.isArray(o.material)?o.material:[o.material])materials.add(m);}});for(const m of materials){for(const value of Object.values(m))if(value instanceof T.Texture)textures.add(value);m.dispose();}for(const texture of textures)texture.dispose();}
 
 const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));

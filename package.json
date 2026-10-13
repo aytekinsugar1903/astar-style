@@ -15,6 +15,7 @@
     "test:e2e": "playwright test",
     "test:providers": "node scripts/check-provider-guards.mjs",
     "test:outfits": "node --experimental-strip-types scripts/test-outfit-logic.mjs",
+    "test:dressing": "node --experimental-strip-types scripts/test-dressing-fit.mjs",
     "test:stylist": "node --experimental-strip-types scripts/test-stylist.mjs",
     "test:catalog": "node scripts/check-photo-catalog.mjs",
     "test:daily": "node scripts/test-daily.mjs",

@@ -2,7 +2,7 @@ import {useEffect,useMemo,useState} from 'react';
 import {Image,Pressable,ScrollView,StyleSheet,Text,TextInput,View} from 'react-native';
 import {useI18n} from '@/i18n/I18nProvider';
 import {useAppStyles} from '@/studio/theme';
-import {modelSlot,type ModelSlot} from '@/studio/mannequin';
+import type {ModelSlot} from '@/studio/slots';
 import {picture,type Garment} from '@/studio/closet';
 import {brandKey,shoeBrands} from './shoe-brands';
 import {variantGarment,commitCatalog} from './imported';

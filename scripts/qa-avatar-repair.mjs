@@ -12,7 +12,7 @@ try{
  check('Homepage duplicate store shelf removed',await p.getByTestId('store-shelf').count()===0);
  await p.getByTestId('rack-category-tshirt').scrollIntoViewIfNeeded();await p.getByTestId('rack-category-tshirt').click();
  const dialog=p.getByRole('dialog');await dialog.waitFor();
- await p.getByTestId('model-3d-stage').locator('canvas').waitFor();
+ await p.getByTestId('dressing-stage').waitFor();
  check('Avatar opens from hanger',await dialog.getByRole('button',{name:'Avatarı giydir',exact:true}).isVisible());
  check('Photo demo no longer replaces avatar',await p.getByTestId('photo-tryon').count()===0);
  await p.screenshot({path:'docs/qa/avatar-repaired-mobile.png'});
@@ -23,13 +23,14 @@ try{
  check('Product details stay inside studio',await dialog.count()===1);
  const img=p.getByTestId('inline-product-detail').locator('img').first();await expect(img).toBeVisible();
  check('Actual catalog photograph loads',await img.evaluate(x=>x.complete&&x.naturalWidth>0));
- await p.getByTestId('model-3d-stage').scrollIntoViewIfNeeded();await p.screenshot({path:'docs/qa/avatar-repaired-shirt.png'});
- await dialog.getByRole('button',{name:'Erkek',exact:true}).click();await dialog.getByRole('button',{name:'Önden',exact:true}).click();
- check('Male model and front control usable',await p.getByTestId('model-3d-stage').locator('canvas').isVisible());
+ await p.getByTestId('dressing-stage').scrollIntoViewIfNeeded();await p.screenshot({path:'docs/qa/avatar-repaired-shirt.png'});
+ await dialog.getByRole('button',{name:'Erkek',exact:true}).click();
+ check('Male model usable',await p.getByTestId('dressing-stage').isVisible());
+ check('3D stage is gone',await p.getByTestId('model-3d-stage').count()===0);
  await dialog.getByRole('button',{name:'Kadın',exact:true}).click();
  check('No horizontal overflow',await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await p.setViewportSize({width:1200,height:900});await p.screenshot({path:'docs/qa/avatar-repaired-desktop.png'});
- const a=await p.getByTestId('model-3d-stage').boundingBox(),b=await catalog.boundingBox();check('Desktop catalog next to avatar',b.x>=a.x+a.width-5);
+ const a=await p.getByTestId('dressing-stage').boundingBox(),b=await catalog.boundingBox();check('Desktop catalog next to avatar',b.x>=a.x+a.width-5);
  check('No runtime errors',errors.length===0);
  await writeFile('docs/qa/avatar-repair-results.json',JSON.stringify({checks,note:'Local web verification; no physical iPhone test.'},null,2));console.log('PASS',checks);
 }finally{await browser.close();server.kill();}

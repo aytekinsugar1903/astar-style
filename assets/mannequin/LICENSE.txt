@@ -1,0 +1,10 @@
+WEYRA display figures
+
+These front-view fashion display figures were generated for Weyra.
+They are not photographs of real people.
+License: CC0-1.0
+
+Skin tones shipped as photographs: light, medium, deep.
+Tan uses the medium photograph.
+Slim, balanced and full photographs exist for medium skin.
+Light and deep use the balanced photograph, then the dressing view scales it from the saved measurements.
