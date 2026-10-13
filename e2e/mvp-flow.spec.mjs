@@ -290,7 +290,7 @@ test('rack hover keeps pieces upright without moving hit areas',async({page})=>{
  await knit.hover();await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');
  const after=await knit.boundingBox();expect(after.x).toBe(before.x);expect(after.width).toBe(before.width);
  await page.getByTestId('rack-category-tshirt').hover();await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');await expect.poll(()=>page.getByTestId('rack-turn-tshirt').evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');
- const rail=page.getByTestId('category-rack');await page.getByRole('button',{name:'Askılığı sağa kaydır',exact:true}).click();await expect.poll(()=>rail.evaluate(el=>el.scrollLeft)).toBeGreaterThan(100);
+ const rail=page.getByTestId('category-rack');await rail.evaluate(el=>{el.scrollLeft=0;});await page.getByRole('button',{name:'Askılığı sağa kaydır',exact:true}).click();await expect.poll(async()=>{const a=await rail.evaluate(el=>el.scrollLeft);await page.waitForTimeout(90);const b=await rail.evaluate(el=>el.scrollLeft);return Math.abs(a-b)<0.5?b:0;}).toBeGreaterThan(200);
  await page.getByRole('button',{name:'Askılığı sola kaydır',exact:true}).click();await expect.poll(()=>rail.evaluate(el=>el.scrollLeft)).toBeLessThan(10);
  const box=await rail.boundingBox();await page.mouse.move(box.x+box.width-25,box.y+110);await page.mouse.down();await page.mouse.move(box.x+30,box.y+112,{steps:15});await page.mouse.up();await expect.poll(()=>rail.evaluate(el=>el.scrollLeft)).toBeGreaterThan(100);await expect(rail).toBeVisible();
 });

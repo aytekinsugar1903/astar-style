@@ -72,7 +72,7 @@ These are real, separately sourced example photographs, not a retailer feed or v
 
 ## Category rail derivatives (v8)
 
-`assets/rack/*.png` are transparent derivatives of the licensed catalogue photographs, not generated garments. Background removal uses the existing local U2NetP browser pipeline; originals and their source/licence records remain in `src/studio/closet.ts`. Mapping: tshirt→tshirt.jpg, knit→knit.jpg, shirt→catalog-shirt-45.jpg, trousers→jeans-blue.jpg, shoes→formal.jpg, dress→catalog-dress-44.jpg, jacket→jacket-denim.jpg, skirt→skirt-pleated.jpg, bag→handbag.jpg, accessory→catalog-accessory-33.jpg. The rack applies display perspective only; it is not a physical 3D garment simulation.
+`assets/rack/*.png` are solid cut-outs on a transparent ground, not faded source photographs. Mapping: tshirt→tshirt.jpg, knit→knit.jpg, shirt→catalog-shirt-45.jpg, trousers→the local WEYRA 3D catalogue render `female-trousers-Siyah.png`, shoes→`female-shoes-Siyah.png`, dress→catalog-dress-44.jpg, jacket→`female-jacket-Siyah.png`, skirt→the skirt of `female-dress-Siyah.png`, bag→handbag.jpg, accessory→catalog-accessory-33.jpg. Jacket, trousers, shoes and the skirt use those renders because the licensed photographs still showed a person and the studio scene. Credits for the photographs remain in `src/studio/closet.ts`. The rack hangs each cut-out upright in its own slot.
 
 ## Additional real photographs (v10)
 
@@ -92,4 +92,4 @@ These are real, separately sourced example photographs, not a retailer feed or v
 | catalog-hat-page-14.jpg | derivative work: Wikisteve (talk) Hatt.jpg: User:Kjetil r | CC BY 2.5 | https://commons.wikimedia.org/wiki/File:Brown_fur_felt_fedora.jpg |
 | catalog-hat-page-21.jpg | David Ring | CC0 | https://commons.wikimedia.org/wiki/File:Fedora_(clothing).jpg |
 
-Rail covers use unbranded catalogue photographs only. jacket.png derives from jacket-denim.jpg, trousers.png from jeans-blue.jpg, shoes.png from formal.jpg and skirt.png from skirt-pleated.jpg. bag.png derives from catalog-bag-page-2.jpg. Local background removal only; corresponding credits and licences remain in the catalogue.
+Rail covers are unbranded. jacket.png, trousers.png and shoes.png are backdrop-removed cut-outs of the local WEYRA 3D catalogue renders. skirt.png is the skirt of the local dress render `female-dress-Siyah.png`. bag.png derives from catalog-bag-page-2.jpg. Local background removal only; photograph credits and licences remain in the catalogue.
