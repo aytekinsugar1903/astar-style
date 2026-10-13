@@ -37,7 +37,7 @@ test("wardrobe and outfit demo flows work", async ({ page }) => {
   await expect(page.getByText("81 parça", { exact: true })).toBeVisible();
 
   await page.goto("/outfit");
-  await expect(page.getByText("768 farklı kadın, erkek ve unisex kombin şablonu hazır.", { exact: true })).toBeVisible();
+  await expect.poll(async () => Number((await page.getByTestId("outfit-combination-count").textContent())?.replace(/\D/g, ""))).toBeGreaterThan(768);
   await page.getByText("Parti", { exact: true }).click();
   await expect(page.getByLabel("Etkinlik")).toHaveValue("Parti");
   await page.getByText("Kombinleri hazırla", { exact: false }).click();
@@ -284,13 +284,32 @@ test('local onboarding choices persist into the profile',async({page})=>{
 });
 
 
-test('rack hover turns forward without moving hit areas, then returns sideways',async({page})=>{
+test('outfit pages through wardrobe and catalog combinations', async ({ page }) => {
+  await page.goto('/outfit');
+  await expect.poll(async () => Number((await page.getByTestId('outfit-combination-count').textContent())?.replace(/\D/g, ''))).toBeGreaterThan(768);
+  await page.getByText('Parti', { exact: true }).click();
+  await page.getByText('Kombinleri hazırla', { exact: false }).click();
+  await expect(page.getByText('Parti · Minimal seçenek 1', { exact: true })).toBeVisible();
+  await expect(page.getByText('6 farklı kombin seçeneği', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Sonraki kombinasyonlar', exact: true }).click();
+  await expect(page.getByText('Parti · Minimal seçenek 7', { exact: true })).toBeVisible();
+  await expect(page.getByText('6 farklı kombin seçeneği', { exact: true })).toBeVisible();
+});
+
+test('board keeps every linked garment', async ({ page }) => {
+  await page.goto('/board?pieces=photo-white-tee,photo-blue-jeans,photo-formal,photo-jacket-denim,photo-cardigan');
+  for (const name of ['Beyaz bisiklet yaka tişört', 'Mavi kot pantolon', 'Siyah derby kundura', 'Mavi kot ceket · model fotoğrafı', 'Kırmızı düğmeli hırka']) {
+    await expect(page.getByLabel(name).first()).toBeVisible();
+  }
+});
+
+test('rack hover keeps pieces upright without moving hit areas',async({page})=>{
  await page.goto('/');const knit=page.getByTestId('rack-category-knit');const turn=page.getByTestId('rack-turn-knit');
- await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(-72deg)');const before=await knit.boundingBox();
+ await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');const before=await knit.boundingBox();
  await knit.hover();await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');
  const after=await knit.boundingBox();expect(after.x).toBe(before.x);expect(after.width).toBe(before.width);
- await page.getByTestId('rack-category-tshirt').hover();await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(-72deg)');await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(-72deg)');
- const rail=page.getByTestId('category-rack');await page.getByRole('button',{name:'Askılığı sağa kaydır',exact:true}).click();await expect.poll(()=>rail.evaluate(el=>el.scrollLeft)).toBeGreaterThan(100);
+ await page.getByTestId('rack-category-tshirt').hover();await expect.poll(()=>turn.evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');await expect.poll(()=>page.getByTestId('rack-turn-tshirt').evaluate(el=>el.style.transform)).toContain('rotateY(0deg)');
+ const rail=page.getByTestId('category-rack');await rail.evaluate(el=>{el.scrollLeft=0;});await page.getByRole('button',{name:'Askılığı sağa kaydır',exact:true}).click();await expect.poll(async()=>{const a=await rail.evaluate(el=>el.scrollLeft);await page.waitForTimeout(90);const b=await rail.evaluate(el=>el.scrollLeft);return Math.abs(a-b)<0.5?b:0;}).toBeGreaterThan(200);
  await page.getByRole('button',{name:'Askılığı sola kaydır',exact:true}).click();await expect.poll(()=>rail.evaluate(el=>el.scrollLeft)).toBeLessThan(10);
  const box=await rail.boundingBox();await page.mouse.move(box.x+box.width-25,box.y+110);await page.mouse.down();await page.mouse.move(box.x+30,box.y+112,{steps:15});await page.mouse.up();await expect.poll(()=>rail.evaluate(el=>el.scrollLeft)).toBeGreaterThan(100);await expect(rail).toBeVisible();
 });

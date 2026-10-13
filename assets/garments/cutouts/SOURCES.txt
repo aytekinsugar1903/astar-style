@@ -1,0 +1,4 @@
+These PNG cut-outs are derivatives of the flat product photographs credited in src/studio/closet.ts.
+The original credit, source URL and license on each garment stay in force.
+Backgrounds were removed locally with the bundled U²-Net model. No person was cut out.
+Photographs whose names mark a model or mannequin are not included and are not placed on the figure.

@@ -119,7 +119,7 @@ export default function WardrobeScreen() {const s=useAppStyles(baseStyles);
       : await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) { setMessage(t(source === "camera" ? "cameraPermissionWardrobe" : "galleryPermissionWardrobe")); return; }
     const options: ImagePicker.ImagePickerOptions = source === "library"
-      ? { mediaTypes: ["images"], quality: .55, base64: !isSupabaseConfigured, allowsMultipleSelection: true, selectionLimit: 30 }
+      ? { mediaTypes: ["images"], quality: .55, base64: !isSupabaseConfigured, allowsMultipleSelection: true, selectionLimit: 0 }
       : { mediaTypes: ["images"], quality: .55, base64: !isSupabaseConfigured, allowsEditing: true };
     const picked = source === "camera" ? await ImagePicker.launchCameraAsync(options) : await ImagePicker.launchImageLibraryAsync(options);
     if (picked.canceled) return;
@@ -127,7 +127,7 @@ export default function WardrobeScreen() {const s=useAppStyles(baseStyles);
     if (!valid.length) { setMessage(t("captureTooSmall")); return; }
     setPendingBatch(current => {
       const seen = new Set(current.map(asset => asset.assetId ?? asset.uri));
-      return [...current, ...valid.filter(asset => !seen.has(asset.assetId ?? asset.uri))].slice(0, 30);
+      return [...current, ...valid.filter(asset => !seen.has(asset.assetId ?? asset.uri))];
     });
     setPendingName(""); setPendingPrice(""); setMessage(t("batchQueued", { count: valid.length }));
   }

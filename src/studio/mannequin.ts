@@ -3,11 +3,11 @@ import {MarchingCubes} from 'three/examples/jsm/objects/MarchingCubes.js';
 import type {Garment} from './closet';
 import type {BodyRegions} from './avatarShape';
 import {colors} from './taxonomy';
-export type ModelKind='female'|'male';
-export type ModelSlot='top'|'bottom'|'shoes'|'bag'|'accessory';
+export type {ModelKind,ModelSlot} from './slots';
+export {modelSlot} from './slots';
+import type {ModelKind,ModelSlot} from './slots';
 export type ModelMeasures={height:number;chest:number;waist:number;hip:number;inseam:number;thigh:number};
 export type ModelLook=Partial<Record<ModelSlot,Garment>>;
-export function modelSlot(p:Garment):ModelSlot{return p.category==='shoes'?'shoes':p.category==='bag'?'bag':p.category==='accessory'?'accessory':['trousers','skirt','dress'].includes(p.category)?'bottom':'top';}
 export function disposeModel(root:T.Object3D){const materials=new Set<T.Material>(),textures=new Set<T.Texture>();root.traverse(o=>{if(o instanceof T.Mesh){o.geometry.dispose();for(const m of Array.isArray(o.material)?o.material:[o.material])materials.add(m);}});for(const m of materials){for(const value of Object.values(m))if(value instanceof T.Texture)textures.add(value);m.dispose();}for(const texture of textures)texture.dispose();}
 
 const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
@@ -125,7 +125,7 @@ function fittedCloth(g:T.Group,mat:T.Material,p:Garment,d:D,slot:ModelSlot){
  const legParts=[...all.slice(offset+10,offset+14),...all.slice(offset+25,offset+29)];
  // Shoulder and sleeve volumes share the body's actual joints and taper.
  const arms=armParts;
- const margin=p.category==='jacket'?.035:p.category==='knit'?.028:.024;
+ const margin=slot==='outer'||p.category==='jacket'?.058:p.category==='knit'?.030:.024;
  if(slot==='bottom'&&p.category!=='dress'&&p.category!=='skirt'){
  const lower=[all[3],all[4],...legParts.map(b=>{const profile=b.profile?Object.assign(b.profile.map(p=>[p[0],p[1],p[2],p[3]*1.13,p[4]*1.08] as Section),{posterior:b.profile.posterior,continuousCurvature:b.profile.continuousCurvature}):undefined;const v=Object.assign([...b],{disabled:b.disabled,profile}) as Blob;if(v[1]<1.0){v[3]*=1.13;v[5]*=1.08;}return v;})];const low=p.subtype==='shorts'?.84:.20;
  implicitMesh(g,mat,(x,y,z)=>Math.max(distanceToBlobs(x,y,z,lower)-.025,low-y,y-1.29));return;
@@ -134,7 +134,7 @@ function fittedCloth(g:T.Group,mat:T.Material,p:Garment,d:D,slot:ModelSlot){
  const sleeveLow=p.category==='tshirt'?1.47:1.09;
  implicitMesh(g,mat,(x,y,z)=>{
  let value=Math.max(distanceToBlobs(x,y,z,torso)-(margin+.021*clamp((1.43-y)/.23,0,1)),1.195-y,y-1.715);
- if(p.category!=='dress')value=smoothMin(value,Math.max(distanceToBlobs(x,y,z,arms)-Math.min(margin,.020),sleeveLow-y,y-1.715),.025);
+ if(p.category!=='dress')value=smoothMin(value,Math.max(distanceToBlobs(x,y,z,arms)-(slot==='outer'?margin:Math.min(margin,.020)),sleeveLow-y,y-1.715),.025);
  if(p.category==='dress')value=smoothMin(value,skirtDistance(x,y,z,d,p.subtype==='maxi'?.25:p.subtype==='mini'?.94:.72),.035);
  // Open neckline: subtraction avoids a floating collar and covered neck.
  const neck=Math.sqrt(x*x/(.067*.067)+z*z/(.060*.060))-1;
@@ -162,7 +162,7 @@ export function createBody(m:ModelMeasures,r:BodyRegions,kind:ModelKind){const d
  fitLegs(group,d);return group;
 }
 export function createGarment(slot:ModelSlot,p:Garment,m:ModelMeasures,r:BodyRegions,kind:ModelKind){const d=dims(m,r,kind),g=new T.Group();g.name='worn-'+slot;g.userData.garmentId=p.id;const mat=fabric(p);const col=new T.Color(mat.color);const trim=new T.MeshStandardMaterial({color:col.clone().multiplyScalar(.6),roughness:.8,side:T.DoubleSide});
- if(slot==='top'||slot==='bottom'){
+ if(slot==='top'||slot==='bottom'||slot==='outer'){
  fittedCloth(g,mat,p,d,slot);
  if(p.category==='shirt'||p.category==='jacket'||p.subtype==='polo'){
  // Lapels and buttons follow the fitted front rather than a fixed depth.
@@ -171,7 +171,8 @@ export function createGarment(slot:ModelSlot,p:Garment,m:ModelMeasures,r:BodyReg
  for(let i=0;i<5;i++){const y=1.60-i*.077;let z=.11;while(distanceToBlobs(0,y,z,blobs)<.039&&z<.30)z+=.002;oval(g,trim,0,y,z+.004,.005,.005,.003);}
  }
  }else if(slot==='shoes'){
- for(const s of [-1,1]){const x=s*.103*d.hip;oval(g,mat,x,.119,.055,.054,.062,.116);oval(g,trim,x,.075,.060,.056,.018,.119);for(let i=0;i<3;i++){const lace=addMesh(g,new T.BoxGeometry(.063,.004,.007),new T.MeshStandardMaterial({color:'#EFEDE7'}),x,.176,.03+i*.017);lace.rotation.x=-.22;}}
+ const footX=.103*d.hip,length=.112*(.82+.18*d.calf),width=.052*(.78+.22*d.thigh);
+ for(const s of [-1,1]){const x=s*footX;oval(g,mat,x,.108,.045,width,.042,length);oval(g,trim,x,.072,.048,width*.95,.014,length);oval(g,mat,x,.132,.012,width*.62,.038,length*.48);for(let i=0;i<3;i++){const lace=addMesh(g,new T.BoxGeometry(width,.004,.006),new T.MeshStandardMaterial({color:'#EFEDE7'}),x,.128,.02+i*.012);lace.rotation.x=-.2;}}
  }else if(slot==='bag'){
  const x=Math.max(.203*d.shoulders+.108,.103*d.hip+.077*d.thigh+.095);const mesh=addMesh(g,new T.BoxGeometry(.16,.18,.065,3,3,3),mat,x,.92,.035);mesh.geometry.computeVertexNormals();const handle=addMesh(g,new T.TorusGeometry(.048,.006,8,32,Math.PI),trim,x,1.018,.036);
  handle.scale.y=1.4;
@@ -181,7 +182,11 @@ export function createGarment(slot:ModelSlot,p:Garment,m:ModelMeasures,r:BodyReg
  addMesh(g,new T.TubeGeometry(new T.CatmullRomCurve3(points),64,.0035,8,false),mat);const pendant=points[3];oval(g,trim,pendant.x,pendant.y-.012,pendant.z+.004,.015,.020,.005);
 
  }
- fitLegs(g,d);return g;
+ fitLegs(g,d);paintOrder(g,slot);return g;
+}
+export function paintOrder(g:T.Object3D,slot:ModelSlot){
+ const layer=slot==='bottom'?1:slot==='top'?2:slot==='outer'?3:slot==='shoes'?4:slot==='bag'?5:6;
+ g.renderOrder=layer;g.traverse(o=>{if(!(o instanceof T.Mesh))return;o.renderOrder=layer;for(const material of Array.isArray(o.material)?o.material:[o.material]){material.polygonOffset=true;material.polygonOffsetFactor=-layer;material.polygonOffsetUnits=-layer;}});
 }
 
 // Contract: garment-only static mesh, metres, Y-up, origin on the floor,
